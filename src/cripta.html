@@ -101,17 +101,13 @@
             //retorna true ou false de acordo com a chance em porcentagem informada
             //exemplo: perc(50) tem 50% de chance de retornar true
             function perc(n) {
-                if (randint(1, 100) <= n) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return randint(1, 100) <= n;
             }
 
             c = document.getElementById('canvas');
 
-            function criar_tag(obj) {
-                var tag = document.createElement(obj.tp);
+            function criarTag(obj) {
+                var tag = document.createElement(obj.tipo);
                 tag.style.position = 'absolute';
 
                 for (const i in obj) {
@@ -119,11 +115,11 @@
                         for (const j in obj[i]) {
                             tag.style[j] = obj[i][j];
                         }
-                    } else if (i == 'att') {
+                    } else if (i == 'attributes') {
                         for (const j in obj[i]) {
                             tag.setAttribute(j, obj[i][j]);
                         }
-                    } else if (i != 'tp') {
+                    } else if (i != 'tipo') {
                         tag[i] = obj[i];
                     }
                 }
@@ -131,73 +127,73 @@
                 return tag;
             }
 
-            var lista_mapas = {
+            var listaMapas = {
                 0: {
                     x: Math.round(screen.width / 4),
                     y: Math.round(screen.height / 7),
-                    alt: Math.round(screen.height * (55.5 / 100)),
-                    larg: Math.round(screen.width * (50 / 100)),
+                    altura: Math.round(screen.height * (55.5 / 100)),
+                    largura: Math.round(screen.width * (50 / 100)),
                     func: function () {
                         if (perc(33)) {
-                            criar_obstaculo(Math.round(this.x + this.larg / 2 - 40), Math.round(this.y + this.alt / 2 - 40), 80, 80);
+                            criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
                         } else if (perc(33)) {
-                            criar_obstaculo(this.x, 550, 500, 50);
-                            criar_obstaculo(this.x + this.larg - 500, 300, 500, 50);
+                            criarObstaculo(this.x, 550, 500, 50);
+                            criarObstaculo(this.x + this.largura - 500, 300, 500, 50);
                         }
                     },
                 },
                 1: {
                     x: Math.round(screen.width / 2 - (screen.width * (20 / 100)) / 2),
                     y: Math.round(screen.height / 7),
-                    alt: Math.round(screen.height * (55.5 / 100)),
-                    larg: Math.round(screen.width * (20 / 100)),
+                    altura: Math.round(screen.height * (55.5 / 100)),
+                    largura: Math.round(screen.width * (20 / 100)),
                     func: function () {
                         if (perc(50)) {
-                            criar_obstaculo(Math.round(this.x + this.larg / 2 - 40), Math.round(this.y + this.alt / 2 - 40), 80, 80);
+                            criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
                         }
                     },
                 },
             };
 
-            var lista_portais = {
+            var listaPortais = {
                 //esquerda
                 1: {
                     id: 'po1',
-                    larg: 30,
-                    alt: 90,
+                    largura: 30,
+                    altura: 90,
                     func: () => {
-                        criar_obstaculo(mapa.x, mapa.y + Math.floor(mapa.alt / 2) - 45 - 30, 40, 30);
-                        criar_obstaculo(mapa.x, mapa.y + Math.floor(mapa.alt / 2) - 45 + 90, 40, 30);
+                        criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
+                        criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
                     },
                 },
                 //direita
                 2: {
                     id: 'po2',
-                    larg: 30,
-                    alt: 90,
+                    largura: 30,
+                    altura: 90,
                     func: () => {
-                        criar_obstaculo(mapa.x + mapa.larg - 40, mapa.y + Math.floor(mapa.alt / 2) - 45 - 30, 40, 30);
-                        criar_obstaculo(mapa.x + mapa.larg - 40, mapa.y + Math.floor(mapa.alt / 2) - 45 + 90, 40, 30);
+                        criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
+                        criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
                     },
                 },
                 //cima
                 3: {
                     id: 'po3',
-                    larg: 90,
-                    alt: 30,
+                    largura: 90,
+                    altura: 30,
                     func: () => {
-                        criar_obstaculo(mapa.x + Math.floor(mapa.larg / 2) - 45 - 30, mapa.y, 30, 40);
-                        criar_obstaculo(mapa.x + Math.floor(mapa.larg / 2) - 45 + 90, mapa.y, 30, 40);
+                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y, 30, 40);
+                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y, 30, 40);
                     },
                 },
                 //baixo
                 4: {
                     id: 'po4',
-                    larg: 90,
-                    alt: 30,
+                    largura: 90,
+                    altura: 30,
                     func: () => {
-                        criar_obstaculo(mapa.x + Math.floor(mapa.larg / 2) - 45 - 30, mapa.y + mapa.alt - 40, 30, 40);
-                        criar_obstaculo(mapa.x + Math.floor(mapa.larg / 2) - 45 + 90, mapa.y + mapa.alt - 40, 30, 40);
+                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y + mapa.altura - 40, 30, 40);
+                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y + mapa.altura - 40, 30, 40);
                     },
                 },
             };
@@ -206,31 +202,31 @@
 
             var portais = {};
 
-            function criar_portais(n) {
-                lista_portais['1'].x = mapa.x;
-                lista_portais['1'].y = mapa.y + Math.floor(mapa.alt / 2) - 45;
+            function criarPortais(n) {
+                listaPortais['1'].x = mapa.x;
+                listaPortais['1'].y = mapa.y + Math.floor(mapa.altura / 2) - 45;
 
-                lista_portais['2'].x = mapa.x + mapa.larg - 30;
-                lista_portais['2'].y = mapa.y + Math.floor(mapa.alt / 2) - 45;
+                listaPortais['2'].x = mapa.x + mapa.largura - 30;
+                listaPortais['2'].y = mapa.y + Math.floor(mapa.altura / 2) - 45;
 
-                lista_portais['3'].x = mapa.x + Math.floor(mapa.larg / 2) - 45;
-                lista_portais['3'].y = mapa.y;
+                listaPortais['3'].x = mapa.x + Math.floor(mapa.largura / 2) - 45;
+                listaPortais['3'].y = mapa.y;
 
-                lista_portais['4'].x = mapa.x + Math.floor(mapa.larg / 2) - 45;
-                lista_portais['4'].y = mapa.y + mapa.alt - 30;
+                listaPortais['4'].x = mapa.x + Math.floor(mapa.largura / 2) - 45;
+                listaPortais['4'].y = mapa.y + mapa.altura - 30;
 
-                portais[n] = lista_portais[n];
+                portais[n] = listaPortais[n];
 
                 c.appendChild(
-                    criar_tag({
-                        tp: 'div',
-                        att: {
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
                             id: portais[n].id,
                             class: 'po',
                         },
                         style: {
-                            width: portais[n].larg + 'px',
-                            height: portais[n].alt + 'px',
+                            width: portais[n].largura + 'px',
+                            height: portais[n].altura + 'px',
                             left: portais[n].x + 'px',
                             top: portais[n].y + 'px',
                         },
@@ -240,20 +236,20 @@
                 portais[n].func();
             }
 
-            function criar_mapa() {
-                mapa = lista_mapas[randint(0, 1)];
+            function criarMapa() {
+                mapa = listaMapas[randint(0, 1)];
 
                 mapa.id = 'mapa';
 
                 c.appendChild(
-                    criar_tag({
-                        tp: 'div',
-                        att: {
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
                             id: mapa.id,
                         },
                         style: {
-                            width: mapa.larg + 'px',
-                            height: mapa.alt + 'px',
+                            width: mapa.largura + 'px',
+                            height: mapa.altura + 'px',
                             left: mapa.x + 'px',
                             top: mapa.y + 'px',
                         },
@@ -263,7 +259,7 @@
                 mapa.func();
             }
 
-            var lista_itens = {
+            var listaItens = {
                 vazio: {
                     nome: 'vazio',
                     texto: 'Vazio',
@@ -274,7 +270,7 @@
                     texto: 'Espada de Ferro',
                     poder: 40,
                     tipo: 'arma',
-                    tipo_atq: 'c',
+                    tipoAtaque: 'c',
                 },
                 1: {
                     nome: 'armadura_ferro',
@@ -287,7 +283,7 @@
                     texto: 'Espada Dourada',
                     poder: 70,
                     tipo: 'arma',
-                    tipo_atq: 'c',
+                    tipoAtaque: 'c',
                 },
                 3: {
                     nome: 'armadura_trevas',
@@ -312,24 +308,24 @@
                     texto: 'Arco de Madeira',
                     poder: 30,
                     tipo: 'arma',
-                    tipo_atq: 'd',
+                    tipoAtaque: 'd',
                 },
             };
 
-            var lista_inimigos = {
+            var listaInimigos = {
                 0: {
                     nome: 'guerreiro_esquecido',
-                    alt: 40,
-                    larg: 40,
+                    altura: 40,
+                    largura: 40,
                     hp: 200,
-                    atq: 10,
+                    ataque: 10,
                     class: 'i',
                     equipamento: {
                         arma: {
                             nome: 'espada_simples',
                             texto: 'Espada Simples',
                             poder: 10,
-                            tipo_atq: 'c',
+                            tipoAtaque: 'c',
                         },
                         armadura: {
                             nome: 'armadura_simples',
@@ -340,17 +336,17 @@
                 },
                 1: {
                     nome: 'zumbi',
-                    alt: 40,
-                    larg: 40,
+                    altura: 40,
+                    largura: 40,
                     hp: 200,
-                    atq: 10,
+                    ataque: 10,
                     class: 'zumbi',
                     equipamento: {
                         arma: {
                             nome: 'espada_simples',
                             texto: 'Espada Simples',
                             poder: 10,
-                            tipo_atq: 'c',
+                            tipoAtaque: 'c',
                         },
                         armadura: {
                             nome: 'armadura_simples',
@@ -370,24 +366,24 @@
             var armas = {};
 
             // faz um objeto mudar de posição
-            function andar(obj, d) {
-                if (d == 'direita') {
-                    if (obj.x + obj.larg < mapa.x + mapa.larg) {
+            function andar(obj, direcao) {
+                if (direcao == 'direita') {
+                    if (obj.x + obj.largura < mapa.x + mapa.largura) {
                         obj.x++;
                         document.getElementById(obj.id).style.left = obj.x + 'px';
                     }
-                } else if (d == 'esquerda') {
+                } else if (direcao == 'esquerda') {
                     if (obj.x > mapa.x) {
                         obj.x--;
                         document.getElementById(obj.id).style.left = obj.x + 'px';
                     }
-                } else if (d == 'cima') {
+                } else if (direcao == 'cima') {
                     if (obj.y > mapa.y) {
                         obj.y--;
                         document.getElementById(obj.id).style.top = obj.y + 'px';
                     }
-                } else if (d == 'baixo') {
-                    if (obj.y + obj.alt < mapa.y + mapa.alt) {
+                } else if (direcao == 'baixo') {
+                    if (obj.y + obj.altura < mapa.y + mapa.altura) {
                         obj.y++;
                         document.getElementById(obj.id).style.top = obj.y + 'px';
                     }
@@ -402,27 +398,27 @@
                     },
                     b: {
                         x: obj.x,
-                        y: obj.y + obj.alt,
+                        y: obj.y + obj.altura,
                     },
                     c: {
-                        x: obj.x + obj.larg,
+                        x: obj.x + obj.largura,
                         y: obj.y,
                     },
                     d: {
-                        x: obj.x + obj.larg,
-                        y: obj.y + obj.alt,
+                        x: obj.x + obj.largura,
+                        y: obj.y + obj.altura,
                     },
                 };
             }
 
             // valida o movimento de um objeto baseado na direção e colisão com outro objeto
-            function movimento(obj1, obj2, d) {
-                obj1.face = d;
+            function movimento(obj1, obj2, direcao) {
+                obj1.face = direcao;
 
                 var pt1 = pontos(obj1);
                 var pt2 = pontos(obj2);
 
-                if (d == 'direita') {
+                if (direcao == 'direita') {
                     if (pt1.c.x + 1 == pt2.b.x) {
                         if (pt1.c.y >= pt2.a.y && pt1.c.y <= pt2.b.y) {
                             return false;
@@ -430,13 +426,13 @@
                             return false;
                         } else if (pt1.c.y <= pt2.a.y && pt1.d.y >= pt2.b.y) {
                             return false;
-                        } else {
-                            return true;
                         }
-                    } else {
+                        
                         return true;
                     }
-                } else if (d == 'esquerda') {
+                    
+                    return true;
+                } else if (direcao == 'esquerda') {
                     if (pt1.b.x - 1 == pt2.c.x) {
                         if (pt1.b.y >= pt2.c.y && pt1.b.y <= pt2.d.y) {
                             return false;
@@ -444,13 +440,13 @@
                             return false;
                         } else if (pt1.a.y <= pt2.c.y && pt1.b.y >= pt2.d.y) {
                             return false;
-                        } else {
-                            return true;
                         }
-                    } else {
+
                         return true;
                     }
-                } else if (d == 'cima') {
+
+                    return true;
+                } else if (direcao == 'cima') {
                     if (pt1.a.y - 1 == pt2.b.y) {
                         if (pt1.c.x >= pt2.b.x && pt1.c.x <= pt2.d.x) {
                             return false;
@@ -458,13 +454,13 @@
                             return false;
                         } else if (pt1.a.x <= pt2.b.x && pt1.c.x >= pt2.d.x) {
                             return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
+                        } 
+
                         return true;
                     }
-                } else if (d == 'baixo') {
+                        
+                    return true;
+                } else if (direcao == 'baixo') {
                     if (pt1.b.y + 1 == pt2.a.y) {
                         if (pt1.b.x >= pt2.a.x && pt1.b.x <= pt2.c.x) {
                             return false;
@@ -472,24 +468,24 @@
                             return false;
                         } else if (pt1.b.x <= pt2.a.x && pt1.d.x >= pt2.c.x) {
                             return false;
-                        } else {
-                            return true;
                         }
-                    } else {
+                        
                         return true;
                     }
-                } else {
-                    return false;
+                    
+                    return true;
                 }
+
+                return false;
             }
 
             // verifica a interação de movimento e colisão entre todos os objetos (jogador, inimigos e obstáculos)
-            function mov_geral(obj, d) {
+            function movimentoGeral(obj, direcao) {
                 var e = true;
 
                 for (const i in inimigos) {
                     if (obj.id != inimigos[i].id) {
-                        if (!movimento(obj, inimigos[i], d)) {
+                        if (!movimento(obj, inimigos[i], direcao)) {
                             e = false;
                         }
                     }
@@ -497,14 +493,14 @@
 
                 for (const i in obstaculos) {
                     if (obj.id != obstaculos[i].id) {
-                        if (!movimento(obj, obstaculos[i], d)) {
+                        if (!movimento(obj, obstaculos[i], direcao)) {
                             e = false;
                         }
                     }
                 }
 
                 if (e) {
-                    andar(obj, d);
+                    andar(obj, direcao);
                 }
             }
 
@@ -513,41 +509,33 @@
                 var pt1 = pontos(obj1);
                 var pt2 = pontos(obj2);
 
-                var r;
-
-                if (pt1.c.x + 1 >= pt2.b.x && pt1.b.x - 1 <= pt2.c.x && pt1.a.y - 1 <= pt2.b.y && pt1.b.y + 1 >= pt2.a.y) {
-                    r = true;
-                } else {
-                    r = false;
-                }
-
-                return r;
+                return pt1.c.x + 1 >= pt2.b.x && pt1.b.x - 1 <= pt2.c.x && pt1.a.y - 1 <= pt2.b.y && pt1.b.y + 1 >= pt2.a.y;
             }
 
-            function criar_item(n, x_i, y_i) {
+            function criarItem(n, x_i, y_i) {
                 var w = Object.keys(itens).length + 1;
 
                 obj = {
                     id: 'it' + w,
                     x: x_i,
                     y: y_i,
-                    alt: 30,
-                    larg: 30,
-                    obj: lista_itens[n],
+                    altura: 30,
+                    largura: 30,
+                    obj: listaItens[n],
                 };
 
                 itens['item' + w] = obj;
 
                 c.appendChild(
-                    criar_tag({
-                        tp: 'div',
-                        att: {
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
                             id: obj.id,
                             class: 'it',
                         },
                         style: {
-                            width: obj.larg + 'px',
-                            height: obj.alt + 'px',
+                            width: obj.largura + 'px',
+                            height: obj.altura + 'px',
                             left: obj.x + 'px',
                             top: obj.y + 'px',
                         },
@@ -555,12 +543,12 @@
                 );
             }
 
-            function carregar_equip() {
+            function mostrarEquipamento() {
                 document.getElementById('status').innerHTML = '';
 
                 document.getElementById('status').appendChild(
-                    criar_tag({
-                        tp: 'p',
+                    criarTag({
+                        tipo: 'p',
                         innerHTML: 'Vida: ' + jogador.hp + '/' + jogador.hp_max,
                         style: {
                             fontSize: '20px',
@@ -571,9 +559,9 @@
                 );
 
                 document.getElementById('status').appendChild(
-                    criar_tag({
-                        tp: 'p',
-                        innerHTML: 'Força: ' + jogador.atq + ' +' + jogador.equipamento.arma.poder,
+                    criarTag({
+                        tipo: 'p',
+                        innerHTML: 'Força: ' + jogador.ataque + ' (+' + jogador.equipamento.arma.poder + ')',
                         style: {
                             fontSize: '20px',
                             color: 'white',
@@ -582,13 +570,13 @@
                     })
                 );
 
-                var d = document.getElementById('div_equip_content');
-                d.innerHTML = '';
+                var divEquipamento = document.getElementById('div_equip_content');
+                divEquipamento.innerHTML = '';
 
                 for (const i in jogador.equipamento) {
                     if (jogador.equipamento[i].nome != 'vazio') {
-                        var string = criar_tag({
-                            tp: 'p',
+                        var string = criarTag({
+                            tipo: 'p',
                             innerHTML: jogador.equipamento[i].texto,
                             style: {
                                 fontSize: '20px',
@@ -597,8 +585,8 @@
                             },
                         });
 
-                        var b = criar_tag({
-                            tp: 'button',
+                        var b = criarTag({
+                            tipo: 'button',
                             innerHTML: 'Remover',
                             style: {
                                 backgroundColor: '#520a06',
@@ -608,25 +596,25 @@
                                 height: '30px',
                             },
                             onclick: () => {
-                                rmv_equip(i);
-                                carregar_equip();
+                                removerDoEquipamento(i);
+                                mostrarEquipamento();
                             },
                         });
 
                         string.appendChild(b);
 
-                        d.appendChild(string);
+                        divEquipamento.appendChild(string);
                     }
                 }
             }
 
-            function carregar_inv() {
+            function mostrarInventario() {
                 var d = document.getElementById('div_inv_content');
                 d.innerHTML = '';
 
                 for (const i in jogador.inventario) {
-                    var string = criar_tag({
-                        tp: 'p',
+                    var string = criarTag({
+                        tipo: 'p',
                         innerHTML: jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)',
                         style: {
                             fontSize: '20px',
@@ -636,8 +624,8 @@
                     });
 
                     if (jogador.inventario[i].tipo == 'cura') {
-                        var b = criar_tag({
-                            tp: 'button',
+                        var b = criarTag({
+                            tipo: 'button',
                             innerHTML: 'Usar',
                             style: {
                                 backgroundColor: '#520a06',
@@ -648,14 +636,14 @@
                             },
                             onclick: () => {
                                 curar(jogador.inventario[i].nome);
-                                carregar_inv();
+                                mostrarInventario();
                             },
                         });
 
                         string.appendChild(b);
                     } else {
-                        var b = criar_tag({
-                            tp: 'button',
+                        var b = criarTag({
+                            tipo: 'button',
                             innerHTML: 'Ad Equip',
                             style: {
                                 backgroundColor: '#520a06',
@@ -665,8 +653,8 @@
                                 height: '30px',
                             },
                             onclick: () => {
-                                ad_equip(jogador.inventario[i]);
-                                carregar_inv();
+                                adicionarAoEquipamento(jogador.inventario[i]);
+                                mostrarInventario();
                             },
                         });
 
@@ -677,7 +665,7 @@
                 }
             }
 
-            function ad_inv(obj, p = undefined) {
+            function adicionarAoInventario(obj, p = undefined) {
                 var item = {
                     nome: obj.nome,
                     texto: obj.texto,
@@ -686,8 +674,8 @@
                     quantidade: 1,
                 };
 
-                if (typeof obj.tipo_atq != 'undefined') {
-                    item.tipo_atq = obj.tipo_atq;
+                if (typeof obj.tipoAtaque != 'undefined') {
+                    item.tipoAtaque = obj.tipoAtaque;
                 }
 
                 if (typeof jogador.inventario[item.nome] != 'undefined') {
@@ -703,30 +691,30 @@
                 }
             }
 
-            function rmv_equip(t) {
+            function removerDoEquipamento(t) {
                 if (typeof jogador.equipamento[t] != 'undefined') {
                     if (jogador.equipamento[t].nome != 'vazio') {
                         jogador.equipamento[t].tipo = t;
 
-                        ad_inv(jogador.equipamento[t]);
+                        adicionarAoInventario(jogador.equipamento[t]);
                     }
 
-                    jogador.equipamento[t] = lista_itens['vazio'];
+                    jogador.equipamento[t] = listaItens['vazio'];
                 }
             }
 
-            function ad_equip(obj) {
+            function adicionarAoEquipamento(obj) {
                 var item = {
                     nome: obj.nome,
                     texto: obj.texto,
                     poder: obj.poder,
                 };
 
-                if (typeof obj.tipo_atq != 'undefined') {
-                    item.tipo_atq = obj.tipo_atq;
+                if (typeof obj.tipoAtaque != 'undefined') {
+                    item.tipoAtaque = obj.tipoAtaque;
                 }
 
-                rmv_equip(obj.tipo);
+                removerDoEquipamento(obj.tipo);
 
                 jogador.equipamento[obj.tipo] = item;
 
@@ -739,7 +727,7 @@
 
             var contador_arma = 0;
 
-            function criar_arma(atacante, o_larg, o_alt) {
+            function criarArma(atacante, o_larg, o_alt) {
                 var w = contador_arma + 1;
                 contador_arma++;
 
@@ -748,39 +736,39 @@
                 };
 
                 if (atacante.face == 'esquerda') {
-                    obj.larg = o_larg;
-                    obj.alt = o_alt;
-                    obj.x = atacante.x - obj.larg;
-                    obj.y = Math.round(atacante.y + atacante.alt / 2 - obj.alt / 2);
+                    obj.largura = o_larg;
+                    obj.altura = o_alt;
+                    obj.x = atacante.x - obj.largura;
+                    obj.y = Math.round(atacante.y + atacante.altura / 2 - obj.altura / 2);
                 } else if (atacante.face == 'direita') {
-                    obj.larg = o_larg;
-                    obj.alt = o_alt;
-                    obj.x = atacante.x + atacante.larg;
-                    obj.y = Math.round(atacante.y + atacante.alt / 2 - obj.alt / 2);
+                    obj.largura = o_larg;
+                    obj.altura = o_alt;
+                    obj.x = atacante.x + atacante.largura;
+                    obj.y = Math.round(atacante.y + atacante.altura / 2 - obj.altura / 2);
                 } else if (atacante.face == 'cima') {
-                    obj.larg = o_alt;
-                    obj.alt = o_larg;
-                    obj.x = Math.round(atacante.x + atacante.larg / 2 - obj.larg / 2);
-                    obj.y = atacante.y - obj.alt;
+                    obj.largura = o_alt;
+                    obj.altura = o_larg;
+                    obj.x = Math.round(atacante.x + atacante.largura / 2 - obj.largura / 2);
+                    obj.y = atacante.y - obj.altura;
                 } else if (atacante.face == 'baixo') {
-                    obj.larg = o_alt;
-                    obj.alt = o_larg;
-                    obj.x = Math.round(atacante.x + atacante.larg / 2 - obj.larg / 2);
-                    obj.y = atacante.y + atacante.alt;
+                    obj.largura = o_alt;
+                    obj.altura = o_larg;
+                    obj.x = Math.round(atacante.x + atacante.largura / 2 - obj.largura / 2);
+                    obj.y = atacante.y + atacante.altura;
                 }
 
                 armas['arma' + w] = obj;
 
                 c.appendChild(
-                    criar_tag({
-                        tp: 'div',
-                        att: {
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
                             id: obj.id,
                             class: 'ar',
                         },
                         style: {
-                            width: obj.larg + 'px',
-                            height: obj.alt + 'px',
+                            width: obj.largura + 'px',
+                            height: obj.altura + 'px',
                             left: obj.x + 'px',
                             top: obj.y + 'px',
                         },
@@ -791,13 +779,13 @@
             }
 
             function atacar(obj) {
-                var arma_id = criar_arma(obj, 25, 6);
+                var arma_id = criarArma(obj, 25, 6);
                 var ar = document.getElementById(armas[arma_id].id);
 
                 //
 
-                if (obj.equipamento.arma.tipo_atq == 'd') {
-                    var projetil_id = criar_arma(obj, 25, 6);
+                if (obj.equipamento.arma.tipoAtaque == 'd') {
+                    var projetil_id = criarArma(obj, 25, 6);
                     var pr = document.getElementById(armas[projetil_id].id);
                     var face = obj.face;
                     var pos = {
@@ -811,12 +799,12 @@
                         for (const i in inimigos) {
                             if (colisao(armas[projetil_id], inimigos[i])) {
                                 inimigos[i].hp = Math.round(
-                                    inimigos[i].hp - (jogador.atq + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.atq + jogador.equipamento.arma.poder))
+                                    inimigos[i].hp - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
                                 );
 
                                 if (inimigos[i].hp <= 0) {
-                                    criar_item(randint(0, 6), inimigos[i].x, inimigos[i].y);
-                                    //criar_item(3);
+                                    criarItem(randint(0, 6), inimigos[i].x, inimigos[i].y);
+                                    //criarItem(3);
 
                                     clearInterval(inimigos[i].mov);
 
@@ -845,7 +833,7 @@
 
                 if (obj.id != jogador.id) {
                     if (colisao(armas[arma_id], obj)) {
-                        jogador.hp = Math.round(jogador.hp - (obj.atq + obj.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (obj.atq + obj.equipamento.arma.poder)));
+                        jogador.hp = Math.round(jogador.hp - (obj.ataque + obj.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (obj.ataque + obj.equipamento.arma.poder)));
 
                         if (jogador.hp <= 0) {
                             delete armas[arma_id];
@@ -884,12 +872,12 @@
                     for (const i in inimigos) {
                         if (colisao(armas[arma_id], inimigos[i])) {
                             inimigos[i].hp = Math.round(
-                                inimigos[i].hp - (jogador.atq + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.atq + jogador.equipamento.arma.poder))
+                                inimigos[i].hp - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
                             );
 
                             if (inimigos[i].hp <= 0) {
-                                criar_item(randint(0, 6), inimigos[i].x, inimigos[i].y);
-                                //criar_item(3);
+                                criarItem(randint(0, 6), inimigos[i].x, inimigos[i].y);
+                                //criarItem(3);
 
                                 clearInterval(inimigos[i].mov);
 
@@ -904,11 +892,11 @@
 
             // inteligência artificial básica para os inimigos
             function ia(obj) {
-                if (jogador.x + jogador.larg < obj.x - 100 || jogador.x > obj.x + obj.larg + 100 || jogador.y + jogador.alt < obj.y - 100 || jogador.y > obj.y + obj.alt + 100) {
+                if (jogador.x + jogador.largura < obj.x - 100 || jogador.x > obj.x + obj.largura + 100 || jogador.y + jogador.altura < obj.y - 100 || jogador.y > obj.y + obj.altura + 100) {
                     if (obj.x < obj.inix + 20 && obj.bool == true) {
                         obj.bool = true;
 
-                        mov_geral(obj, 'direita');
+                        movimentoGeral(obj, 'direita');
                     } else {
                         obj.bool = false;
                     }
@@ -916,14 +904,14 @@
                     if (obj.x > obj.inix - 20 && obj.bool == false) {
                         obj.bool = false;
 
-                        mov_geral(obj, 'esquerda');
+                        movimentoGeral(obj, 'esquerda');
                     } else {
                         obj.bool = true;
                     }
                 } else {
                     if (jogador.x < obj.x) {
                         if (movimento(obj, jogador, 'esquerda')) {
-                            mov_geral(obj, 'esquerda');
+                            movimentoGeral(obj, 'esquerda');
                         } else {
                             if (obj.pa) {
                                 atacar(obj);
@@ -932,7 +920,7 @@
                     } else if (jogador.x == obj.x) {
                     } else {
                         if (movimento(obj, jogador, 'direita')) {
-                            mov_geral(obj, 'direita');
+                            movimentoGeral(obj, 'direita');
                         } else {
                             if (obj.pa) {
                                 atacar(obj);
@@ -942,7 +930,7 @@
 
                     if (jogador.y < obj.y) {
                         if (movimento(obj, jogador, 'cima')) {
-                            mov_geral(obj, 'cima');
+                            movimentoGeral(obj, 'cima');
                         } else {
                             if (obj.pa) {
                                 atacar(obj);
@@ -951,7 +939,7 @@
                     } else if (jogador.y == obj.y) {
                     } else {
                         if (movimento(obj, jogador, 'baixo')) {
-                            mov_geral(obj, 'baixo');
+                            movimentoGeral(obj, 'baixo');
                         } else {
                             if (obj.pa) {
                                 atacar(obj);
@@ -962,20 +950,20 @@
             }
 
             // cria os inimigos e coloca no mapa
-            function criar_inimigo() {
+            function criarInimigo() {
                 var w = Object.keys(inimigos).length + 1;
 
-                var ini = lista_inimigos[randint(0, 1)];
+                var ini = listaInimigos[randint(0, 1)];
 
                 var obj = {
                     id: 'i' + w,
                     bool: true,
                     pa: true,
                     face: 'direita',
-                    alt: ini.alt,
-                    larg: ini.larg,
+                    altura: ini.altura,
+                    largura: ini.largura,
                     hp: ini.hp,
-                    atq: ini.atq,
+                    ataque: ini.ataque,
                     class: ini.class,
                     equipamento: {
                         arma: {
@@ -987,7 +975,7 @@
                             nome: ini.equipamento.armadura.nome,
                             texto: ini.equipamento.armadura.texto,
                             poder: ini.equipamento.armadura.poder,
-                            tipo_atq: ini.equipamento.armadura.tipo_atq,
+                            tipoAtaque: ini.equipamento.armadura.tipoAtaque,
                         },
                     },
                 };
@@ -1001,8 +989,8 @@
                     bool.o = true;
                     bool.i = true;
 
-                    obj.x = obj.inix = randint(mapa.x + 130, mapa.x + mapa.larg - 230);
-                    obj.y = obj.iniy = randint(mapa.y + 130, mapa.y + mapa.alt - 230);
+                    obj.x = obj.inix = randint(mapa.x + 130, mapa.x + mapa.largura - 230);
+                    obj.y = obj.iniy = randint(mapa.y + 130, mapa.y + mapa.altura - 230);
 
                     for (const i in inimigos) {
                         if (colisao(inimigos[i], obj)) {
@@ -1022,15 +1010,15 @@
                 inimigos['inimigo' + w] = obj;
 
                 c.appendChild(
-                    criar_tag({
-                        tp: 'div',
-                        att: {
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
                             id: obj.id,
                             class: obj.class,
                         },
                         style: {
-                            width: obj.larg + 'px',
-                            height: obj.alt + 'px',
+                            width: obj.largura + 'px',
+                            height: obj.altura + 'px',
                             left: obj.x + 'px',
                             top: obj.y + 'px',
                         },
@@ -1043,29 +1031,29 @@
             }
 
             // cria obstaculos e coloca no mapa
-            function criar_obstaculo(x, y, larg, alt) {
+            function criarObstaculo(x, y, largura, altura) {
                 var w = Object.keys(obstaculos).length + 1;
 
                 var obj = {
                     id: 'o' + w,
                     x: x,
                     y: y,
-                    alt: alt,
-                    larg: larg,
+                    altura: altura,
+                    largura: largura,
                 };
 
                 obstaculos['obstaculo' + w] = obj;
 
                 c.appendChild(
-                    criar_tag({
-                        tp: 'div',
-                        att: {
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
                             id: obj.id,
                             class: 'o',
                         },
                         style: {
-                            width: obj.larg + 'px',
-                            height: obj.alt + 'px',
+                            width: obj.largura + 'px',
+                            height: obj.altura + 'px',
                             left: obj.x + 'px',
                             top: obj.y + 'px',
                         },
@@ -1073,16 +1061,16 @@
                 );
             }
 
-            function criar_jogador() {
+            function criarJogador() {
                 c.appendChild(
-                    criar_tag({
-                        tp: 'div',
-                        att: {
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
                             id: jogador.id,
                         },
                         style: {
-                            width: jogador.larg + 'px',
-                            height: jogador.alt + 'px',
+                            width: jogador.largura + 'px',
+                            height: jogador.altura + 'px',
                             left: jogador.x + 'px',
                             top: jogador.y + 'px',
                         },
@@ -1090,9 +1078,9 @@
                 );
 
                 c.appendChild(
-                    criar_tag({
-                        tp: 'progress',
-                        att: {
+                    criarTag({
+                        tipo: 'progress',
+                        attributes: {
                             id: 'p_hp',
                             value: jogador.hp,
                             max: jogador.hp_max,
@@ -1143,87 +1131,87 @@
                 }
             }
 
-            function entrou_portal() {
+            function entrouPortal() {
                 for (const i in portais) {
                     if (colisao(jogador, portais[i])) {
                         reset();
 
-                        criar_mapa();
+                        criarMapa();
 
                         if (i == '1') {
-                            criar_portais(2);
+                            criarPortais(2);
 
                             if (perc(50)) {
-                                criar_portais(1);
+                                criarPortais(1);
                             }
 
                             if (perc(50)) {
-                                criar_portais(3);
+                                criarPortais(3);
                             }
 
                             if (perc(50)) {
-                                criar_portais(4);
+                                criarPortais(4);
                             }
 
-                            jogador.x = Math.round(mapa.x + mapa.larg - portais['2'].larg - jogador.larg * 2);
-                            jogador.y = Math.round(mapa.y + mapa.alt / 2 - jogador.alt / 2);
+                            jogador.x = Math.round(mapa.x + mapa.largura - portais['2'].largura - jogador.largura * 2);
+                            jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
                         } else if (i == '2') {
-                            criar_portais(1);
+                            criarPortais(1);
 
                             if (perc(50)) {
-                                criar_portais(2);
+                                criarPortais(2);
                             }
 
                             if (perc(50)) {
-                                criar_portais(3);
+                                criarPortais(3);
                             }
 
                             if (perc(50)) {
-                                criar_portais(4);
+                                criarPortais(4);
                             }
 
-                            jogador.x = Math.round(mapa.x + portais['1'].larg + jogador.larg);
-                            jogador.y = Math.round(mapa.y + mapa.alt / 2 - jogador.alt / 2);
+                            jogador.x = Math.round(mapa.x + portais['1'].largura + jogador.largura);
+                            jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
                         } else if (i == '3') {
-                            criar_portais(4);
+                            criarPortais(4);
 
                             if (perc(50)) {
-                                criar_portais(1);
+                                criarPortais(1);
                             }
 
                             if (perc(50)) {
-                                criar_portais(2);
+                                criarPortais(2);
                             }
 
                             if (perc(50)) {
-                                criar_portais(3);
+                                criarPortais(3);
                             }
 
-                            jogador.x = Math.round(mapa.x + mapa.larg / 2 - jogador.larg / 2);
-                            jogador.y = Math.round(mapa.y + mapa.alt - portais['4'].alt - jogador.alt * 2);
+                            jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
+                            jogador.y = Math.round(mapa.y + mapa.altura - portais['4'].altura - jogador.altura * 2);
                         } else if (i == '4') {
-                            criar_portais(3);
+                            criarPortais(3);
 
                             if (perc(50)) {
-                                criar_portais(1);
+                                criarPortais(1);
                             }
 
                             if (perc(50)) {
-                                criar_portais(2);
+                                criarPortais(2);
                             }
 
                             if (perc(50)) {
-                                criar_portais(4);
+                                criarPortais(4);
                             }
 
-                            jogador.x = Math.round(mapa.x + mapa.larg / 2 - jogador.larg / 2);
-                            jogador.y = Math.round(mapa.y + portais['3'].alt + jogador.alt);
+                            jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
+                            jogador.y = Math.round(mapa.y + portais['3'].altura + jogador.altura);
                         }
 
-                        criar_jogador();
+                        criarJogador();
 
                         for (k = randint(1, 3); k > 0; k--) {
-                            criar_inimigo();
+                            criarInimigo();
                         }
 
                         break;
@@ -1231,10 +1219,10 @@
                 }
             }
 
-            function pegou_item() {
+            function pegarItem() {
                 for (const i in itens) {
                     if (colisao(jogador, itens[i])) {
-                        ad_inv(itens[i].obj, i);
+                        adicionarAoInventario(itens[i].obj, i);
                     }
                 }
             }
@@ -1258,31 +1246,31 @@
             var jogador;
 
             function iniciar() {
-                criar_mapa();
+                criarMapa();
 
-                criar_portais(3);
+                criarPortais(3);
 
-                criar_inimigo();
+                criarInimigo();
 
                 jogador = {
                     id: 'p',
-                    alt: 40,
-                    larg: 40,
-                    x: Math.round(mapa.x + mapa.larg / 2 - 20),
-                    y: Math.round(mapa.y + mapa.alt - 125),
-                    face: 'direita',
+                    altura: 40,
+                    largura: 40,
+                    x: Math.round(mapa.x + mapa.largura / 2 - 20),
+                    y: Math.round(mapa.y + mapa.altura - 125),
+                    face: 'cima',
                     hp: 200,
                     hp_max: 200,
-                    atq: 50,
+                    ataque: 50,
                     inventario: {},
                     equipamento: {
                         arma: {
                             nome: 'espada_madeira',
                             texto: 'Espada de Madeira',
                             poder: 5,
-                            tipo_atq: 'c',
+                            tipoAtaque: 'c',
                         },
-                        armadura: lista_itens['vazio'],
+                        armadura: listaItens['vazio'],
                     },
                     mov: {
                         direita: false,
@@ -1292,9 +1280,9 @@
                     },
                 };
 
-                criar_jogador();
+                criarJogador();
 
-                ad_inv(lista_itens[6]);
+                adicionarAoInventario(listaItens[6]);
             }
 
             document.getElementById('novo').onclick = function () {
@@ -1308,21 +1296,21 @@
                     clearInterval(jogador.mov.esquerda);
 
                     jogador.mov.esquerda = setInterval(() => {
-                        entrou_portal();
+                        entrouPortal();
 
-                        pegou_item();
+                        pegarItem();
 
-                        mov_geral(jogador, 'esquerda');
+                        movimentoGeral(jogador, 'esquerda');
                     }, 5);
                 } else if (event.keyCode == 39) {
                     clearInterval(jogador.mov.direita);
 
                     jogador.mov.direita = setInterval(() => {
-                        entrou_portal();
+                        entrouPortal();
 
-                        pegou_item();
+                        pegarItem();
 
-                        mov_geral(jogador, 'direita');
+                        movimentoGeral(jogador, 'direita');
                     }, 5);
                 }
 
@@ -1330,21 +1318,21 @@
                     clearInterval(jogador.mov.cima);
 
                     jogador.mov.cima = setInterval(() => {
-                        entrou_portal();
+                        entrouPortal();
 
-                        pegou_item();
+                        pegarItem();
 
-                        mov_geral(jogador, 'cima');
+                        movimentoGeral(jogador, 'cima');
                     }, 5);
                 } else if (event.keyCode == 40) {
                     clearInterval(jogador.mov.baixo);
 
                     jogador.mov.baixo = setInterval(() => {
-                        entrou_portal();
+                        entrouPortal();
 
-                        pegou_item();
+                        pegarItem();
 
-                        mov_geral(jogador, 'baixo');
+                        movimentoGeral(jogador, 'baixo');
                     }, 5);
                 }
 
@@ -1356,7 +1344,7 @@
                     var div = document.getElementById('div_inv');
 
                     if (div.style.display == 'none' || div.style.display == '') {
-                        carregar_inv();
+                        mostrarInventario();
 
                         div.style.display = 'block';
                     } else {
@@ -1368,7 +1356,7 @@
                     var div = document.getElementById('div_equip');
 
                     if (div.style.display == 'none' || div.style.display == '') {
-                        carregar_equip();
+                        mostrarEquipamento();
 
                         div.style.display = 'block';
                     } else {
