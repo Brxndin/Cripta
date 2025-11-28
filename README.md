@@ -4,7 +4,7 @@ Jogo roguelike de batalha estilo RPG, com progressão em fases geradas de forma 
 
 Feito com JavaScript, HTML e CSS.
 
-OBS: Funciona melhor no Google Chrome.
+OBS: Funciona melhor no Google Chrome ou Microsoft Edge.
 
 # Controles
 
