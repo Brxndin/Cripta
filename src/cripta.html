@@ -77,21 +77,21 @@
             <h1 class="titulo">Cripta</h1>
             <button class="botao" id="novo">Novo Jogo</button>
         </div>
-        <div id="div_inv" class="menu">
+        <div id="janela_inventario" class="menu">
             <h1>Inventário</h1>
-            <div id="div_inv_content"></div>
+            <div id="conteudo_janela_inventario"></div>
         </div>
-        <div id="div_equip" class="menu">
+        <div id="janela_equipamento" class="menu">
             <h1>Status</h1>
             <div id="status"></div>
             <h1>Equipamento</h1>
-            <div id="div_equip_content"></div>
+            <div id="conteudo_janela_equipamento"></div>
         </div>
         <div id="canvas"></div>
 
         <script>
             // gera um numero inteiro pseudoaleatorio
-            function randint(min, max) {
+            function randInt(min, max) {
                 min = Math.ceil(min);
                 max = Math.floor(max + 1);
 
@@ -99,28 +99,28 @@
             }
 
             //retorna true ou false de acordo com a chance em porcentagem informada
-            //exemplo: perc(50) tem 50% de chance de retornar true
-            function perc(n) {
-                return randint(1, 100) <= n;
+            //exemplo: chancePercentual(50) tem 50% de chance de retornar true
+            function chancePercentual(n) {
+                return randInt(1, 100) <= n;
             }
 
-            c = document.getElementById('canvas');
+            canvas = document.getElementById('canvas');
 
-            function criarTag(obj) {
-                var tag = document.createElement(obj.tipo);
+            function criarTag(objeto) {
+                var tag = document.createElement(objeto.tipo);
                 tag.style.position = 'absolute';
 
-                for (const i in obj) {
+                for (const i in objeto) {
                     if (i == 'style') {
-                        for (const j in obj[i]) {
-                            tag.style[j] = obj[i][j];
+                        for (const j in objeto[i]) {
+                            tag.style[j] = objeto[i][j];
                         }
                     } else if (i == 'attributes') {
-                        for (const j in obj[i]) {
-                            tag.setAttribute(j, obj[i][j]);
+                        for (const j in objeto[i]) {
+                            tag.setAttribute(j, objeto[i][j]);
                         }
                     } else if (i != 'tipo') {
-                        tag[i] = obj[i];
+                        tag[i] = objeto[i];
                     }
                 }
 
@@ -133,10 +133,10 @@
                     y: Math.round(screen.height / 7),
                     altura: Math.round(screen.height * (55.5 / 100)),
                     largura: Math.round(screen.width * (50 / 100)),
-                    func: function () {
-                        if (perc(33)) {
+                    funcao: function () {
+                        if (chancePercentual(33)) {
                             criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
-                        } else if (perc(33)) {
+                        } else if (chancePercentual(33)) {
                             criarObstaculo(this.x, 550, 500, 50);
                             criarObstaculo(this.x + this.largura - 500, 300, 500, 50);
                         }
@@ -147,8 +147,8 @@
                     y: Math.round(screen.height / 7),
                     altura: Math.round(screen.height * (55.5 / 100)),
                     largura: Math.round(screen.width * (20 / 100)),
-                    func: function () {
-                        if (perc(50)) {
+                    funcao: function () {
+                        if (chancePercentual(50)) {
                             criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
                         }
                     },
@@ -161,7 +161,7 @@
                     id: 'po1',
                     largura: 30,
                     altura: 90,
-                    func: () => {
+                    funcao: () => {
                         criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
                         criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
                     },
@@ -171,7 +171,7 @@
                     id: 'po2',
                     largura: 30,
                     altura: 90,
-                    func: () => {
+                    funcao: () => {
                         criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
                         criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
                     },
@@ -181,7 +181,7 @@
                     id: 'po3',
                     largura: 90,
                     altura: 30,
-                    func: () => {
+                    funcao: () => {
                         criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y, 30, 40);
                         criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y, 30, 40);
                     },
@@ -191,7 +191,7 @@
                     id: 'po4',
                     largura: 90,
                     altura: 30,
-                    func: () => {
+                    funcao: () => {
                         criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y + mapa.altura - 40, 30, 40);
                         criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y + mapa.altura - 40, 30, 40);
                     },
@@ -217,7 +217,7 @@
 
                 portais[n] = listaPortais[n];
 
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
@@ -233,15 +233,15 @@
                     })
                 );
 
-                portais[n].func();
+                portais[n].funcao();
             }
 
             function criarMapa() {
-                mapa = listaMapas[randint(0, 1)];
+                mapa = listaMapas[randInt(0, 1)];
 
                 mapa.id = 'mapa';
 
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
@@ -256,8 +256,17 @@
                     })
                 );
 
-                mapa.func();
+                mapa.funcao();
             }
+
+            // tipos de itens
+            var tipoItemArma = 'a';
+            var tipoItemArmadura = 'ar';
+            var tipoItemCura = 'c';
+
+            // tipos de ataque
+            var tipoAtaqueADistancia = 'd';
+            var tipoAtaqueCorporal = 'c';
 
             var listaItens = {
                 vazio: {
@@ -269,46 +278,46 @@
                     nome: 'espada_ferro',
                     texto: 'Espada de Ferro',
                     poder: 40,
-                    tipo: 'arma',
-                    tipoAtaque: 'c',
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueCorporal,
                 },
                 1: {
                     nome: 'armadura_ferro',
                     texto: 'Armadura de Ferro',
                     poder: 40,
-                    tipo: 'armadura',
+                    tipo: tipoItemArmadura,
                 },
                 2: {
                     nome: 'espada_ouro',
                     texto: 'Espada Dourada',
                     poder: 70,
-                    tipo: 'arma',
-                    tipoAtaque: 'c',
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueCorporal,
                 },
                 3: {
                     nome: 'armadura_trevas',
                     texto: 'Armadura das Trevas',
                     poder: 60,
-                    tipo: 'armadura',
+                    tipo: tipoItemArmadura,
                 },
                 4: {
                     nome: 'pocao_hp',
-                    texto: 'Poção de HP',
+                    texto: 'Poção',
                     poder: 25,
-                    tipo: 'cura',
+                    tipo: tipoItemCura,
                 },
                 5: {
                     nome: 'pocao_grande_hp',
-                    texto: 'Poção Grande de HP',
+                    texto: 'Poção Grande',
                     poder: 50,
-                    tipo: 'cura',
+                    tipo: tipoItemCura,
                 },
                 6: {
                     nome: 'arco_madeira',
                     texto: 'Arco de Madeira',
                     poder: 30,
-                    tipo: 'arma',
-                    tipoAtaque: 'd',
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueADistancia,
                 },
             };
 
@@ -317,7 +326,7 @@
                     nome: 'guerreiro_esquecido',
                     altura: 40,
                     largura: 40,
-                    hp: 200,
+                    pontosDeVida: 200,
                     ataque: 10,
                     class: 'i',
                     equipamento: {
@@ -325,7 +334,7 @@
                             nome: 'espada_simples',
                             texto: 'Espada Simples',
                             poder: 10,
-                            tipoAtaque: 'c',
+                            tipoAtaque: tipoAtaqueCorporal,
                         },
                         armadura: {
                             nome: 'armadura_simples',
@@ -338,7 +347,7 @@
                     nome: 'zumbi',
                     altura: 40,
                     largura: 40,
-                    hp: 200,
+                    pontosDeVida: 200,
                     ataque: 10,
                     class: 'zumbi',
                     equipamento: {
@@ -346,7 +355,7 @@
                             nome: 'espada_simples',
                             texto: 'Espada Simples',
                             poder: 10,
-                            tipoAtaque: 'c',
+                            tipoAtaque: tipoAtaqueCorporal,
                         },
                         armadura: {
                             nome: 'armadura_simples',
@@ -366,65 +375,66 @@
             var armas = {};
 
             // faz um objeto mudar de posição
-            function andar(obj, direcao) {
+            function andar(objeto, direcao) {
                 if (direcao == 'direita') {
-                    if (obj.x + obj.largura < mapa.x + mapa.largura) {
-                        obj.x++;
-                        document.getElementById(obj.id).style.left = obj.x + 'px';
+                    if (objeto.x + objeto.largura < mapa.x + mapa.largura) {
+                        objeto.x++;
+                        document.getElementById(objeto.id).style.left = objeto.x + 'px';
                     }
                 } else if (direcao == 'esquerda') {
-                    if (obj.x > mapa.x) {
-                        obj.x--;
-                        document.getElementById(obj.id).style.left = obj.x + 'px';
+                    if (objeto.x > mapa.x) {
+                        objeto.x--;
+                        document.getElementById(objeto.id).style.left = objeto.x + 'px';
                     }
                 } else if (direcao == 'cima') {
-                    if (obj.y > mapa.y) {
-                        obj.y--;
-                        document.getElementById(obj.id).style.top = obj.y + 'px';
+                    if (objeto.y > mapa.y) {
+                        objeto.y--;
+                        document.getElementById(objeto.id).style.top = objeto.y + 'px';
                     }
                 } else if (direcao == 'baixo') {
-                    if (obj.y + obj.altura < mapa.y + mapa.altura) {
-                        obj.y++;
-                        document.getElementById(obj.id).style.top = obj.y + 'px';
+                    if (objeto.y + objeto.altura < mapa.y + mapa.altura) {
+                        objeto.y++;
+                        document.getElementById(objeto.id).style.top = objeto.y + 'px';
                     }
                 }
             }
 
-            function pontos(obj) {
+            function pontos(objeto) {
+                // os pontos "a", "b", "c" e "d" são os vértices
                 return {
                     a: {
-                        x: obj.x,
-                        y: obj.y,
+                        x: objeto.x,
+                        y: objeto.y,
                     },
                     b: {
-                        x: obj.x,
-                        y: obj.y + obj.altura,
+                        x: objeto.x,
+                        y: objeto.y + objeto.altura,
                     },
                     c: {
-                        x: obj.x + obj.largura,
-                        y: obj.y,
+                        x: objeto.x + objeto.largura,
+                        y: objeto.y,
                     },
                     d: {
-                        x: obj.x + obj.largura,
-                        y: obj.y + obj.altura,
+                        x: objeto.x + objeto.largura,
+                        y: objeto.y + objeto.altura,
                     },
                 };
             }
 
             // valida o movimento de um objeto baseado na direção e colisão com outro objeto
-            function movimento(obj1, obj2, direcao) {
-                obj1.face = direcao;
+            function movimento(objeto1, objeto2, direcao) {
+                objeto1.face = direcao;
 
-                var pt1 = pontos(obj1);
-                var pt2 = pontos(obj2);
+                var pontosObjeto1 = pontos(objeto1);
+                var pontosObjeto2 = pontos(objeto2);
 
                 if (direcao == 'direita') {
-                    if (pt1.c.x + 1 == pt2.b.x) {
-                        if (pt1.c.y >= pt2.a.y && pt1.c.y <= pt2.b.y) {
+                    if (pontosObjeto1.c.x + 1 == pontosObjeto2.b.x) {
+                        if (pontosObjeto1.c.y >= pontosObjeto2.a.y && pontosObjeto1.c.y <= pontosObjeto2.b.y) {
                             return false;
-                        } else if (pt1.d.y >= pt2.a.y && pt1.d.y <= pt2.b.y) {
+                        } else if (pontosObjeto1.d.y >= pontosObjeto2.a.y && pontosObjeto1.d.y <= pontosObjeto2.b.y) {
                             return false;
-                        } else if (pt1.c.y <= pt2.a.y && pt1.d.y >= pt2.b.y) {
+                        } else if (pontosObjeto1.c.y <= pontosObjeto2.a.y && pontosObjeto1.d.y >= pontosObjeto2.b.y) {
                             return false;
                         }
                         
@@ -433,12 +443,12 @@
                     
                     return true;
                 } else if (direcao == 'esquerda') {
-                    if (pt1.b.x - 1 == pt2.c.x) {
-                        if (pt1.b.y >= pt2.c.y && pt1.b.y <= pt2.d.y) {
+                    if (pontosObjeto1.b.x - 1 == pontosObjeto2.c.x) {
+                        if (pontosObjeto1.b.y >= pontosObjeto2.c.y && pontosObjeto1.b.y <= pontosObjeto2.d.y) {
                             return false;
-                        } else if (pt1.a.y >= pt2.c.y && pt1.a.y <= pt2.d.y) {
+                        } else if (pontosObjeto1.a.y >= pontosObjeto2.c.y && pontosObjeto1.a.y <= pontosObjeto2.d.y) {
                             return false;
-                        } else if (pt1.a.y <= pt2.c.y && pt1.b.y >= pt2.d.y) {
+                        } else if (pontosObjeto1.a.y <= pontosObjeto2.c.y && pontosObjeto1.b.y >= pontosObjeto2.d.y) {
                             return false;
                         }
 
@@ -447,12 +457,12 @@
 
                     return true;
                 } else if (direcao == 'cima') {
-                    if (pt1.a.y - 1 == pt2.b.y) {
-                        if (pt1.c.x >= pt2.b.x && pt1.c.x <= pt2.d.x) {
+                    if (pontosObjeto1.a.y - 1 == pontosObjeto2.b.y) {
+                        if (pontosObjeto1.c.x >= pontosObjeto2.b.x && pontosObjeto1.c.x <= pontosObjeto2.d.x) {
                             return false;
-                        } else if (pt1.a.x >= pt2.b.x && pt1.a.x <= pt2.d.x) {
+                        } else if (pontosObjeto1.a.x >= pontosObjeto2.b.x && pontosObjeto1.a.x <= pontosObjeto2.d.x) {
                             return false;
-                        } else if (pt1.a.x <= pt2.b.x && pt1.c.x >= pt2.d.x) {
+                        } else if (pontosObjeto1.a.x <= pontosObjeto2.b.x && pontosObjeto1.c.x >= pontosObjeto2.d.x) {
                             return false;
                         } 
 
@@ -461,12 +471,12 @@
                         
                     return true;
                 } else if (direcao == 'baixo') {
-                    if (pt1.b.y + 1 == pt2.a.y) {
-                        if (pt1.b.x >= pt2.a.x && pt1.b.x <= pt2.c.x) {
+                    if (pontosObjeto1.b.y + 1 == pontosObjeto2.a.y) {
+                        if (pontosObjeto1.b.x >= pontosObjeto2.a.x && pontosObjeto1.b.x <= pontosObjeto2.c.x) {
                             return false;
-                        } else if (pt1.d.x >= pt2.a.x && pt1.d.x <= pt2.c.x) {
+                        } else if (pontosObjeto1.d.x >= pontosObjeto2.a.x && pontosObjeto1.d.x <= pontosObjeto2.c.x) {
                             return false;
-                        } else if (pt1.b.x <= pt2.a.x && pt1.d.x >= pt2.c.x) {
+                        } else if (pontosObjeto1.b.x <= pontosObjeto2.a.x && pontosObjeto1.d.x >= pontosObjeto2.c.x) {
                             return false;
                         }
                         
@@ -480,64 +490,64 @@
             }
 
             // verifica a interação de movimento e colisão entre todos os objetos (jogador, inimigos e obstáculos)
-            function movimentoGeral(obj, direcao) {
+            function movimentoGeral(objeto, direcao) {
                 var e = true;
 
                 for (const i in inimigos) {
-                    if (obj.id != inimigos[i].id) {
-                        if (!movimento(obj, inimigos[i], direcao)) {
+                    if (objeto.id != inimigos[i].id) {
+                        if (!movimento(objeto, inimigos[i], direcao)) {
                             e = false;
                         }
                     }
                 }
 
                 for (const i in obstaculos) {
-                    if (obj.id != obstaculos[i].id) {
-                        if (!movimento(obj, obstaculos[i], direcao)) {
+                    if (objeto.id != obstaculos[i].id) {
+                        if (!movimento(objeto, obstaculos[i], direcao)) {
                             e = false;
                         }
                     }
                 }
 
                 if (e) {
-                    andar(obj, direcao);
+                    andar(objeto, direcao);
                 }
             }
 
             // verifica se houve colisao entre dois objetos ou se ocupam o mesmo lugar (é mais usado no ataque)
-            function colisao(obj1, obj2) {
-                var pt1 = pontos(obj1);
-                var pt2 = pontos(obj2);
+            function colisao(objeto1, objeto2) {
+                var pontosObjeto1 = pontos(objeto1);
+                var pontosObjeto2 = pontos(objeto2);
 
-                return pt1.c.x + 1 >= pt2.b.x && pt1.b.x - 1 <= pt2.c.x && pt1.a.y - 1 <= pt2.b.y && pt1.b.y + 1 >= pt2.a.y;
+                return pontosObjeto1.c.x + 1 >= pontosObjeto2.b.x && pontosObjeto1.b.x - 1 <= pontosObjeto2.c.x && pontosObjeto1.a.y - 1 <= pontosObjeto2.b.y && pontosObjeto1.b.y + 1 >= pontosObjeto2.a.y;
             }
 
             function criarItem(n, x_i, y_i) {
                 var w = Object.keys(itens).length + 1;
 
-                obj = {
+                objeto = {
                     id: 'it' + w,
                     x: x_i,
                     y: y_i,
                     altura: 30,
                     largura: 30,
-                    obj: listaItens[n],
+                    objeto: listaItens[n],
                 };
 
-                itens['item' + w] = obj;
+                itens['item' + w] = objeto;
 
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
-                            id: obj.id,
+                            id: objeto.id,
                             class: 'it',
                         },
                         style: {
-                            width: obj.largura + 'px',
-                            height: obj.altura + 'px',
-                            left: obj.x + 'px',
-                            top: obj.y + 'px',
+                            width: objeto.largura + 'px',
+                            height: objeto.altura + 'px',
+                            left: objeto.x + 'px',
+                            top: objeto.y + 'px',
                         },
                     })
                 );
@@ -549,7 +559,7 @@
                 document.getElementById('status').appendChild(
                     criarTag({
                         tipo: 'p',
-                        innerHTML: 'Vida: ' + jogador.hp + '/' + jogador.hp_max,
+                        innerHTML: 'Vida: ' + jogador.pontosDeVida + '/' + jogador.pontosDeVidaMaximo,
                         style: {
                             fontSize: '20px',
                             color: 'white',
@@ -570,7 +580,7 @@
                     })
                 );
 
-                var divEquipamento = document.getElementById('div_equip_content');
+                var divEquipamento = document.getElementById('conteudo_janela_equipamento');
                 divEquipamento.innerHTML = '';
 
                 for (const i in jogador.equipamento) {
@@ -609,8 +619,8 @@
             }
 
             function mostrarInventario() {
-                var d = document.getElementById('div_inv_content');
-                d.innerHTML = '';
+                var divInventario = document.getElementById('conteudo_janela_inventario');
+                divInventario.innerHTML = '';
 
                 for (const i in jogador.inventario) {
                     var string = criarTag({
@@ -623,7 +633,7 @@
                         },
                     });
 
-                    if (jogador.inventario[i].tipo == 'cura') {
+                    if (jogador.inventario[i].tipo == tipoItemCura) {
                         var b = criarTag({
                             tipo: 'button',
                             innerHTML: 'Usar',
@@ -661,21 +671,21 @@
                         string.appendChild(b);
                     }
 
-                    d.appendChild(string);
+                    divInventario.appendChild(string);
                 }
             }
 
-            function adicionarAoInventario(obj, p = undefined) {
+            function adicionarAoInventario(objeto, p = undefined) {
                 var item = {
-                    nome: obj.nome,
-                    texto: obj.texto,
-                    poder: obj.poder,
-                    tipo: obj.tipo,
+                    nome: objeto.nome,
+                    texto: objeto.texto,
+                    poder: objeto.poder,
+                    tipo: objeto.tipo,
                     quantidade: 1,
                 };
 
-                if (typeof obj.tipoAtaque != 'undefined') {
-                    item.tipoAtaque = obj.tipoAtaque;
+                if (typeof objeto.tipoAtaque != 'undefined') {
+                    item.tipoAtaque = objeto.tipoAtaque;
                 }
 
                 if (typeof jogador.inventario[item.nome] != 'undefined') {
@@ -703,25 +713,25 @@
                 }
             }
 
-            function adicionarAoEquipamento(obj) {
+            function adicionarAoEquipamento(objeto) {
                 var item = {
-                    nome: obj.nome,
-                    texto: obj.texto,
-                    poder: obj.poder,
+                    nome: objeto.nome,
+                    texto: objeto.texto,
+                    poder: objeto.poder,
                 };
 
-                if (typeof obj.tipoAtaque != 'undefined') {
-                    item.tipoAtaque = obj.tipoAtaque;
+                if (typeof objeto.tipoAtaque != 'undefined') {
+                    item.tipoAtaque = objeto.tipoAtaque;
                 }
 
-                removerDoEquipamento(obj.tipo);
+                removerDoEquipamento(objeto.tipo);
 
-                jogador.equipamento[obj.tipo] = item;
+                jogador.equipamento[objeto.tipo] = item;
 
-                if (obj.quantidade > 1) {
-                    jogador.inventario[obj.nome].quantidade--;
+                if (objeto.quantidade > 1) {
+                    jogador.inventario[objeto.nome].quantidade--;
                 } else {
-                    delete jogador.inventario[obj.nome];
+                    delete jogador.inventario[objeto.nome];
                 }
             }
 
@@ -731,46 +741,46 @@
                 var w = contador_arma + 1;
                 contador_arma++;
 
-                var obj = {
+                var objeto = {
                     id: 'ar' + w,
                 };
 
                 if (atacante.face == 'esquerda') {
-                    obj.largura = o_larg;
-                    obj.altura = o_alt;
-                    obj.x = atacante.x - obj.largura;
-                    obj.y = Math.round(atacante.y + atacante.altura / 2 - obj.altura / 2);
+                    objeto.largura = o_larg;
+                    objeto.altura = o_alt;
+                    objeto.x = atacante.x - objeto.largura;
+                    objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
                 } else if (atacante.face == 'direita') {
-                    obj.largura = o_larg;
-                    obj.altura = o_alt;
-                    obj.x = atacante.x + atacante.largura;
-                    obj.y = Math.round(atacante.y + atacante.altura / 2 - obj.altura / 2);
+                    objeto.largura = o_larg;
+                    objeto.altura = o_alt;
+                    objeto.x = atacante.x + atacante.largura;
+                    objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
                 } else if (atacante.face == 'cima') {
-                    obj.largura = o_alt;
-                    obj.altura = o_larg;
-                    obj.x = Math.round(atacante.x + atacante.largura / 2 - obj.largura / 2);
-                    obj.y = atacante.y - obj.altura;
+                    objeto.largura = o_alt;
+                    objeto.altura = o_larg;
+                    objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
+                    objeto.y = atacante.y - objeto.altura;
                 } else if (atacante.face == 'baixo') {
-                    obj.largura = o_alt;
-                    obj.altura = o_larg;
-                    obj.x = Math.round(atacante.x + atacante.largura / 2 - obj.largura / 2);
-                    obj.y = atacante.y + atacante.altura;
+                    objeto.largura = o_alt;
+                    objeto.altura = o_larg;
+                    objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
+                    objeto.y = atacante.y + atacante.altura;
                 }
 
-                armas['arma' + w] = obj;
+                armas['arma' + w] = objeto;
 
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
-                            id: obj.id,
+                            id: objeto.id,
                             class: 'ar',
                         },
                         style: {
-                            width: obj.largura + 'px',
-                            height: obj.altura + 'px',
-                            left: obj.x + 'px',
-                            top: obj.y + 'px',
+                            width: objeto.largura + 'px',
+                            height: objeto.altura + 'px',
+                            left: objeto.x + 'px',
+                            top: objeto.y + 'px',
                         },
                     })
                 );
@@ -778,16 +788,16 @@
                 return 'arma' + w;
             }
 
-            function atacar(obj) {
-                var arma_id = criarArma(obj, 25, 6);
+            function atacar(objeto) {
+                var arma_id = criarArma(objeto, 25, 6);
                 var ar = document.getElementById(armas[arma_id].id);
 
                 //
 
-                if (obj.equipamento.arma.tipoAtaque == 'd') {
-                    var projetil_id = criarArma(obj, 25, 6);
+                if (objeto.equipamento.arma.tipoAtaque == 'd') {
+                    var projetil_id = criarArma(objeto, 25, 6);
                     var pr = document.getElementById(armas[projetil_id].id);
-                    var face = obj.face;
+                    var face = objeto.face;
                     var pos = {
                         x: armas[projetil_id].x,
                         y: armas[projetil_id].y,
@@ -798,12 +808,12 @@
 
                         for (const i in inimigos) {
                             if (colisao(armas[projetil_id], inimigos[i])) {
-                                inimigos[i].hp = Math.round(
-                                    inimigos[i].hp - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
+                                inimigos[i].pontosDeVida = Math.round(
+                                    inimigos[i].pontosDeVida - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
                                 );
 
-                                if (inimigos[i].hp <= 0) {
-                                    criarItem(randint(0, 6), inimigos[i].x, inimigos[i].y);
+                                if (inimigos[i].pontosDeVida <= 0) {
+                                    criarItem(randInt(0, 6), inimigos[i].x, inimigos[i].y);
                                     //criarItem(3);
 
                                     clearInterval(inimigos[i].mov);
@@ -831,11 +841,11 @@
 
                 //
 
-                if (obj.id != jogador.id) {
-                    if (colisao(armas[arma_id], obj)) {
-                        jogador.hp = Math.round(jogador.hp - (obj.ataque + obj.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (obj.ataque + obj.equipamento.arma.poder)));
+                if (objeto.id != jogador.id) {
+                    if (colisao(armas[arma_id], objeto)) {
+                        jogador.pontosDeVida = Math.round(jogador.pontosDeVida - (objeto.ataque + objeto.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (objeto.ataque + objeto.equipamento.arma.poder)));
 
-                        if (jogador.hp <= 0) {
+                        if (jogador.pontosDeVida <= 0) {
                             delete armas[arma_id];
                             ar.remove();
                             reset();
@@ -849,18 +859,18 @@
 
                             document.getElementById('inicial').style.display = 'block';
                         } else {
-                            document.getElementById('p_hp').setAttribute('value', jogador.hp);
+                            document.getElementById('p_hp').setAttribute('value', jogador.pontosDeVida);
                         }
                     }
 
-                    obj.pa = false;
+                    objeto.pa = false;
 
                     setTimeout(() => {
                         delete armas[arma_id];
                         ar.remove();
 
                         setTimeout(() => {
-                            obj.pa = true;
+                            objeto.pa = true;
                         }, 300);
                     }, 40);
                 } else {
@@ -871,12 +881,12 @@
 
                     for (const i in inimigos) {
                         if (colisao(armas[arma_id], inimigos[i])) {
-                            inimigos[i].hp = Math.round(
-                                inimigos[i].hp - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
+                            inimigos[i].pontosDeVida = Math.round(
+                                inimigos[i].pontosDeVida - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
                             );
 
-                            if (inimigos[i].hp <= 0) {
-                                criarItem(randint(0, 6), inimigos[i].x, inimigos[i].y);
+                            if (inimigos[i].pontosDeVida <= 0) {
+                                criarItem(randInt(0, 6), inimigos[i].x, inimigos[i].y);
                                 //criarItem(3);
 
                                 clearInterval(inimigos[i].mov);
@@ -891,58 +901,58 @@
             }
 
             // inteligência artificial básica para os inimigos
-            function ia(obj) {
-                if (jogador.x + jogador.largura < obj.x - 100 || jogador.x > obj.x + obj.largura + 100 || jogador.y + jogador.altura < obj.y - 100 || jogador.y > obj.y + obj.altura + 100) {
-                    if (obj.x < obj.inix + 20 && obj.bool == true) {
-                        obj.bool = true;
+            function ia(objeto) {
+                if (jogador.x + jogador.largura < objeto.x - 100 || jogador.x > objeto.x + objeto.largura + 100 || jogador.y + jogador.altura < objeto.y - 100 || jogador.y > objeto.y + objeto.altura + 100) {
+                    if (objeto.x < objeto.inix + 20 && objeto.bool == true) {
+                        objeto.bool = true;
 
-                        movimentoGeral(obj, 'direita');
+                        movimentoGeral(objeto, 'direita');
                     } else {
-                        obj.bool = false;
+                        objeto.bool = false;
                     }
 
-                    if (obj.x > obj.inix - 20 && obj.bool == false) {
-                        obj.bool = false;
+                    if (objeto.x > objeto.inix - 20 && objeto.bool == false) {
+                        objeto.bool = false;
 
-                        movimentoGeral(obj, 'esquerda');
+                        movimentoGeral(objeto, 'esquerda');
                     } else {
-                        obj.bool = true;
+                        objeto.bool = true;
                     }
                 } else {
-                    if (jogador.x < obj.x) {
-                        if (movimento(obj, jogador, 'esquerda')) {
-                            movimentoGeral(obj, 'esquerda');
+                    if (jogador.x < objeto.x) {
+                        if (movimento(objeto, jogador, 'esquerda')) {
+                            movimentoGeral(objeto, 'esquerda');
                         } else {
-                            if (obj.pa) {
-                                atacar(obj);
+                            if (objeto.pa) {
+                                atacar(objeto);
                             }
                         }
-                    } else if (jogador.x == obj.x) {
+                    } else if (jogador.x == objeto.x) {
                     } else {
-                        if (movimento(obj, jogador, 'direita')) {
-                            movimentoGeral(obj, 'direita');
+                        if (movimento(objeto, jogador, 'direita')) {
+                            movimentoGeral(objeto, 'direita');
                         } else {
-                            if (obj.pa) {
-                                atacar(obj);
+                            if (objeto.pa) {
+                                atacar(objeto);
                             }
                         }
                     }
 
-                    if (jogador.y < obj.y) {
-                        if (movimento(obj, jogador, 'cima')) {
-                            movimentoGeral(obj, 'cima');
+                    if (jogador.y < objeto.y) {
+                        if (movimento(objeto, jogador, 'cima')) {
+                            movimentoGeral(objeto, 'cima');
                         } else {
-                            if (obj.pa) {
-                                atacar(obj);
+                            if (objeto.pa) {
+                                atacar(objeto);
                             }
                         }
-                    } else if (jogador.y == obj.y) {
+                    } else if (jogador.y == objeto.y) {
                     } else {
-                        if (movimento(obj, jogador, 'baixo')) {
-                            movimentoGeral(obj, 'baixo');
+                        if (movimento(objeto, jogador, 'baixo')) {
+                            movimentoGeral(objeto, 'baixo');
                         } else {
-                            if (obj.pa) {
-                                atacar(obj);
+                            if (objeto.pa) {
+                                atacar(objeto);
                             }
                         }
                     }
@@ -953,16 +963,16 @@
             function criarInimigo() {
                 var w = Object.keys(inimigos).length + 1;
 
-                var ini = listaInimigos[randint(0, 1)];
+                var ini = listaInimigos[randInt(0, 1)];
 
-                var obj = {
+                var objeto = {
                     id: 'i' + w,
                     bool: true,
                     pa: true,
                     face: 'direita',
                     altura: ini.altura,
                     largura: ini.largura,
-                    hp: ini.hp,
+                    pontosDeVida: ini.pontosDeVida,
                     ataque: ini.ataque,
                     class: ini.class,
                     equipamento: {
@@ -989,38 +999,38 @@
                     bool.o = true;
                     bool.i = true;
 
-                    obj.x = obj.inix = randint(mapa.x + 130, mapa.x + mapa.largura - 230);
-                    obj.y = obj.iniy = randint(mapa.y + 130, mapa.y + mapa.altura - 230);
+                    objeto.x = objeto.inix = randInt(mapa.x + 130, mapa.x + mapa.largura - 230);
+                    objeto.y = objeto.iniy = randInt(mapa.y + 130, mapa.y + mapa.altura - 230);
 
                     for (const i in inimigos) {
-                        if (colisao(inimigos[i], obj)) {
+                        if (colisao(inimigos[i], objeto)) {
                             bool.i = false;
                             break;
                         }
                     }
 
                     for (const i in obstaculos) {
-                        if (colisao(obstaculos[i], obj)) {
+                        if (colisao(obstaculos[i], objeto)) {
                             bool.o = false;
                             break;
                         }
                     }
                 } while (bool.i == false || bool.o == false);
 
-                inimigos['inimigo' + w] = obj;
+                inimigos['inimigo' + w] = objeto;
 
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
-                            id: obj.id,
-                            class: obj.class,
+                            id: objeto.id,
+                            class: objeto.class,
                         },
                         style: {
-                            width: obj.largura + 'px',
-                            height: obj.altura + 'px',
-                            left: obj.x + 'px',
-                            top: obj.y + 'px',
+                            width: objeto.largura + 'px',
+                            height: objeto.altura + 'px',
+                            left: objeto.x + 'px',
+                            top: objeto.y + 'px',
                         },
                     })
                 );
@@ -1034,7 +1044,7 @@
             function criarObstaculo(x, y, largura, altura) {
                 var w = Object.keys(obstaculos).length + 1;
 
-                var obj = {
+                var objeto = {
                     id: 'o' + w,
                     x: x,
                     y: y,
@@ -1042,27 +1052,27 @@
                     largura: largura,
                 };
 
-                obstaculos['obstaculo' + w] = obj;
+                obstaculos['obstaculo' + w] = objeto;
 
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
-                            id: obj.id,
+                            id: objeto.id,
                             class: 'o',
                         },
                         style: {
-                            width: obj.largura + 'px',
-                            height: obj.altura + 'px',
-                            left: obj.x + 'px',
-                            top: obj.y + 'px',
+                            width: objeto.largura + 'px',
+                            height: objeto.altura + 'px',
+                            left: objeto.x + 'px',
+                            top: objeto.y + 'px',
                         },
                     })
                 );
             }
 
             function criarJogador() {
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
@@ -1077,13 +1087,13 @@
                     })
                 );
 
-                c.appendChild(
+                canvas.appendChild(
                     criarTag({
                         tipo: 'progress',
                         attributes: {
                             id: 'p_hp',
-                            value: jogador.hp,
-                            max: jogador.hp_max,
+                            value: jogador.pontosDeVida,
+                            max: jogador.pontosDeVidaMaximo,
                         },
                         style: {
                             width: '200px',
@@ -1141,15 +1151,15 @@
                         if (i == '1') {
                             criarPortais(2);
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(1);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(3);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(4);
                             }
 
@@ -1158,15 +1168,15 @@
                         } else if (i == '2') {
                             criarPortais(1);
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(2);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(3);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(4);
                             }
 
@@ -1175,15 +1185,15 @@
                         } else if (i == '3') {
                             criarPortais(4);
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(1);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(2);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(3);
                             }
 
@@ -1192,15 +1202,15 @@
                         } else if (i == '4') {
                             criarPortais(3);
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(1);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(2);
                             }
 
-                            if (perc(50)) {
+                            if (chancePercentual(50)) {
                                 criarPortais(4);
                             }
 
@@ -1210,7 +1220,7 @@
 
                         criarJogador();
 
-                        for (k = randint(1, 3); k > 0; k--) {
+                        for (k = randInt(1, 3); k > 0; k--) {
                             criarInimigo();
                         }
 
@@ -1222,16 +1232,16 @@
             function pegarItem() {
                 for (const i in itens) {
                     if (colisao(jogador, itens[i])) {
-                        adicionarAoInventario(itens[i].obj, i);
+                        adicionarAoInventario(itens[i].objeto, i);
                     }
                 }
             }
 
             function curar(pocao_nome) {
-                if (jogador.hp + (jogador.hp_max * jogador.inventario[pocao_nome].poder) / 100 <= jogador.hp_max) {
-                    jogador.hp = jogador.hp + (jogador.hp_max * jogador.inventario[pocao_nome].poder) / 100;
+                if (jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100 <= jogador.pontosDeVidaMaximo) {
+                    jogador.pontosDeVida = jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100;
                 } else {
-                    jogador.hp = jogador.hp_max;
+                    jogador.pontosDeVida = jogador.pontosDeVidaMaximo;
                 }
 
                 if (jogador.inventario[pocao_nome].quantidade == 1) {
@@ -1240,7 +1250,7 @@
                     jogador.inventario[pocao_nome].quantidade--;
                 }
 
-                document.getElementById('p_hp').setAttribute('value', jogador.hp);
+                document.getElementById('p_hp').setAttribute('value', jogador.pontosDeVida);
             }
 
             var jogador;
@@ -1259,8 +1269,8 @@
                     x: Math.round(mapa.x + mapa.largura / 2 - 20),
                     y: Math.round(mapa.y + mapa.altura - 125),
                     face: 'cima',
-                    hp: 200,
-                    hp_max: 200,
+                    pontosDeVida: 200,
+                    pontosDeVidaMaximo: 200,
                     ataque: 50,
                     inventario: {},
                     equipamento: {
@@ -1268,7 +1278,7 @@
                             nome: 'espada_madeira',
                             texto: 'Espada de Madeira',
                             poder: 5,
-                            tipoAtaque: 'c',
+                            tipoAtaque: tipoAtaqueCorporal,
                         },
                         armadura: listaItens['vazio'],
                     },
@@ -1341,7 +1351,7 @@
                 }
 
                 if (event.keyCode == 73) {
-                    var div = document.getElementById('div_inv');
+                    var div = document.getElementById('janela_inventario');
 
                     if (div.style.display == 'none' || div.style.display == '') {
                         mostrarInventario();
@@ -1353,7 +1363,7 @@
                 }
 
                 if (event.keyCode == 69) {
-                    var div = document.getElementById('div_equip');
+                    var div = document.getElementById('janela_equipamento');
 
                     if (div.style.display == 'none' || div.style.display == '') {
                         mostrarEquipamento();
