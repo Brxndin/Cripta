@@ -658,35 +658,37 @@
                 canvas.appendChild(aguaFonte);
             }
 
-            function criarItem(n, x_i, y_i) {
-                var w = tamanhoObjeto(itens) + 1;
+            function criarItem(item, x, y) {
+                if (item.nome != 'vazio') {
+                    var idKey = tamanhoObjeto(itens) + 1;
 
-                objeto = {
-                    id: 'it' + w,
-                    x: x_i,
-                    y: y_i,
-                    altura: 30,
-                    largura: 30,
-                    objeto: listaItens[n],
-                };
+                    objeto = {
+                        id: 'it' + idKey,
+                        x: x,
+                        y: y,
+                        altura: 30,
+                        largura: 30,
+                        objeto: item,
+                    };
 
-                itens['item' + w] = objeto;
+                    itens['item' + idKey] = objeto;
 
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: objeto.id,
-                            class: 'it',
-                        },
-                        style: {
-                            width: objeto.largura + 'px',
-                            height: objeto.altura + 'px',
-                            left: objeto.x + 'px',
-                            top: objeto.y + 'px',
-                        },
-                    })
-                );
+                    canvas.appendChild(
+                        criarTag({
+                            tipo: 'div',
+                            attributes: {
+                                id: objeto.id,
+                                class: 'it',
+                            },
+                            style: {
+                                width: objeto.largura + 'px',
+                                height: objeto.altura + 'px',
+                                left: objeto.x + 'px',
+                                top: objeto.y + 'px',
+                            },
+                        })
+                    );
+                }
             }
 
             function mostrarLoja() {
@@ -967,39 +969,40 @@
                 }
             }
 
-            var contador_arma = 0;
+            var contadorArma = 0;
 
-            function criarArma(atacante, o_larg, o_alt) {
-                var w = contador_arma + 1;
-                contador_arma++;
+            function criarArma(atacante, larguraObjeto, alturaObjeto) {
+                var idKey = contadorArma + 1;
+
+                contadorArma++;
 
                 var objeto = {
-                    id: 'ar' + w,
+                    id: 'ar' + idKey,
                 };
 
                 if (atacante.face == 'esquerda') {
-                    objeto.largura = o_larg;
-                    objeto.altura = o_alt;
+                    objeto.largura = larguraObjeto;
+                    objeto.altura = alturaObjeto;
                     objeto.x = atacante.x - objeto.largura;
                     objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
                 } else if (atacante.face == 'direita') {
-                    objeto.largura = o_larg;
-                    objeto.altura = o_alt;
+                    objeto.largura = larguraObjeto;
+                    objeto.altura = alturaObjeto;
                     objeto.x = atacante.x + atacante.largura;
                     objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
                 } else if (atacante.face == 'cima') {
-                    objeto.largura = o_alt;
-                    objeto.altura = o_larg;
+                    objeto.largura = alturaObjeto;
+                    objeto.altura = larguraObjeto;
                     objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
                     objeto.y = atacante.y - objeto.altura;
                 } else if (atacante.face == 'baixo') {
-                    objeto.largura = o_alt;
-                    objeto.altura = o_larg;
+                    objeto.largura = alturaObjeto;
+                    objeto.altura = larguraObjeto;
                     objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
                     objeto.y = atacante.y + atacante.altura;
                 }
 
-                armas['arma' + w] = objeto;
+                armas['arma' + idKey] = objeto;
 
                 canvas.appendChild(
                     criarTag({
@@ -1017,7 +1020,7 @@
                     })
                 );
 
-                return 'arma' + w;
+                return 'arma' + idKey;
             }
 
             function atacar(objeto) {
@@ -1280,17 +1283,17 @@
 
             // cria obstaculos e coloca no mapa
             function criarObstaculo(x, y, largura, altura) {
-                var w = tamanhoObjeto(obstaculos) + 1;
+                var idKey = tamanhoObjeto(obstaculos) + 1;
 
                 var objeto = {
-                    id: 'o' + w,
+                    id: 'o' + idKey,
                     x: x,
                     y: y,
                     altura: altura,
                     largura: largura,
                 };
 
-                obstaculos['obstaculo' + w] = objeto;
+                obstaculos['obstaculo' + idKey] = objeto;
 
                 canvas.appendChild(
                     criarTag({
