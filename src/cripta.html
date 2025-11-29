@@ -830,7 +830,7 @@
                                 height: '30px',
                             },
                             onclick: () => {
-                                removerDoEquipamento(i);
+                                removerDoEquipamento(jogador, i);
                                 mostrarEquipamento();
                             },
                         });
@@ -889,7 +889,7 @@
                                 height: '30px',
                             },
                             onclick: () => {
-                                adicionarAoEquipamento(jogador.inventario[i]);
+                                adicionarAoEquipamento(jogador, jogador.inventario[i]);
                                 mostrarInventario();
                             },
                         });
@@ -910,6 +910,10 @@
                     quantidade: 1,
                 };
 
+                if (existe(objeto.preco)) {
+                    item.preco = objeto.preco;
+                }
+
                 if (existe(objeto.tipoAtaque)) {
                     item.tipoAtaque = objeto.tipoAtaque;
                 }
@@ -927,20 +931,20 @@
                 }
             }
 
-            function removerDoEquipamento(tipoEquipamento) {
-                if (existe(jogador.equipamento[tipoEquipamento])) {
-                    if (jogador.equipamento[tipoEquipamento].nome != 'vazio') {
-                        adicionarAoInventario(jogador.equipamento[tipoEquipamento]);
+            function removerDoEquipamento(personagem, tipoEquipamento) {
+                if (existe(personagem.equipamento[tipoEquipamento])) {
+                    if (personagem.equipamento[tipoEquipamento].nome != 'vazio') {
+                        adicionarAoInventario(personagem.equipamento[tipoEquipamento]);
                     }
 
-                    jogador.equipamento[tipoEquipamento] = listaItens['vazio'];
+                    personagem.equipamento[tipoEquipamento] = listaItens['vazio'];
                 }
             }
 
-            function adicionarAoEquipamento(objeto) {
+            function adicionarAoEquipamento(personagem, item) {
                 var tipoEquipamento = null;
 
-                switch (objeto.tipo) {
+                switch (item.tipo) {
                     case tipoItemArma:
                         tipoEquipamento = 'arma';
                         break;
@@ -951,25 +955,31 @@
                         break;
                 }
 
-                var item = {
-                    nome: objeto.nome,
-                    texto: objeto.texto,
-                    poder: objeto.poder,
-                    tipo: objeto.tipo,
+                var novoItem = {
+                    nome: item.nome,
+                    texto: item.texto,
+                    poder: item.poder,
+                    tipo: item.tipo,
                 };
 
-                if (existe(objeto.tipoAtaque)) {
-                    item.tipoAtaque = objeto.tipoAtaque;
+                if (existe(item.preco)) {
+                    novoItem.preco = item.preco;
                 }
 
-                removerDoEquipamento(tipoEquipamento);
+                if (existe(item.tipoAtaque)) {
+                    novoItem.tipoAtaque = item.tipoAtaque;
+                }
 
-                jogador.equipamento[tipoEquipamento] = item;
+                removerDoEquipamento(personagem, tipoEquipamento);
 
-                if (objeto.quantidade > 1) {
-                    jogador.inventario[objeto.nome].quantidade--;
-                } else {
-                    delete jogador.inventario[objeto.nome];
+                personagem.equipamento[tipoEquipamento] = novoItem;
+
+                if (existe(personagem.inventario)) {
+                    if (item.quantidade > 1) {
+                        personagem.inventario[item.nome].quantidade--;
+                    } else {
+                        delete personagem.inventario[item.nome];
+                    }
                 }
             }
 
@@ -1194,17 +1204,8 @@
                     ataque: ini.ataque,
                     class: ini.class,
                     equipamento: {
-                        arma: {
-                            nome: ini.equipamento.arma.nome,
-                            texto: ini.equipamento.arma.texto,
-                            poder: ini.equipamento.arma.poder,
-                        },
-                        armadura: {
-                            nome: ini.equipamento.armadura.nome,
-                            texto: ini.equipamento.armadura.texto,
-                            poder: ini.equipamento.armadura.poder,
-                            tipoAtaque: ini.equipamento.armadura.tipoAtaque,
-                        },
+                        arma: listaItens['vazio'],
+                        armadura: listaItens['vazio'],
                     },
                     diminuiVida: function (posicao) {
                         this.pontosDeVida = Math.round(this.pontosDeVida - ((jogador.ataque + jogador.equipamento.arma.poder) - ((this.equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))));
@@ -1226,6 +1227,14 @@
                         }
                     },
                 };
+
+                if (existe(ini.equipamento.arma)) {
+                    adicionarAoEquipamento(objeto, ini.equipamento.arma);
+                }
+
+                if (existe(ini.equipamento.armadura)) {
+                    adicionarAoEquipamento(objeto, ini.equipamento.armadura);
+                }
 
                 let bool = {
                     o: true,
@@ -1574,7 +1583,7 @@
                 };
 
                 // nasce com uma espada enferrujada e arco de madeira
-                adicionarAoEquipamento(listaItens[7]);
+                adicionarAoEquipamento(jogador, listaItens[7]);
                 adicionarAoInventario(listaItens[6]);
 
                 criarJogador();
