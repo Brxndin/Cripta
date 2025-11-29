@@ -1082,19 +1082,7 @@
                             jogador.pontosDeVida = Math.round(jogador.pontosDeVida - (objeto.ataque + objeto.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (objeto.ataque + objeto.equipamento.arma.poder)));
 
                             if (jogador.pontosDeVida <= 0) {
-                                delete armas[arma_id];
-                                ar.remove();
-                                reset();
-
-                                for (const i in jogador.mov) {
-                                    clearInterval(jogador.mov[i]);
-                                }
-
-                                jogador = {};
-
-                                alert('Você morreu.');
-
-                                document.getElementById('inicial').style.display = 'block';
+                                finalizarJogo('Você morreu.');
                             } else {
                                 document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
                             }
@@ -1412,11 +1400,26 @@
                 }
             }
 
-            function entrouPortal() {
-                // aumenta o level
-                // quando chegar em levels específicos podem acontecer outras coisas (exemplo: aparecer loja ou coisa assim)
-                level++;
+            function finalizarJogo(mensagem) {
+                level = 1;
 
+                reset();
+
+                // isso não fica no reset pois ele é usado quando entra nos portais também
+                // nesses casos, o jogador, após atravessar um portal, quer continar andando
+                for (const i in jogador.mov) {
+                    clearInterval(jogador.mov[i]);
+                }
+
+                // aqui serve para limpar o histórico dos itens adquiridos
+                jogador = {};
+
+                alert(mensagem);
+
+                document.getElementById('inicial').style.display = 'block';
+            }
+
+            function entrouPortal() {
                 for (const i in portais) {
                     if (colisao(jogador, portais[i])) {
                         reset();
