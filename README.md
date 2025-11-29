@@ -1,14 +1,20 @@
-# Informações
+# Cripta
 
-Jogo roguelike de batalha estilo RPG, com progressão em fases geradas de forma aleatória. Conta com sistema de itens e inventário.
+Jogo roguelike de batalha estilo RPG, com progressão em fases geradas de forma aleatória.
+Conta com sistema de combate, itens, inventário/equipamento e loja.
 
-Feito com JavaScript, HTML e CSS.
+## Tecnologias
+
+* HTML
+* JavaScript
+* CSS
 
 OBS: Funciona melhor no Google Chrome ou Microsoft Edge.
 
-# Controles
+## Controles
 
-* Setas: movimentação
-* Spacebar: ataque
-* letra i: inventário (para abrir e fechar)
-* letra e: equipamento e status (para abrir e fechar)
+* Setas: Movimentação.
+* Spacebar: Ataque.
+* letra I: Inventário (para abrir e fechar).
+* letra E: Equipamento e status (para abrir e fechar).
+* letra Z: Loja (para abrir e fechar). Só funciona se o jogador estiver encostado na loja.
