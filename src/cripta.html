@@ -20,6 +20,10 @@
                 background-color: lightgreen;
             }
 
+            .esqueleto {
+                background-color: lightgray;
+            }
+
             .o {
                 background-color: brown;
             }
@@ -287,14 +291,14 @@
                 0: {
                     nome: 'espada_ferro',
                     texto: 'Espada de Ferro',
-                    poder: 40,
+                    poder: 10,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueCorporal,
                 },
                 1: {
                     nome: 'armadura_ferro',
                     texto: 'Armadura de Ferro',
-                    poder: 40,
+                    poder: 10,
                     tipo: tipoItemArmadura,
                 },
                 2: {
@@ -325,6 +329,33 @@
                 6: {
                     nome: 'arco_madeira',
                     texto: 'Arco de Madeira',
+                    poder: 5,
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueADistancia,
+                },
+                7: {
+                    nome: 'espada_enferrujada',
+                    texto: 'Espada Enferrujada',
+                    poder: 7,
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueCorporal,
+                },
+                8: {
+                    nome: 'armadura_enferrujada',
+                    texto: 'Armadura Enferrujada',
+                    poder: 5,
+                    tipo: tipoItemArmadura,
+                },
+                9: {
+                    nome: 'espada_prata',
+                    texto: 'Espada de Prata',
+                    poder: 50,
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueCorporal,
+                },
+                10: {
+                    nome: 'arco_recurvo',
+                    texto: 'Arco Recurvo',
                     poder: 30,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueADistancia,
@@ -340,17 +371,8 @@
                     ataque: 10,
                     class: 'i',
                     equipamento: {
-                        arma: {
-                            nome: 'espada_simples',
-                            texto: 'Espada Simples',
-                            poder: 10,
-                            tipoAtaque: tipoAtaqueCorporal,
-                        },
-                        armadura: {
-                            nome: 'armadura_simples',
-                            texto: 'Armadura Simples',
-                            poder: 10,
-                        },
+                        arma: listaItens[0],
+                        armadura: listaItens[1],
                     },
                 },
                 1: {
@@ -361,17 +383,20 @@
                     ataque: 10,
                     class: 'zumbi',
                     equipamento: {
-                        arma: {
-                            nome: 'espada_simples',
-                            texto: 'Espada Simples',
-                            poder: 10,
-                            tipoAtaque: tipoAtaqueCorporal,
-                        },
-                        armadura: {
-                            nome: 'armadura_simples',
-                            texto: 'Armadura Simples',
-                            poder: 10,
-                        },
+                        arma: listaItens['vazio'],
+                        armadura: listaItens[8],
+                    },
+                },
+                2: {
+                    nome: 'esqueleto',
+                    altura: 40,
+                    largura: 40,
+                    pontosDeVida: 100,
+                    ataque: 3,
+                    class: 'esqueleto',
+                    equipamento: {
+                        arma: listaItens[7],
+                        armadura: listaItens['vazio'],
                     },
                 },
             };
@@ -999,7 +1024,7 @@
             function criarInimigo() {
                 var w = tamanhoObjeto(inimigos) + 1;
 
-                var ini = listaInimigos[randInt(0, 1)];
+                var ini = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
 
                 var objeto = {
                     id: 'i' + w,
@@ -1310,12 +1335,7 @@
                     ataque: 50,
                     inventario: {},
                     equipamento: {
-                        arma: {
-                            nome: 'espada_madeira',
-                            texto: 'Espada de Madeira',
-                            poder: 5,
-                            tipoAtaque: tipoAtaqueCorporal,
-                        },
+                        arma: listaItens['vazio'],
                         armadura: listaItens['vazio'],
                     },
                     mov: {
@@ -1326,9 +1346,11 @@
                     },
                 };
 
-                criarJogador();
-
+                // nasce com uma espada enferrujada e arco de madeira
+                adicionarAoEquipamento(listaItens[7]);
                 adicionarAoInventario(listaItens[6]);
+
+                criarJogador();
             }
 
             document.getElementById('novo').onclick = function () {
