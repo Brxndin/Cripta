@@ -1117,8 +1117,7 @@
                                 atacar(objeto);
                             }
                         }
-                    } else if (jogador.x == objeto.x) {
-                    } else {
+                    } else if (jogador.x != objeto.x) {
                         if (movimento(objeto, jogador, 'direita')) {
                             movimentoGeral(objeto, 'direita');
                         } else {
@@ -1136,8 +1135,7 @@
                                 atacar(objeto);
                             }
                         }
-                    } else if (jogador.y == objeto.y) {
-                    } else {
+                    } else if (jogador.y != objeto.y) {
                         if (movimento(objeto, jogador, 'baixo')) {
                             movimentoGeral(objeto, 'baixo');
                         } else {
