@@ -42,10 +42,6 @@
                 background-color: yellow;
             }
 
-            .loja {
-                background-color: #1275e6;
-            }
-
             #mapa {
                 background-color: #e8b07b;
             }
@@ -302,12 +298,14 @@
                     poder: 10,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueCorporal,
+                    preco: 60,
                 },
                 1: {
                     nome: 'armadura_ferro',
                     texto: 'Armadura de Ferro',
                     poder: 10,
                     tipo: tipoItemArmadura,
+                    preco: 60,
                 },
                 2: {
                     nome: 'espada_ouro',
@@ -315,24 +313,28 @@
                     poder: 70,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueCorporal,
+                    preco: 220,
                 },
                 3: {
                     nome: 'armadura_trevas',
                     texto: 'Armadura das Trevas',
                     poder: 60,
                     tipo: tipoItemArmadura,
+                    preco: 225,
                 },
                 4: {
                     nome: 'pocao_hp',
                     texto: 'Poção',
                     poder: 25,
                     tipo: tipoItemCura,
+                    preco: 25,
                 },
                 5: {
                     nome: 'pocao_hp_grande',
                     texto: 'Poção Grande',
                     poder: 50,
                     tipo: tipoItemCura,
+                    preco: 50,
                 },
                 6: {
                     nome: 'arco_madeira',
@@ -340,6 +342,7 @@
                     poder: 5,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueADistancia,
+                    preco: 10
                 },
                 7: {
                     nome: 'espada_enferrujada',
@@ -347,12 +350,14 @@
                     poder: 7,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueCorporal,
+                    preco: 2,
                 },
                 8: {
                     nome: 'armadura_enferrujada',
                     texto: 'Armadura Enferrujada',
                     poder: 5,
                     tipo: tipoItemArmadura,
+                    preco: 2,
                 },
                 9: {
                     nome: 'espada_prata',
@@ -360,6 +365,7 @@
                     poder: 50,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueCorporal,
+                    preco: 130,
                 },
                 10: {
                     nome: 'arco_recurvo',
@@ -367,6 +373,22 @@
                     poder: 30,
                     tipo: tipoItemArma,
                     tipoAtaque: tipoAtaqueADistancia,
+                    preco: 35,
+                },
+                11: {
+                    nome: 'armadura_dragao',
+                    texto: 'Armadura de Dragão',
+                    poder: 70,
+                    tipo: tipoItemArmadura,
+                    preco: 250,
+                },
+                12: {
+                    nome: 'besta',
+                    texto: 'Besta',
+                    poder: 45,
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueADistancia,
+                    preco: 55,
                 },
             };
 
@@ -409,30 +431,11 @@
                 },
             };
 
-            // verificar para usar os itens do listaItens
             var itensLoja = {
-                2: {
-                    nome: 'espada_prata',
-                    texto: 'Espada de Prata',
-                    poder: 50,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueCorporal,
-                    preco: 200,
-                },
-                3: {
-                    nome: 'armadura_dragao',
-                    texto: 'Armadura de Dragão',
-                    poder: 70,
-                    tipo: tipoItemArmadura,
-                    preco: 250,
-                },
-                4: {
-                    nome: 'pocao_hp',
-                    texto: 'Poção',
-                    poder: 25,
-                    tipo: tipoItemCura,
-                    preco: 25,
-                },
+                0: listaItens[9],
+                1: listaItens[11],
+                2: listaItens[4],
+                3: listaItens[5],
             };
 
             // fazer a loja igual uma fonte dos desejos
@@ -622,19 +625,35 @@
                     largura: loja.largura,
                 };
 
-                canvas.appendChild(criarTag({
+                var bordaFonte = 6;
+
+                var fonteBase = criarTag({
                     tipo: 'div',
                     attributes: {
                         id: loja.id,
-                        class: 'loja'
                     },
                     style: {
                         width: loja.largura + 'px',
                         height: loja.altura + 'px',
                         left: x + 'px',
-                        top: y + 'px'
+                        top: y + 'px',
+                        backgroundColor: 'grey',
                     }
-                }));
+                });
+
+                var aguaFonte = criarTag({
+                    tipo: 'div',
+                    style: {
+                        width: (loja.largura - (bordaFonte * 2)) + 'px',
+                        height: (loja.altura - (bordaFonte * 2)) + 'px',
+                        left: (x + bordaFonte) + 'px',
+                        top: (y + bordaFonte) + 'px',
+                        backgroundColor: '#1275e6'
+                    }
+                });
+
+                canvas.appendChild(fonteBase);
+                canvas.appendChild(aguaFonte);
             }
 
             function criarItem(n, x_i, y_i) {
@@ -1184,7 +1203,7 @@
 
                             document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
 
-                            if (chancePercentual(30)) {
+                            if (chancePercentual(50)) {
                                 criarItem(randInt(0, tamanhoObjeto(listaItens) - 2), this.x, this.y);
                             }
 
