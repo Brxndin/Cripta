@@ -55,8 +55,8 @@
                 top: 300px;
                 padding: 20px;
                 /*
-              overflow-y: scroll;
-              */
+                overflow-y: scroll;
+                */
             }
 
             .botao {
@@ -72,6 +72,7 @@
             }
         </style>
     </head>
+
     <body>
         <div id="inicial" style="text-align: center">
             <h1 class="titulo">Cripta</h1>
@@ -125,6 +126,14 @@
                 }
 
                 return tag;
+            }
+
+            function tamanhoObjeto(objeto) {
+                return Object.keys(objeto).length;
+            }
+
+            function existe(dado) {
+                return typeof dado != 'undefined';
             }
 
             var listaMapas = {
@@ -437,10 +446,10 @@
                         } else if (pontosObjeto1.c.y <= pontosObjeto2.a.y && pontosObjeto1.d.y >= pontosObjeto2.b.y) {
                             return false;
                         }
-                        
+
                         return true;
                     }
-                    
+
                     return true;
                 } else if (direcao == 'esquerda') {
                     if (pontosObjeto1.b.x - 1 == pontosObjeto2.c.x) {
@@ -464,11 +473,11 @@
                             return false;
                         } else if (pontosObjeto1.a.x <= pontosObjeto2.b.x && pontosObjeto1.c.x >= pontosObjeto2.d.x) {
                             return false;
-                        } 
+                        }
 
                         return true;
                     }
-                        
+
                     return true;
                 } else if (direcao == 'baixo') {
                     if (pontosObjeto1.b.y + 1 == pontosObjeto2.a.y) {
@@ -479,10 +488,10 @@
                         } else if (pontosObjeto1.b.x <= pontosObjeto2.a.x && pontosObjeto1.d.x >= pontosObjeto2.c.x) {
                             return false;
                         }
-                        
+
                         return true;
                     }
-                    
+
                     return true;
                 }
 
@@ -523,7 +532,7 @@
             }
 
             function criarItem(n, x_i, y_i) {
-                var w = Object.keys(itens).length + 1;
+                var w = tamanhoObjeto(itens) + 1;
 
                 objeto = {
                     id: 'it' + w,
@@ -684,17 +693,17 @@
                     quantidade: 1,
                 };
 
-                if (typeof objeto.tipoAtaque != 'undefined') {
+                if (existe(objeto.tipoAtaque)) {
                     item.tipoAtaque = objeto.tipoAtaque;
                 }
 
-                if (typeof jogador.inventario[item.nome] != 'undefined') {
+                if (existe(jogador.inventario[item.nome])) {
                     jogador.inventario[item.nome].quantidade += item.quantidade;
                 } else {
                     jogador.inventario[item.nome] = item;
                 }
 
-                if (typeof p != 'undefined') {
+                if (existe(p)) {
                     document.getElementById(itens[p].id).remove();
 
                     delete itens[p];
@@ -720,7 +729,7 @@
                     poder: objeto.poder,
                 };
 
-                if (typeof objeto.tipoAtaque != 'undefined') {
+                if (existe(objeto.tipoAtaque)) {
                     item.tipoAtaque = objeto.tipoAtaque;
                 }
 
@@ -961,7 +970,7 @@
 
             // cria os inimigos e coloca no mapa
             function criarInimigo() {
-                var w = Object.keys(inimigos).length + 1;
+                var w = tamanhoObjeto(inimigos) + 1;
 
                 var ini = listaInimigos[randInt(0, 1)];
 
@@ -1042,7 +1051,7 @@
 
             // cria obstaculos e coloca no mapa
             function criarObstaculo(x, y, largura, altura) {
-                var w = Object.keys(obstaculos).length + 1;
+                var w = tamanhoObjeto(obstaculos) + 1;
 
                 var objeto = {
                     id: 'o' + w,
