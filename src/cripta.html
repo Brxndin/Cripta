@@ -863,20 +863,7 @@
 
                         for (const i in inimigos) {
                             if (colisao(armas[projetil_id], inimigos[i])) {
-                                inimigos[i].pontosDeVida = Math.round(
-                                    inimigos[i].pontosDeVida - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
-                                );
-
-                                if (inimigos[i].pontosDeVida <= 0) {
-                                    criarItem(randInt(0, 6), inimigos[i].x, inimigos[i].y);
-                                    //criarItem(3);
-
-                                    clearInterval(inimigos[i].mov);
-
-                                    document.getElementById(inimigos[i].id).remove();
-
-                                    delete inimigos[i];
-                                }
+                                inimigos[i].diminuiVida(i);
 
                                 clearInterval(armas[projetil_id].mov);
                                 pr.remove();
@@ -942,20 +929,7 @@
                     } else {
                         for (const i in inimigos) {
                             if (colisao(armas[arma_id], inimigos[i])) {
-                                inimigos[i].pontosDeVida = Math.round(
-                                    inimigos[i].pontosDeVida - (jogador.ataque + jogador.equipamento.arma.poder - (inimigos[i].equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))
-                                );
-
-                                if (inimigos[i].pontosDeVida <= 0) {
-                                    criarItem(randInt(0, 6), inimigos[i].x, inimigos[i].y);
-                                    //criarItem(3);
-
-                                    clearInterval(inimigos[i].mov);
-
-                                    document.getElementById(inimigos[i].id).remove();
-
-                                    delete inimigos[i];
-                                }
+                                inimigos[i].diminuiVida(i);
 
                                 break;
                             }
@@ -1065,6 +1039,25 @@
                             poder: ini.equipamento.armadura.poder,
                             tipoAtaque: ini.equipamento.armadura.tipoAtaque,
                         },
+                    },
+                    diminuiVida: function (posicao) {
+                        this.pontosDeVida = Math.round(this.pontosDeVida - ((jogador.ataque + jogador.equipamento.arma.poder) - ((this.equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))));
+
+                        if (this.pontosDeVida <= 0) {
+                            jogador.dinheiro += randInt(5, 10);
+
+                            document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
+
+                            if (chancePercentual(30)) {
+                                criarItem(randInt(0, tamanhoObjeto(listaItens) - 2), this.x, this.y);
+                            }
+
+                            clearInterval(this.mov);
+
+                            document.getElementById(this.id).remove();
+
+                            delete inimigos[posicao];
+                        }
                     },
                 };
 
