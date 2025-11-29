@@ -42,6 +42,10 @@
                 background-color: yellow;
             }
 
+            .loja {
+                background-color: #1275e6;
+            }
+
             #mapa {
                 background-color: #e8b07b;
             }
@@ -58,9 +62,7 @@
                 left: 650px;
                 top: 300px;
                 padding: 20px;
-                /*
-                overflow-y: scroll;
-                */
+                /* overflow-y: scroll; */
             }
 
             .botao {
@@ -91,6 +93,10 @@
             <div id="status"></div>
             <h1>Equipamento</h1>
             <div id="conteudo_janela_equipamento"></div>
+        </div>
+        <div id="janela_loja" class="menu">
+            <h1>Loja</h1>
+            <div id="conteudo_janela_loja"></div>
         </div>
         <div id="canvas"></div>
 
@@ -137,7 +143,7 @@
             }
 
             function existe(dado) {
-                return typeof dado != 'undefined';
+                return typeof dado != 'undefined' && dado != null;
             }
 
             var listaMapas = {
@@ -163,6 +169,8 @@
                     funcao: function () {
                         if (chancePercentual(50)) {
                             criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
+                        } else {
+                            criarLoja(Math.round(this.x + this.largura / 2 - (loja.largura / 2)), Math.round(this.y + this.altura / 2 - (loja.altura / 2)));
                         }
                     },
                 },
@@ -321,7 +329,7 @@
                     tipo: tipoItemCura,
                 },
                 5: {
-                    nome: 'pocao_grande_hp',
+                    nome: 'pocao_hp_grande',
                     texto: 'Poção Grande',
                     poder: 50,
                     tipo: tipoItemCura,
@@ -400,6 +408,43 @@
                     },
                 },
             };
+
+            // verificar para usar os itens do listaItens
+            var itensLoja = {
+                2: {
+                    nome: 'espada_prata',
+                    texto: 'Espada de Prata',
+                    poder: 50,
+                    tipo: tipoItemArma,
+                    tipoAtaque: tipoAtaqueCorporal,
+                    preco: 200,
+                },
+                3: {
+                    nome: 'armadura_dragao',
+                    texto: 'Armadura de Dragão',
+                    poder: 70,
+                    tipo: tipoItemArmadura,
+                    preco: 250,
+                },
+                4: {
+                    nome: 'pocao_hp',
+                    texto: 'Poção',
+                    poder: 25,
+                    tipo: tipoItemCura,
+                    preco: 25,
+                },
+            };
+
+            // fazer a loja igual uma fonte dos desejos
+            // verificar como fazer isso
+            var loja = {
+                id: 'loja',
+                altura: 110,
+                largura: 110,
+                objeto: null,
+            };
+
+            var level = 1;
 
             var inimigos = {};
 
@@ -528,18 +573,30 @@
             function movimentoGeral(objeto, direcao) {
                 var e = true;
 
-                for (const i in inimigos) {
-                    if (objeto.id != inimigos[i].id) {
-                        if (!movimento(objeto, inimigos[i], direcao)) {
-                            e = false;
+                if (existe(loja.objeto) && !movimento(objeto, loja.objeto, direcao)) {
+                    e = false;
+                }
+
+                if (e) {
+                    for (const i in inimigos) {
+                        if (objeto.id != inimigos[i].id) {
+                            if (!movimento(objeto, inimigos[i], direcao)) {
+                                e = false;
+
+                                break;
+                            }
                         }
                     }
                 }
 
-                for (const i in obstaculos) {
-                    if (objeto.id != obstaculos[i].id) {
-                        if (!movimento(objeto, obstaculos[i], direcao)) {
-                            e = false;
+                if (e) {
+                    for (const i in obstaculos) {
+                        if (objeto.id != obstaculos[i].id) {
+                            if (!movimento(objeto, obstaculos[i], direcao)) {
+                                e = false;
+
+                                break;
+                            }
                         }
                     }
                 }
@@ -555,6 +612,29 @@
                 var pontosObjeto2 = pontos(objeto2);
 
                 return pontosObjeto1.c.x + 1 >= pontosObjeto2.b.x && pontosObjeto1.b.x - 1 <= pontosObjeto2.c.x && pontosObjeto1.a.y - 1 <= pontosObjeto2.b.y && pontosObjeto1.b.y + 1 >= pontosObjeto2.a.y;
+            }
+
+            function criarLoja(x, y) {
+                loja.objeto = {
+                    x: x,
+                    y: y,
+                    altura: loja.altura,
+                    largura: loja.largura,
+                };
+
+                canvas.appendChild(criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: loja.id,
+                        class: 'loja'
+                    },
+                    style: {
+                        width: loja.largura + 'px',
+                        height: loja.altura + 'px',
+                        left: x + 'px',
+                        top: y + 'px'
+                    }
+                }));
             }
 
             function criarItem(n, x_i, y_i) {
@@ -586,6 +666,54 @@
                         },
                     })
                 );
+            }
+
+            function mostrarLoja() {
+                var divLoja = document.getElementById('conteudo_janela_loja');
+                divLoja.innerHTML = '';
+
+                for (const i in itensLoja) {
+                    var string = criarTag({
+                        tipo: 'p',
+                        innerHTML: itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ',
+                        style: {
+                            fontSize: '20px',
+                            color: 'white',
+                            position: 'static'
+                        }
+                    });
+
+                    var b = criarTag({
+                        tipo: 'button',
+                        innerHTML: 'Comprar',
+                        style: {
+                            backgroundColor: '#520a06',
+                            border: '1px solid white',
+                            width: '80px',
+                            color: 'white',
+                            height: '30px'
+                        },
+                        onclick: () => {
+                            if (jogador?.dinheiro >= itensLoja[i]?.preco) {
+                                alert('Item comprado com sucesso!');
+
+                                jogador.dinheiro -= itensLoja[i]?.preco;
+
+                                document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
+
+                                adicionarAoInventario(itensLoja[i]);
+
+                                mostrarLoja();
+                            } else {
+                                alert('Você não tem dinheiro suficiente!');
+                            }
+                        }
+                    });
+
+                    string.appendChild(b);
+
+                    divLoja.appendChild(string);
+                }
             }
 
             function mostrarEquipamento() {
@@ -626,6 +754,16 @@
                         },
                     })
                 );
+
+                document.getElementById('status').appendChild(criarTag({
+                    tipo: 'p',
+                    innerHTML: 'Dinheiro: ' + jogador.dinheiro + ' moedas',
+                    style: {
+                        fontSize: '20px',
+                        color: 'white',
+                        position: 'static'
+                    }
+                }));
 
                 var divEquipamento = document.getElementById('conteudo_janela_equipamento');
                 divEquipamento.innerHTML = '';
@@ -923,7 +1061,7 @@
 
                                 document.getElementById('inicial').style.display = 'block';
                             } else {
-                                document.getElementById('p_hp').setAttribute('value', jogador.pontosDeVida);
+                                document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
                             }
                         }
                     } else {
@@ -1073,17 +1211,25 @@
                     objeto.x = objeto.inix = randInt(mapa.x + 130, mapa.x + mapa.largura - 230);
                     objeto.y = objeto.iniy = randInt(mapa.y + 130, mapa.y + mapa.altura - 230);
 
-                    for (const i in inimigos) {
-                        if (colisao(inimigos[i], objeto)) {
-                            bool.i = false;
-                            break;
+                    if (existe(loja.objeto) && colisao(loja.objeto, objeto)) {
+                        bool.i = false;
+                    }
+
+                    if (bool.i) {
+                        for (const i in inimigos) {
+                            if (colisao(inimigos[i], objeto)) {
+                                bool.i = false;
+                                break;
+                            }
                         }
                     }
 
-                    for (const i in obstaculos) {
-                        if (colisao(obstaculos[i], objeto)) {
-                            bool.o = false;
-                            break;
+                    if (bool.i) {
+                        for (const i in obstaculos) {
+                            if (colisao(obstaculos[i], objeto)) {
+                                bool.o = false;
+                                break;
+                            }
                         }
                     }
                 } while (bool.i == false || bool.o == false);
@@ -1162,7 +1308,7 @@
                     criarTag({
                         tipo: 'progress',
                         attributes: {
-                            id: 'p_hp',
+                            id: 'vidaJogador',
                             value: jogador.pontosDeVida,
                             max: jogador.pontosDeVidaMaximo,
                         },
@@ -1175,11 +1321,32 @@
                         },
                     })
                 );
+
+                canvas.appendChild(criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: 'dinheiroJogador',
+                    },
+                    innerHTML: jogador.dinheiro + ' moedas',
+                    style: {
+                        fontSize: '20px',
+                        left: mapa.x + 'px',
+                        top: '120px',
+                        // backgroundColor: 'green'
+                        color: 'white'
+                    }
+                }));
             }
 
             function reset() {
                 document.getElementById(jogador.id).remove();
-                document.getElementById('p_hp').remove();
+                document.getElementById('vidaJogador').remove();
+                document.getElementById('dinheiroJogador').remove();
+
+                if (existe(loja.objeto)) {
+                    loja.objeto = null;
+                    document.getElementById(loja.id).remove();
+                }
 
                 document.getElementById(mapa.id).remove();
                 mapa = {};
@@ -1213,6 +1380,10 @@
             }
 
             function entrouPortal() {
+                // aumenta o level
+                // quando chegar em levels específicos podem acontecer outras coisas (exemplo: aparecer loja ou coisa assim)
+                level++;
+
                 for (const i in portais) {
                     if (colisao(jogador, portais[i])) {
                         reset();
@@ -1321,7 +1492,7 @@
                     jogador.inventario[pocao_nome].quantidade--;
                 }
 
-                document.getElementById('p_hp').setAttribute('value', jogador.pontosDeVida);
+                document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
             }
 
             var jogador;
@@ -1344,6 +1515,7 @@
                     pontosDeVida: 200,
                     pontosDeVidaMaximo: 200,
                     ataque: 50,
+                    dinheiro: 0,
                     inventario: {},
                     equipamento: {
                         arma: listaItens['vazio'],
@@ -1415,12 +1587,14 @@
                     }, 5);
                 }
 
+                // Espaço
                 if (event.keyCode == 32) {
                     if (jogador.podeAtacar) {
                         atacar(jogador);
                     }
                 }
 
+                // I
                 if (event.keyCode == 73) {
                     var div = document.getElementById('janela_inventario');
 
@@ -1433,6 +1607,7 @@
                     }
                 }
 
+                // E
                 if (event.keyCode == 69) {
                     var div = document.getElementById('janela_equipamento');
 
@@ -1442,6 +1617,21 @@
                         div.style.display = 'block';
                     } else {
                         div.style.display = 'none';
+                    }
+                }
+
+                // Z
+                if (event.keyCode == 90 && existe(loja.objeto)) {
+                    if (colisao(jogador, loja.objeto)) {
+                        var div = document.getElementById('janela_loja');
+
+                        if (div.style.display == 'none' || div.style.display == '') {
+                            mostrarLoja();
+
+                            div.style.display = 'block';
+                        } else {
+                            div.style.display = 'none';
+                        }
                     }
                 }
             });
