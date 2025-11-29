@@ -1188,13 +1188,15 @@
             }
 
             // cria os inimigos e coloca no mapa
-            function criarInimigo() {
-                var w = tamanhoObjeto(inimigos) + 1;
+            function criarInimigo(ini = null) {
+                var idKey = tamanhoObjeto(inimigos) + 1;
 
-                var ini = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
+                if (!existe(ini)) {
+                    ini = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
+                }
 
                 var objeto = {
-                    id: 'i' + w,
+                    id: 'i' + idKey,
                     bool: true,
                     podeAtacar: true,
                     face: 'direita',
@@ -1215,8 +1217,16 @@
 
                             document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
 
-                            if (chancePercentual(50)) {
-                                criarItem(randInt(0, tamanhoObjeto(listaItens) - 2), this.x, this.y);
+                            // if (chancePercentual(50)) {
+                            //     criarItem(randInt(0, tamanhoObjeto(listaItens) - 2), this.x, this.y);
+                            // }
+
+                            if (chancePercentual(40) && existe(this.equipamento.arma)) {
+                                criarItem(this.equipamento.arma, this.x, this.y);
+                            }
+
+                            if (chancePercentual(40) && existe(this.equipamento.armadura)) {
+                                criarItem(this.equipamento.armadura, this.x, this.y);
                             }
 
                             clearInterval(this.mov);
@@ -1271,7 +1281,7 @@
                     }
                 } while (bool.i == false || bool.o == false);
 
-                inimigos['inimigo' + w] = objeto;
+                inimigos['inimigo' + idKey] = objeto;
 
                 canvas.appendChild(
                     criarTag({
@@ -1289,8 +1299,8 @@
                     })
                 );
 
-                inimigos['inimigo' + w].mov = setInterval(() => {
-                    ia(inimigos['inimigo' + w]);
+                inimigos['inimigo' + idKey].mov = setInterval(() => {
+                    ia(inimigos['inimigo' + idKey]);
                 }, 25);
             }
 
