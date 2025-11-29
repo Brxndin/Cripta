@@ -69,7 +69,7 @@
                 background-color: #520a06;
             }
 
-            .titulo {
+            .texto {
                 color: white;
             }
         </style>
@@ -77,8 +77,10 @@
 
     <body>
         <div id="inicial" style="text-align: center">
-            <h1 class="titulo">Cripta</h1>
-            <button class="botao" id="novo">Novo Jogo</button>
+            <h1 class="texto">Cripta</h1>
+            <p class="texto">Ao se aventurar em uma masmorra, você se deparou com um portal roxo.</p>
+            <p class="texto">Quando entrou nele, percebeu que estava preso num loop, sendo transportado para vários locais e que deveria prosseguir para encontrar uma saída.</p>
+            <button class="botao" id="novo">Iniciar</button>
         </div>
         <div id="janela_inventario" class="menu">
             <h1>Inventário</h1>
@@ -694,10 +696,12 @@
                 for (const i in itensLoja) {
                     var string = criarTag({
                         tipo: 'p',
+                        attributes: {
+                            class: 'texto'
+                        },
                         innerHTML: itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ',
                         style: {
                             fontSize: '20px',
-                            color: 'white',
                             position: 'static'
                         }
                     });
@@ -741,10 +745,12 @@
                 document.getElementById('status').appendChild(
                     criarTag({
                         tipo: 'p',
+                        attributes: {
+                            class: 'texto'
+                        },
                         innerHTML: 'Vida: ' + jogador.pontosDeVida + '/' + jogador.pontosDeVidaMaximo,
                         style: {
                             fontSize: '20px',
-                            color: 'white',
                             position: 'static',
                         },
                     })
@@ -753,10 +759,12 @@
                 document.getElementById('status').appendChild(
                     criarTag({
                         tipo: 'p',
+                        attributes: {
+                            class: 'texto'
+                        },
                         innerHTML: 'Força: ' + jogador.ataque + ' (+' + jogador.equipamento.arma.poder + ')',
                         style: {
                             fontSize: '20px',
-                            color: 'white',
                             position: 'static',
                         },
                     })
@@ -765,10 +773,12 @@
                 document.getElementById('status').appendChild(
                     criarTag({
                         tipo: 'p',
+                        attributes: {
+                            class: 'texto'
+                        },
                         innerHTML: 'Defesa: ' + jogador.equipamento.armadura.poder,
                         style: {
                             fontSize: '20px',
-                            color: 'white',
                             position: 'static',
                         },
                     })
@@ -777,9 +787,11 @@
                 document.getElementById('status').appendChild(criarTag({
                     tipo: 'p',
                     innerHTML: 'Dinheiro: ' + jogador.dinheiro + ' moedas',
+                    attributes: {
+                        class: 'texto'
+                    },
                     style: {
                         fontSize: '20px',
-                        color: 'white',
                         position: 'static'
                     }
                 }));
@@ -791,10 +803,12 @@
                     if (jogador.equipamento[i].nome != 'vazio') {
                         var string = criarTag({
                             tipo: 'p',
+                            attributes: {
+                                class: 'texto'
+                            },
                             innerHTML: jogador.equipamento[i].texto,
                             style: {
                                 fontSize: '20px',
-                                color: 'white',
                                 position: 'static',
                             },
                         });
@@ -829,10 +843,12 @@
                 for (const i in jogador.inventario) {
                     var string = criarTag({
                         tipo: 'p',
+                        attributes: {
+                            class: 'texto'
+                        },
                         innerHTML: jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)',
                         style: {
                             fontSize: '20px',
-                            color: 'white',
                             position: 'static',
                         },
                     });
