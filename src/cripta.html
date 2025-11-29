@@ -897,14 +897,14 @@
                                 }
                             }
                         }
-
-                        // bloqueia o ataque por um tempo
-                        objeto.podeAtacar = false;
-
-                        setTimeout(() => {
-                            objeto.podeAtacar = true;
-                        }, 300);
                     }, 0.5);
+
+                    // bloqueia o ataque por um tempo
+                    objeto.podeAtacar = false;
+
+                    setTimeout(() => {
+                        objeto.podeAtacar = true;
+                    }, 300);
 
                     setTimeout(() => {
                         if (armas[projetil_id]) {
