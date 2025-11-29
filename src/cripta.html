@@ -615,6 +615,18 @@
                     })
                 );
 
+                document.getElementById('status').appendChild(
+                    criarTag({
+                        tipo: 'p',
+                        innerHTML: 'Defesa: ' + jogador.equipamento.armadura.poder,
+                        style: {
+                            fontSize: '20px',
+                            color: 'white',
+                            position: 'static',
+                        },
+                    })
+                );
+
                 var divEquipamento = document.getElementById('conteudo_janela_equipamento');
                 divEquipamento.innerHTML = '';
 
