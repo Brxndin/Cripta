@@ -42,6 +42,11 @@
                 background-color: yellow;
             }
 
+            .cavaleiro_das_trevas {
+                border: 2px solid purple;
+                background-color: black;
+            }
+
             #mapa {
                 background-color: #e8b07b;
             }
@@ -412,7 +417,7 @@
                     altura: 40,
                     largura: 40,
                     pontosDeVida: 200,
-                    ataque: 10,
+                    ataque: 7,
                     class: 'zumbi',
                     equipamento: {
                         arma: listaItens['vazio'],
@@ -429,6 +434,22 @@
                     equipamento: {
                         arma: listaItens[7],
                         armadura: listaItens['vazio'],
+                    },
+                },
+                
+            };
+
+            var listaChefes = {
+                0: {
+                    nome: 'cavaleiro_das_trevas',
+                    altura: 70,
+                    largura: 70,
+                    pontosDeVida: 500,
+                    ataque: 15,
+                    class: 'cavaleiro_das_trevas',
+                    equipamento: {
+                        arma: listaItens[9],
+                        armadura: listaItens[3],
                     },
                 },
             };
@@ -1449,6 +1470,8 @@
             function entrouPortal() {
                 for (const i in portais) {
                     if (colisao(jogador, portais[i])) {
+                        level++;
+
                         reset();
 
                         criarMapa();
@@ -1525,8 +1548,24 @@
 
                         criarJogador();
 
-                        for (k = randInt(1, 3); k > 0; k--) {
-                            criarInimigo();
+                        // em níveis específicos, o jogador enfrenta um chefe
+                        if (level == 10) {
+                            criarInimigo(listaChefes[0]);
+                        } else if (level == 20) {
+                        
+                        } else if (level == 30) {
+                        
+                        } else if (level == 40) {
+                        
+                        } else if (level == 50) {
+                        
+                        } else if (level > 50) {
+                            finalizarJogo('Você encontrou a saída da masmorra!');
+                        } else {
+                            // cria de 1 a 3 inimigos
+                            for (k = randInt(1, 3); k > 0; k--) {
+                                criarInimigo();
+                            }
                         }
 
                         break;
