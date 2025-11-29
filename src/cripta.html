@@ -885,6 +885,13 @@
                                 }
                             }
                         }
+
+                        // bloqueia o ataque por um tempo
+                        objeto.podeAtacar = false;
+
+                        setTimeout(() => {
+                            objeto.podeAtacar = true;
+                        }, 300);
                     }, 0.5);
 
                     setTimeout(() => {
@@ -920,23 +927,7 @@
                                 document.getElementById('p_hp').setAttribute('value', jogador.pontosDeVida);
                             }
                         }
-
-                        objeto.pa = false;
-
-                        setTimeout(() => {
-                            delete armas[arma_id];
-                            ar.remove();
-
-                            setTimeout(() => {
-                                objeto.pa = true;
-                            }, 300);
-                        }, 40);
                     } else {
-                        setTimeout(() => {
-                            delete armas[arma_id];
-                            ar.remove();
-                        }, 40);
-
                         for (const i in inimigos) {
                             if (colisao(armas[arma_id], inimigos[i])) {
                                 inimigos[i].pontosDeVida = Math.round(
@@ -958,6 +949,20 @@
                             }
                         }
                     }
+
+                    // bloqueia o ataque por um tempo
+                    objeto.podeAtacar = false;
+
+                    setTimeout(() => {
+                        delete armas[arma_id];
+                        ar.remove();
+
+                        // verificar se é interessante esse tempo mudar dependendo do personagem
+                        // por exemplo: com um equip melhor poderia ter um tempo menor de bloqueio
+                        setTimeout(() => {
+                            objeto.podeAtacar = true;
+                        }, 300);
+                    }, 40);
                 }
             }
 
@@ -984,7 +989,7 @@
                         if (movimento(objeto, jogador, 'esquerda')) {
                             movimentoGeral(objeto, 'esquerda');
                         } else {
-                            if (objeto.pa) {
+                            if (objeto.podeAtacar) {
                                 atacar(objeto);
                             }
                         }
@@ -993,7 +998,7 @@
                         if (movimento(objeto, jogador, 'direita')) {
                             movimentoGeral(objeto, 'direita');
                         } else {
-                            if (objeto.pa) {
+                            if (objeto.podeAtacar) {
                                 atacar(objeto);
                             }
                         }
@@ -1003,7 +1008,7 @@
                         if (movimento(objeto, jogador, 'cima')) {
                             movimentoGeral(objeto, 'cima');
                         } else {
-                            if (objeto.pa) {
+                            if (objeto.podeAtacar) {
                                 atacar(objeto);
                             }
                         }
@@ -1012,7 +1017,7 @@
                         if (movimento(objeto, jogador, 'baixo')) {
                             movimentoGeral(objeto, 'baixo');
                         } else {
-                            if (objeto.pa) {
+                            if (objeto.podeAtacar) {
                                 atacar(objeto);
                             }
                         }
@@ -1029,7 +1034,7 @@
                 var objeto = {
                     id: 'i' + w,
                     bool: true,
-                    pa: true,
+                    podeAtacar: true,
                     face: 'direita',
                     altura: ini.altura,
                     largura: ini.largura,
@@ -1330,6 +1335,7 @@
                     x: Math.round(mapa.x + mapa.largura / 2 - 20),
                     y: Math.round(mapa.y + mapa.altura - 125),
                     face: 'cima',
+                    podeAtacar: true,
                     pontosDeVida: 200,
                     pontosDeVidaMaximo: 200,
                     ataque: 50,
@@ -1405,7 +1411,9 @@
                 }
 
                 if (event.keyCode == 32) {
-                    atacar(jogador);
+                    if (jogador.podeAtacar) {
+                        atacar(jogador);
+                    }
                 }
 
                 if (event.keyCode == 73) {
