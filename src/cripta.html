@@ -629,33 +629,37 @@
 
                 var bordaFonte = 6;
 
-                var fonteBase = criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: loja.id,
-                    },
-                    style: {
-                        width: loja.largura + 'px',
-                        height: loja.altura + 'px',
-                        left: x + 'px',
-                        top: y + 'px',
-                        backgroundColor: 'grey',
-                    }
-                });
+                canvas.appendChild(
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
+                            id: loja.id,
+                        },
+                        style: {
+                            width: loja.largura + 'px',
+                            height: loja.altura + 'px',
+                            left: x + 'px',
+                            top: y + 'px',
+                            backgroundColor: 'grey',
+                        }
+                    })
+                );
 
-                var aguaFonte = criarTag({
-                    tipo: 'div',
-                    style: {
-                        width: (loja.largura - (bordaFonte * 2)) + 'px',
-                        height: (loja.altura - (bordaFonte * 2)) + 'px',
-                        left: (x + bordaFonte) + 'px',
-                        top: (y + bordaFonte) + 'px',
-                        backgroundColor: '#1275e6'
-                    }
-                });
-
-                canvas.appendChild(fonteBase);
-                canvas.appendChild(aguaFonte);
+                canvas.appendChild(
+                    criarTag({
+                        tipo: 'div',
+                        attributes: {
+                            id: loja.id + '_agua',
+                        },
+                        style: {
+                            width: (loja.largura - (bordaFonte * 2)) + 'px',
+                            height: (loja.altura - (bordaFonte * 2)) + 'px',
+                            left: (x + bordaFonte) + 'px',
+                            top: (y + bordaFonte) + 'px',
+                            backgroundColor: '#1275e6'
+                        }
+                    })
+                );
             }
 
             function criarItem(item, x, y) {
@@ -1370,6 +1374,7 @@
                 if (existe(loja.objeto)) {
                     loja.objeto = null;
                     document.getElementById(loja.id).remove();
+                    document.getElementById(loja.id + '_agua').remove();
                 }
 
                 document.getElementById(mapa.id).remove();
