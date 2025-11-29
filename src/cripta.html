@@ -282,6 +282,7 @@
                     nome: 'vazio',
                     texto: 'Vazio',
                     poder: 0,
+                    tipo: 'vazio'
                 },
                 0: {
                     nome: 'espada_ferro',
@@ -710,32 +711,44 @@
                 }
             }
 
-            function removerDoEquipamento(t) {
-                if (typeof jogador.equipamento[t] != 'undefined') {
-                    if (jogador.equipamento[t].nome != 'vazio') {
-                        jogador.equipamento[t].tipo = t;
-
-                        adicionarAoInventario(jogador.equipamento[t]);
+            function removerDoEquipamento(tipoEquipamento) {
+                if (existe(jogador.equipamento[tipoEquipamento])) {
+                    if (jogador.equipamento[tipoEquipamento].nome != 'vazio') {
+                        adicionarAoInventario(jogador.equipamento[tipoEquipamento]);
                     }
 
-                    jogador.equipamento[t] = listaItens['vazio'];
+                    jogador.equipamento[tipoEquipamento] = listaItens['vazio'];
                 }
             }
 
             function adicionarAoEquipamento(objeto) {
+                var tipoEquipamento = null;
+
+                switch (objeto.tipo) {
+                    case tipoItemArma:
+                        tipoEquipamento = 'arma';
+                        break;
+                    case tipoItemArmadura:
+                        tipoEquipamento = 'armadura';
+                        break;
+                    default:
+                        break;
+                }
+
                 var item = {
                     nome: objeto.nome,
                     texto: objeto.texto,
                     poder: objeto.poder,
+                    tipo: objeto.tipo,
                 };
 
                 if (existe(objeto.tipoAtaque)) {
                     item.tipoAtaque = objeto.tipoAtaque;
                 }
 
-                removerDoEquipamento(objeto.tipo);
+                removerDoEquipamento(tipoEquipamento);
 
-                jogador.equipamento[objeto.tipo] = item;
+                jogador.equipamento[tipoEquipamento] = item;
 
                 if (objeto.quantidade > 1) {
                     jogador.inventario[objeto.nome].quantidade--;
