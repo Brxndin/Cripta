@@ -1,1050 +1,711 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Cripta</title>
-        <style>
-            body {
-                background-color: #520a06;
-            }
 
-            #p {
-                background-color: #368203;
-            }
+<head>
+    <meta charset="utf-8" />
+    <title>Cripta</title>
+    <style>
+        body {
+            background-color: #520a06;
+        }
 
-            .i {
-                background-color: red;
-            }
+        #p {
+            background-color: #368203;
+        }
 
-            .zumbi {
-                background-color: lightgreen;
-            }
+        .i {
+            background-color: red;
+        }
 
-            .esqueleto {
-                background-color: lightgray;
-            }
+        .zumbi {
+            background-color: lightgreen;
+        }
 
-            .o {
-                background-color: brown;
-            }
+        .esqueleto {
+            background-color: lightgray;
+        }
 
-            .ar {
-                background-color: gray;
-                border: 1px solid black;
-            }
+        .o {
+            background-color: brown;
+        }
 
-            .po {
-                background-color: #b0279b;
-            }
+        .ar {
+            background-color: gray;
+            border: 1px solid black;
+        }
 
-            .it {
-                border: 1px solid black;
-                background-color: yellow;
-            }
+        .po {
+            background-color: #b0279b;
+        }
 
-            .cavaleiro_das_trevas {
-                border: 2px solid purple;
-                background-color: black;
-            }
+        .it {
+            border: 1px solid black;
+            background-color: yellow;
+        }
 
-            #mapa {
-                background-color: #e8b07b;
-            }
+        .cavaleiro_das_trevas {
+            border: 2px solid purple;
+            background-color: black;
+        }
 
-            .menu {
-                display: none;
-                z-index: 99;
-                background-color: #520a06;
-                color: white;
-                position: absolute;
-                width: 500px;
-                height: 500px;
-                border: 2px solid white;
-                left: 650px;
-                top: 300px;
-                padding: 20px;
-                /* overflow-y: scroll; */
-            }
+        #mapa {
+            background-color: #e8b07b;
+        }
 
-            .botao {
-                width: 150px;
-                height: 50px;
-                border: 1px solid white;
-                color: white;
-                background-color: #520a06;
-            }
+        .menu {
+            display: none;
+            z-index: 99;
+            background-color: #520a06;
+            color: white;
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border: 2px solid white;
+            left: 650px;
+            top: 300px;
+            padding: 20px;
+            /* overflow-y: scroll; */
+        }
 
-            .texto {
-                color: white;
-            }
-        </style>
-    </head>
+        .botao {
+            width: 150px;
+            height: 50px;
+            border: 1px solid white;
+            color: white;
+            background-color: #520a06;
+        }
 
-    <body>
-        <div id="inicial" style="text-align: center">
-            <h1 class="texto">Cripta</h1>
-            <p class="texto">Ao se aventurar em uma masmorra, você se deparou com um portal roxo.</p>
-            <p class="texto">Quando entrou nele, percebeu que estava preso num loop, sendo transportado para vários locais e que deveria prosseguir para encontrar uma saída.</p>
-            <button class="botao" id="novo">Iniciar</button>
-        </div>
-        <div id="janela_inventario" class="menu">
-            <h1>Inventário</h1>
-            <div id="conteudo_janela_inventario"></div>
-        </div>
-        <div id="janela_equipamento" class="menu">
-            <h1>Status</h1>
-            <div id="status"></div>
-            <h1>Equipamento</h1>
-            <div id="conteudo_janela_equipamento"></div>
-        </div>
-        <div id="janela_loja" class="menu">
-            <h1>Loja</h1>
-            <div id="conteudo_janela_loja"></div>
-        </div>
-        <div id="canvas"></div>
+        .texto {
+            color: white;
+        }
+    </style>
+</head>
 
-        <script>
-            // gera um numero inteiro pseudoaleatorio
-            function randInt(min, max) {
-                min = Math.ceil(min);
-                max = Math.floor(max + 1);
+<body>
+    <div id="inicial" style="text-align: center">
+        <h1 class="texto">Cripta</h1>
+        <p class="texto">Ao se aventurar em uma masmorra, você se deparou com um portal roxo.</p>
+        <p class="texto">Quando entrou nele, percebeu que estava preso num loop, sendo transportado para vários locais
+        </p>
+        <p class="texto">Agora, você deve prosseguir para encontrar uma saída.</p>
+        <button class="botao" id="novo">Iniciar</button>
+    </div>
+    <div id="janela_inventario" class="menu">
+        <h1>Inventário</h1>
+        <div id="conteudo_janela_inventario"></div>
+    </div>
+    <div id="janela_equipamento" class="menu">
+        <h1>Status</h1>
+        <div id="status"></div>
+        <h1>Equipamento</h1>
+        <div id="conteudo_janela_equipamento"></div>
+    </div>
+    <div id="janela_loja" class="menu">
+        <h1>Loja</h1>
+        <div id="conteudo_janela_loja"></div>
+    </div>
+    <div id="canvas"></div>
 
-                return Math.floor(Math.random() * (max - min)) + min;
-            }
+    <script>
+        // gera um numero inteiro pseudoaleatorio
+        function randInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max + 1);
 
-            //retorna true ou false de acordo com a chance em porcentagem informada
-            //exemplo: chancePercentual(50) tem 50% de chance de retornar true
-            function chancePercentual(n) {
-                return randInt(1, 100) <= n;
-            }
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
 
-            canvas = document.getElementById('canvas');
+        //retorna true ou false de acordo com a chance em porcentagem informada
+        //exemplo: chancePercentual(50) tem 50% de chance de retornar true
+        function chancePercentual(n) {
+            return randInt(1, 100) <= n;
+        }
 
-            function criarTag(objeto) {
-                var tag = document.createElement(objeto.tipo);
-                tag.style.position = 'absolute';
+        canvas = document.getElementById('canvas');
 
-                for (const i in objeto) {
-                    if (i == 'style') {
-                        for (const j in objeto[i]) {
-                            tag.style[j] = objeto[i][j];
-                        }
-                    } else if (i == 'attributes') {
-                        for (const j in objeto[i]) {
-                            tag.setAttribute(j, objeto[i][j]);
-                        }
-                    } else if (i != 'tipo') {
-                        tag[i] = objeto[i];
+        function criarTag(objeto) {
+            var tag = document.createElement(objeto.tipo);
+            tag.style.position = 'absolute';
+
+            for (const i in objeto) {
+                if (i == 'style') {
+                    for (const j in objeto[i]) {
+                        tag.style[j] = objeto[i][j];
                     }
-                }
-
-                return tag;
-            }
-
-            function tamanhoObjeto(objeto) {
-                return Object.keys(objeto).length;
-            }
-
-            function existe(dado) {
-                return typeof dado != 'undefined' && dado != null;
-            }
-
-            var listaMapas = {
-                0: {
-                    x: Math.round(screen.width / 4),
-                    y: Math.round(screen.height / 7),
-                    altura: Math.round(screen.height * (55.5 / 100)),
-                    largura: Math.round(screen.width * (50 / 100)),
-                    funcao: function () {
-                        if (chancePercentual(33)) {
-                            criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
-                        } else if (chancePercentual(33)) {
-                            criarObstaculo(this.x, 550, 500, 50);
-                            criarObstaculo(this.x + this.largura - 500, 300, 500, 50);
-                        }
-                    },
-                },
-                1: {
-                    x: Math.round(screen.width / 2 - (screen.width * (20 / 100)) / 2),
-                    y: Math.round(screen.height / 7),
-                    altura: Math.round(screen.height * (55.5 / 100)),
-                    largura: Math.round(screen.width * (20 / 100)),
-                    funcao: function () {
-                        if (chancePercentual(50)) {
-                            criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
-                        } else {
-                            criarLoja(Math.round(this.x + this.largura / 2 - (loja.largura / 2)), Math.round(this.y + this.altura / 2 - (loja.altura / 2)));
-                        }
-                    },
-                },
-            };
-
-            var listaPortais = {
-                //esquerda
-                1: {
-                    id: 'po1',
-                    largura: 30,
-                    altura: 90,
-                    funcao: () => {
-                        criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
-                        criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
-                    },
-                },
-                //direita
-                2: {
-                    id: 'po2',
-                    largura: 30,
-                    altura: 90,
-                    funcao: () => {
-                        criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
-                        criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
-                    },
-                },
-                //cima
-                3: {
-                    id: 'po3',
-                    largura: 90,
-                    altura: 30,
-                    funcao: () => {
-                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y, 30, 40);
-                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y, 30, 40);
-                    },
-                },
-                //baixo
-                4: {
-                    id: 'po4',
-                    largura: 90,
-                    altura: 30,
-                    funcao: () => {
-                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y + mapa.altura - 40, 30, 40);
-                        criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y + mapa.altura - 40, 30, 40);
-                    },
-                },
-            };
-
-            var mapa = {};
-
-            var portais = {};
-
-            function criarPortais(n) {
-                listaPortais['1'].x = mapa.x;
-                listaPortais['1'].y = mapa.y + Math.floor(mapa.altura / 2) - 45;
-
-                listaPortais['2'].x = mapa.x + mapa.largura - 30;
-                listaPortais['2'].y = mapa.y + Math.floor(mapa.altura / 2) - 45;
-
-                listaPortais['3'].x = mapa.x + Math.floor(mapa.largura / 2) - 45;
-                listaPortais['3'].y = mapa.y;
-
-                listaPortais['4'].x = mapa.x + Math.floor(mapa.largura / 2) - 45;
-                listaPortais['4'].y = mapa.y + mapa.altura - 30;
-
-                portais[n] = listaPortais[n];
-
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: portais[n].id,
-                            class: 'po',
-                        },
-                        style: {
-                            width: portais[n].largura + 'px',
-                            height: portais[n].altura + 'px',
-                            left: portais[n].x + 'px',
-                            top: portais[n].y + 'px',
-                        },
-                    })
-                );
-
-                portais[n].funcao();
-            }
-
-            function criarMapa() {
-                mapa = listaMapas[randInt(0, 1)];
-
-                mapa.id = 'mapa';
-
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: mapa.id,
-                        },
-                        style: {
-                            width: mapa.largura + 'px',
-                            height: mapa.altura + 'px',
-                            left: mapa.x + 'px',
-                            top: mapa.y + 'px',
-                        },
-                    })
-                );
-
-                mapa.funcao();
-            }
-
-            // tipos de itens
-            var tipoItemArma = 'a';
-            var tipoItemArmadura = 'ar';
-            var tipoItemCura = 'c';
-
-            // tipos de ataque
-            var tipoAtaqueADistancia = 'd';
-            var tipoAtaqueCorporal = 'c';
-
-            var listaItens = {
-                vazio: {
-                    nome: 'vazio',
-                    texto: 'Vazio',
-                    poder: 0,
-                    tipo: 'vazio'
-                },
-                0: {
-                    nome: 'espada_ferro',
-                    texto: 'Espada de Ferro',
-                    poder: 10,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueCorporal,
-                    preco: 60,
-                },
-                1: {
-                    nome: 'armadura_ferro',
-                    texto: 'Armadura de Ferro',
-                    poder: 10,
-                    tipo: tipoItemArmadura,
-                    preco: 60,
-                },
-                2: {
-                    nome: 'espada_ouro',
-                    texto: 'Espada Dourada',
-                    poder: 70,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueCorporal,
-                    preco: 220,
-                },
-                3: {
-                    nome: 'armadura_trevas',
-                    texto: 'Armadura das Trevas',
-                    poder: 60,
-                    tipo: tipoItemArmadura,
-                    preco: 225,
-                },
-                4: {
-                    nome: 'pocao_hp',
-                    texto: 'Poção',
-                    poder: 25,
-                    tipo: tipoItemCura,
-                    preco: 25,
-                },
-                5: {
-                    nome: 'pocao_hp_grande',
-                    texto: 'Poção Grande',
-                    poder: 50,
-                    tipo: tipoItemCura,
-                    preco: 50,
-                },
-                6: {
-                    nome: 'arco_madeira',
-                    texto: 'Arco de Madeira',
-                    poder: 5,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueADistancia,
-                    preco: 10
-                },
-                7: {
-                    nome: 'espada_enferrujada',
-                    texto: 'Espada Enferrujada',
-                    poder: 7,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueCorporal,
-                    preco: 2,
-                },
-                8: {
-                    nome: 'armadura_enferrujada',
-                    texto: 'Armadura Enferrujada',
-                    poder: 5,
-                    tipo: tipoItemArmadura,
-                    preco: 2,
-                },
-                9: {
-                    nome: 'espada_prata',
-                    texto: 'Espada de Prata',
-                    poder: 50,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueCorporal,
-                    preco: 130,
-                },
-                10: {
-                    nome: 'arco_recurvo',
-                    texto: 'Arco Recurvo',
-                    poder: 30,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueADistancia,
-                    preco: 35,
-                },
-                11: {
-                    nome: 'armadura_dragao',
-                    texto: 'Armadura de Dragão',
-                    poder: 70,
-                    tipo: tipoItemArmadura,
-                    preco: 250,
-                },
-                12: {
-                    nome: 'besta',
-                    texto: 'Besta',
-                    poder: 45,
-                    tipo: tipoItemArma,
-                    tipoAtaque: tipoAtaqueADistancia,
-                    preco: 55,
-                },
-            };
-
-            var listaInimigos = {
-                0: {
-                    nome: 'guerreiro_esquecido',
-                    altura: 40,
-                    largura: 40,
-                    pontosDeVida: 200,
-                    ataque: 10,
-                    class: 'i',
-                    equipamento: {
-                        arma: listaItens[0],
-                        armadura: listaItens[1],
-                    },
-                },
-                1: {
-                    nome: 'zumbi',
-                    altura: 40,
-                    largura: 40,
-                    pontosDeVida: 200,
-                    ataque: 7,
-                    class: 'zumbi',
-                    equipamento: {
-                        arma: listaItens['vazio'],
-                        armadura: listaItens[8],
-                    },
-                },
-                2: {
-                    nome: 'esqueleto',
-                    altura: 40,
-                    largura: 40,
-                    pontosDeVida: 100,
-                    ataque: 3,
-                    class: 'esqueleto',
-                    equipamento: {
-                        arma: listaItens[7],
-                        armadura: listaItens['vazio'],
-                    },
-                },
-                
-            };
-
-            var listaChefes = {
-                0: {
-                    nome: 'cavaleiro_das_trevas',
-                    altura: 70,
-                    largura: 70,
-                    pontosDeVida: 500,
-                    ataque: 15,
-                    class: 'cavaleiro_das_trevas',
-                    equipamento: {
-                        arma: listaItens[9],
-                        armadura: listaItens[3],
-                    },
-                },
-            };
-
-            var itensLoja = {
-                0: listaItens[9],
-                1: listaItens[11],
-                2: listaItens[4],
-                3: listaItens[5],
-            };
-
-            // fazer a loja igual uma fonte dos desejos
-            // verificar como fazer isso
-            var loja = {
-                id: 'loja',
-                altura: 110,
-                largura: 110,
-                objeto: null,
-            };
-
-            var level = 1;
-
-            var inimigos = {};
-
-            var obstaculos = {};
-
-            var itens = {};
-
-            var armas = {};
-
-            // faz um objeto mudar de posição
-            function andar(objeto, direcao) {
-                if (direcao == 'direita') {
-                    if (objeto.x + objeto.largura < mapa.x + mapa.largura) {
-                        objeto.x++;
-                        document.getElementById(objeto.id).style.left = objeto.x + 'px';
+                } else if (i == 'attributes') {
+                    for (const j in objeto[i]) {
+                        tag.setAttribute(j, objeto[i][j]);
                     }
-                } else if (direcao == 'esquerda') {
-                    if (objeto.x > mapa.x) {
-                        objeto.x--;
-                        document.getElementById(objeto.id).style.left = objeto.x + 'px';
-                    }
-                } else if (direcao == 'cima') {
-                    if (objeto.y > mapa.y) {
-                        objeto.y--;
-                        document.getElementById(objeto.id).style.top = objeto.y + 'px';
-                    }
-                } else if (direcao == 'baixo') {
-                    if (objeto.y + objeto.altura < mapa.y + mapa.altura) {
-                        objeto.y++;
-                        document.getElementById(objeto.id).style.top = objeto.y + 'px';
-                    }
+                } else if (i != 'tipo') {
+                    tag[i] = objeto[i];
                 }
             }
 
-            function pontos(objeto) {
-                // os pontos "a", "b", "c" e "d" são os vértices
-                return {
-                    a: {
-                        x: objeto.x,
-                        y: objeto.y,
-                    },
-                    b: {
-                        x: objeto.x,
-                        y: objeto.y + objeto.altura,
-                    },
-                    c: {
-                        x: objeto.x + objeto.largura,
-                        y: objeto.y,
-                    },
-                    d: {
-                        x: objeto.x + objeto.largura,
-                        y: objeto.y + objeto.altura,
-                    },
-                };
-            }
+            return tag;
+        }
 
-            // valida o movimento de um objeto baseado na direção e colisão com outro objeto
-            function movimento(objeto1, objeto2, direcao) {
-                objeto1.face = direcao;
+        function tamanhoObjeto(objeto) {
+            return Object.keys(objeto).length;
+        }
 
-                var pontosObjeto1 = pontos(objeto1);
-                var pontosObjeto2 = pontos(objeto2);
+        function existe(dado) {
+            return typeof dado != 'undefined' && dado != null;
+        }
 
-                if (direcao == 'direita') {
-                    if (pontosObjeto1.c.x + 1 == pontosObjeto2.b.x) {
-                        if (pontosObjeto1.c.y >= pontosObjeto2.a.y && pontosObjeto1.c.y <= pontosObjeto2.b.y) {
-                            return false;
-                        } else if (pontosObjeto1.d.y >= pontosObjeto2.a.y && pontosObjeto1.d.y <= pontosObjeto2.b.y) {
-                            return false;
-                        } else if (pontosObjeto1.c.y <= pontosObjeto2.a.y && pontosObjeto1.d.y >= pontosObjeto2.b.y) {
-                            return false;
-                        }
-
-                        return true;
+        var listaMapas = {
+            0: {
+                x: Math.round(screen.width / 4),
+                y: Math.round(screen.height / 7),
+                altura: Math.round(screen.height * (55.5 / 100)),
+                largura: Math.round(screen.width * (50 / 100)),
+                funcao: function () {
+                    if (chancePercentual(33)) {
+                        criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
+                    } else if (chancePercentual(33)) {
+                        criarObstaculo(this.x, 550, 500, 50);
+                        criarObstaculo(this.x + this.largura - 500, 300, 500, 50);
                     }
-
-                    return true;
-                } else if (direcao == 'esquerda') {
-                    if (pontosObjeto1.b.x - 1 == pontosObjeto2.c.x) {
-                        if (pontosObjeto1.b.y >= pontosObjeto2.c.y && pontosObjeto1.b.y <= pontosObjeto2.d.y) {
-                            return false;
-                        } else if (pontosObjeto1.a.y >= pontosObjeto2.c.y && pontosObjeto1.a.y <= pontosObjeto2.d.y) {
-                            return false;
-                        } else if (pontosObjeto1.a.y <= pontosObjeto2.c.y && pontosObjeto1.b.y >= pontosObjeto2.d.y) {
-                            return false;
-                        }
-
-                        return true;
+                },
+            },
+            1: {
+                x: Math.round(screen.width / 2 - (screen.width * (20 / 100)) / 2),
+                y: Math.round(screen.height / 7),
+                altura: Math.round(screen.height * (55.5 / 100)),
+                largura: Math.round(screen.width * (20 / 100)),
+                funcao: function () {
+                    if (chancePercentual(50)) {
+                        criarObstaculo(Math.round(this.x + this.largura / 2 - 40), Math.round(this.y + this.altura / 2 - 40), 80, 80);
+                    } else {
+                        criarLoja(Math.round(this.x + this.largura / 2 - (loja.largura / 2)), Math.round(this.y + this.altura / 2 - (loja.altura / 2)));
                     }
+                },
+            },
+        };
 
-                    return true;
-                } else if (direcao == 'cima') {
-                    if (pontosObjeto1.a.y - 1 == pontosObjeto2.b.y) {
-                        if (pontosObjeto1.c.x >= pontosObjeto2.b.x && pontosObjeto1.c.x <= pontosObjeto2.d.x) {
-                            return false;
-                        } else if (pontosObjeto1.a.x >= pontosObjeto2.b.x && pontosObjeto1.a.x <= pontosObjeto2.d.x) {
-                            return false;
-                        } else if (pontosObjeto1.a.x <= pontosObjeto2.b.x && pontosObjeto1.c.x >= pontosObjeto2.d.x) {
-                            return false;
-                        }
+        var listaPortais = {
+            //esquerda
+            1: {
+                id: 'po1',
+                largura: 30,
+                altura: 90,
+                funcao: () => {
+                    criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
+                    criarObstaculo(mapa.x, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
+                },
+            },
+            //direita
+            2: {
+                id: 'po2',
+                largura: 30,
+                altura: 90,
+                funcao: () => {
+                    criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 - 30, 40, 30);
+                    criarObstaculo(mapa.x + mapa.largura - 40, mapa.y + Math.floor(mapa.altura / 2) - 45 + 90, 40, 30);
+                },
+            },
+            //cima
+            3: {
+                id: 'po3',
+                largura: 90,
+                altura: 30,
+                funcao: () => {
+                    criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y, 30, 40);
+                    criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y, 30, 40);
+                },
+            },
+            //baixo
+            4: {
+                id: 'po4',
+                largura: 90,
+                altura: 30,
+                funcao: () => {
+                    criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 - 30, mapa.y + mapa.altura - 40, 30, 40);
+                    criarObstaculo(mapa.x + Math.floor(mapa.largura / 2) - 45 + 90, mapa.y + mapa.altura - 40, 30, 40);
+                },
+            },
+        };
 
-                        return true;
-                    }
+        var mapa = {};
 
-                    return true;
-                } else if (direcao == 'baixo') {
-                    if (pontosObjeto1.b.y + 1 == pontosObjeto2.a.y) {
-                        if (pontosObjeto1.b.x >= pontosObjeto2.a.x && pontosObjeto1.b.x <= pontosObjeto2.c.x) {
-                            return false;
-                        } else if (pontosObjeto1.d.x >= pontosObjeto2.a.x && pontosObjeto1.d.x <= pontosObjeto2.c.x) {
-                            return false;
-                        } else if (pontosObjeto1.b.x <= pontosObjeto2.a.x && pontosObjeto1.d.x >= pontosObjeto2.c.x) {
-                            return false;
-                        }
+        var portais = {};
 
-                        return true;
-                    }
+        function criarPortais(n) {
+            listaPortais['1'].x = mapa.x;
+            listaPortais['1'].y = mapa.y + Math.floor(mapa.altura / 2) - 45;
 
-                    return true;
-                }
+            listaPortais['2'].x = mapa.x + mapa.largura - 30;
+            listaPortais['2'].y = mapa.y + Math.floor(mapa.altura / 2) - 45;
 
-                return false;
-            }
+            listaPortais['3'].x = mapa.x + Math.floor(mapa.largura / 2) - 45;
+            listaPortais['3'].y = mapa.y;
 
-            // verifica a interação de movimento e colisão entre todos os objetos (jogador, inimigos e obstáculos)
-            function movimentoGeral(objeto, direcao) {
-                var e = true;
+            listaPortais['4'].x = mapa.x + Math.floor(mapa.largura / 2) - 45;
+            listaPortais['4'].y = mapa.y + mapa.altura - 30;
 
-                if (existe(loja.objeto) && !movimento(objeto, loja.objeto, direcao)) {
-                    e = false;
-                }
+            portais[n] = listaPortais[n];
 
-                if (e) {
-                    for (const i in inimigos) {
-                        if (objeto.id != inimigos[i].id) {
-                            if (!movimento(objeto, inimigos[i], direcao)) {
-                                e = false;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (e) {
-                    for (const i in obstaculos) {
-                        if (objeto.id != obstaculos[i].id) {
-                            if (!movimento(objeto, obstaculos[i], direcao)) {
-                                e = false;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (e) {
-                    andar(objeto, direcao);
-                }
-            }
-
-            // verifica se houve colisao entre dois objetos ou se ocupam o mesmo lugar (é mais usado no ataque)
-            function colisao(objeto1, objeto2) {
-                var pontosObjeto1 = pontos(objeto1);
-                var pontosObjeto2 = pontos(objeto2);
-
-                return pontosObjeto1.c.x + 1 >= pontosObjeto2.b.x && pontosObjeto1.b.x - 1 <= pontosObjeto2.c.x && pontosObjeto1.a.y - 1 <= pontosObjeto2.b.y && pontosObjeto1.b.y + 1 >= pontosObjeto2.a.y;
-            }
-
-            function criarLoja(x, y) {
-                loja.objeto = {
-                    x: x,
-                    y: y,
-                    altura: loja.altura,
-                    largura: loja.largura,
-                };
-
-                var bordaFonte = 6;
-
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: loja.id,
-                        },
-                        style: {
-                            width: loja.largura + 'px',
-                            height: loja.altura + 'px',
-                            left: x + 'px',
-                            top: y + 'px',
-                            backgroundColor: 'grey',
-                        }
-                    })
-                );
-
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: loja.id + '_agua',
-                        },
-                        style: {
-                            width: (loja.largura - (bordaFonte * 2)) + 'px',
-                            height: (loja.altura - (bordaFonte * 2)) + 'px',
-                            left: (x + bordaFonte) + 'px',
-                            top: (y + bordaFonte) + 'px',
-                            backgroundColor: '#1275e6'
-                        }
-                    })
-                );
-            }
-
-            function criarItem(item, x, y) {
-                if (item.nome != 'vazio') {
-                    var idKey = tamanhoObjeto(itens) + 1;
-
-                    objeto = {
-                        id: 'it' + idKey,
-                        x: x,
-                        y: y,
-                        altura: 30,
-                        largura: 30,
-                        objeto: item,
-                    };
-
-                    itens['item' + idKey] = objeto;
-
-                    canvas.appendChild(
-                        criarTag({
-                            tipo: 'div',
-                            attributes: {
-                                id: objeto.id,
-                                class: 'it',
-                            },
-                            style: {
-                                width: objeto.largura + 'px',
-                                height: objeto.altura + 'px',
-                                left: objeto.x + 'px',
-                                top: objeto.y + 'px',
-                            },
-                        })
-                    );
-                }
-            }
-
-            function mostrarLoja() {
-                var divLoja = document.getElementById('conteudo_janela_loja');
-                divLoja.innerHTML = '';
-
-                for (const i in itensLoja) {
-                    var string = criarTag({
-                        tipo: 'p',
-                        attributes: {
-                            class: 'texto'
-                        },
-                        innerHTML: itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ',
-                        style: {
-                            fontSize: '20px',
-                            position: 'static'
-                        }
-                    });
-
-                    var b = criarTag({
-                        tipo: 'button',
-                        innerHTML: 'Comprar',
-                        style: {
-                            backgroundColor: '#520a06',
-                            border: '1px solid white',
-                            width: '80px',
-                            color: 'white',
-                            height: '30px'
-                        },
-                        onclick: () => {
-                            if (jogador?.dinheiro >= itensLoja[i]?.preco) {
-                                alert('Item comprado com sucesso!');
-
-                                jogador.dinheiro -= itensLoja[i]?.preco;
-
-                                document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
-
-                                adicionarAoInventario(itensLoja[i]);
-
-                                mostrarLoja();
-                            } else {
-                                alert('Você não tem dinheiro suficiente!');
-                            }
-                        }
-                    });
-
-                    string.appendChild(b);
-
-                    divLoja.appendChild(string);
-                }
-            }
-
-            function mostrarEquipamento() {
-                document.getElementById('status').innerHTML = '';
-
-                document.getElementById('status').appendChild(
-                    criarTag({
-                        tipo: 'p',
-                        attributes: {
-                            class: 'texto'
-                        },
-                        innerHTML: 'Vida: ' + jogador.pontosDeVida + '/' + jogador.pontosDeVidaMaximo,
-                        style: {
-                            fontSize: '20px',
-                            position: 'static',
-                        },
-                    })
-                );
-
-                document.getElementById('status').appendChild(
-                    criarTag({
-                        tipo: 'p',
-                        attributes: {
-                            class: 'texto'
-                        },
-                        innerHTML: 'Força: ' + jogador.ataque + ' (+' + jogador.equipamento.arma.poder + ')',
-                        style: {
-                            fontSize: '20px',
-                            position: 'static',
-                        },
-                    })
-                );
-
-                document.getElementById('status').appendChild(
-                    criarTag({
-                        tipo: 'p',
-                        attributes: {
-                            class: 'texto'
-                        },
-                        innerHTML: 'Defesa: ' + jogador.equipamento.armadura.poder,
-                        style: {
-                            fontSize: '20px',
-                            position: 'static',
-                        },
-                    })
-                );
-
-                document.getElementById('status').appendChild(criarTag({
-                    tipo: 'p',
-                    innerHTML: 'Dinheiro: ' + jogador.dinheiro + ' moedas',
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
                     attributes: {
-                        class: 'texto'
+                        id: portais[n].id,
+                        class: 'po',
                     },
                     style: {
-                        fontSize: '20px',
-                        position: 'static'
+                        width: portais[n].largura + 'px',
+                        height: portais[n].altura + 'px',
+                        left: portais[n].x + 'px',
+                        top: portais[n].y + 'px',
+                    },
+                })
+            );
+
+            portais[n].funcao();
+        }
+
+        function criarMapa() {
+            mapa = listaMapas[randInt(0, 1)];
+
+            mapa.id = 'mapa';
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: mapa.id,
+                    },
+                    style: {
+                        width: mapa.largura + 'px',
+                        height: mapa.altura + 'px',
+                        left: mapa.x + 'px',
+                        top: mapa.y + 'px',
+                    },
+                })
+            );
+
+            mapa.funcao();
+        }
+
+        // tipos de itens
+        var tipoItemArma = 'a';
+        var tipoItemArmadura = 'ar';
+        var tipoItemCura = 'c';
+
+        // tipos de ataque
+        var tipoAtaqueADistancia = 'd';
+        var tipoAtaqueCorporal = 'c';
+
+        var listaItens = {
+            vazio: {
+                nome: 'vazio',
+                texto: 'Vazio',
+                poder: 0,
+                tipo: 'vazio'
+            },
+            0: {
+                nome: 'espada_ferro',
+                texto: 'Espada de Ferro',
+                poder: 10,
+                tipo: tipoItemArma,
+                tipoAtaque: tipoAtaqueCorporal,
+                preco: 60,
+            },
+            1: {
+                nome: 'armadura_ferro',
+                texto: 'Armadura de Ferro',
+                poder: 10,
+                tipo: tipoItemArmadura,
+                preco: 60,
+            },
+            2: {
+                nome: 'espada_ouro',
+                texto: 'Espada Dourada',
+                poder: 70,
+                tipo: tipoItemArma,
+                tipoAtaque: tipoAtaqueCorporal,
+                preco: 220,
+            },
+            3: {
+                nome: 'armadura_trevas',
+                texto: 'Armadura das Trevas',
+                poder: 60,
+                tipo: tipoItemArmadura,
+                preco: 225,
+            },
+            4: {
+                nome: 'pocao_hp',
+                texto: 'Poção',
+                poder: 25,
+                tipo: tipoItemCura,
+                preco: 25,
+            },
+            5: {
+                nome: 'pocao_hp_grande',
+                texto: 'Poção Grande',
+                poder: 50,
+                tipo: tipoItemCura,
+                preco: 50,
+            },
+            6: {
+                nome: 'arco_madeira',
+                texto: 'Arco de Madeira',
+                poder: 5,
+                tipo: tipoItemArma,
+                tipoAtaque: tipoAtaqueADistancia,
+                preco: 10
+            },
+            7: {
+                nome: 'espada_enferrujada',
+                texto: 'Espada Enferrujada',
+                poder: 7,
+                tipo: tipoItemArma,
+                tipoAtaque: tipoAtaqueCorporal,
+                preco: 2,
+            },
+            8: {
+                nome: 'armadura_enferrujada',
+                texto: 'Armadura Enferrujada',
+                poder: 5,
+                tipo: tipoItemArmadura,
+                preco: 2,
+            },
+            9: {
+                nome: 'espada_prata',
+                texto: 'Espada de Prata',
+                poder: 50,
+                tipo: tipoItemArma,
+                tipoAtaque: tipoAtaqueCorporal,
+                preco: 130,
+            },
+            10: {
+                nome: 'arco_recurvo',
+                texto: 'Arco Recurvo',
+                poder: 30,
+                tipo: tipoItemArma,
+                tipoAtaque: tipoAtaqueADistancia,
+                preco: 35,
+            },
+            11: {
+                nome: 'armadura_dragao',
+                texto: 'Armadura de Dragão',
+                poder: 70,
+                tipo: tipoItemArmadura,
+                preco: 250,
+            },
+            12: {
+                nome: 'besta',
+                texto: 'Besta',
+                poder: 45,
+                tipo: tipoItemArma,
+                tipoAtaque: tipoAtaqueADistancia,
+                preco: 55,
+            },
+        };
+
+        var listaInimigos = {
+            0: {
+                nome: 'guerreiro_esquecido',
+                altura: 40,
+                largura: 40,
+                pontosDeVida: 200,
+                ataque: 10,
+                class: 'i',
+                equipamento: {
+                    arma: listaItens[0],
+                    armadura: listaItens[1],
+                },
+            },
+            1: {
+                nome: 'zumbi',
+                altura: 40,
+                largura: 40,
+                pontosDeVida: 200,
+                ataque: 7,
+                class: 'zumbi',
+                equipamento: {
+                    arma: listaItens['vazio'],
+                    armadura: listaItens[8],
+                },
+            },
+            2: {
+                nome: 'esqueleto',
+                altura: 40,
+                largura: 40,
+                pontosDeVida: 100,
+                ataque: 3,
+                class: 'esqueleto',
+                equipamento: {
+                    arma: listaItens[7],
+                    armadura: listaItens['vazio'],
+                },
+            },
+        };
+
+        var listaChefes = {
+            0: {
+                nome: 'cavaleiro_das_trevas',
+                altura: 70,
+                largura: 70,
+                pontosDeVida: 500,
+                ataque: 15,
+                class: 'cavaleiro_das_trevas',
+                equipamento: {
+                    arma: listaItens[9],
+                    armadura: listaItens[3],
+                },
+            },
+        };
+
+        var itensLoja = {
+            0: listaItens[9],
+            1: listaItens[11],
+            2: listaItens[4],
+            3: listaItens[5],
+        };
+
+        // fazer a loja igual uma fonte dos desejos
+        // verificar como fazer isso
+        var loja = {
+            id: 'loja',
+            altura: 110,
+            largura: 110,
+            objeto: null,
+        };
+
+        var level = 1;
+
+        var inimigos = {};
+
+        var obstaculos = {};
+
+        var itens = {};
+
+        var armas = {};
+
+        // faz um objeto mudar de posição
+        function andar(objeto, direcao) {
+            if (direcao == 'direita') {
+                if (objeto.x + objeto.largura < mapa.x + mapa.largura) {
+                    objeto.x++;
+                    document.getElementById(objeto.id).style.left = objeto.x + 'px';
+                }
+            } else if (direcao == 'esquerda') {
+                if (objeto.x > mapa.x) {
+                    objeto.x--;
+                    document.getElementById(objeto.id).style.left = objeto.x + 'px';
+                }
+            } else if (direcao == 'cima') {
+                if (objeto.y > mapa.y) {
+                    objeto.y--;
+                    document.getElementById(objeto.id).style.top = objeto.y + 'px';
+                }
+            } else if (direcao == 'baixo') {
+                if (objeto.y + objeto.altura < mapa.y + mapa.altura) {
+                    objeto.y++;
+                    document.getElementById(objeto.id).style.top = objeto.y + 'px';
+                }
+            }
+        }
+
+        function pontos(objeto) {
+            // os pontos "a", "b", "c" e "d" são os vértices
+            return {
+                a: {
+                    x: objeto.x,
+                    y: objeto.y,
+                },
+                b: {
+                    x: objeto.x,
+                    y: objeto.y + objeto.altura,
+                },
+                c: {
+                    x: objeto.x + objeto.largura,
+                    y: objeto.y,
+                },
+                d: {
+                    x: objeto.x + objeto.largura,
+                    y: objeto.y + objeto.altura,
+                },
+            };
+        }
+
+        // valida o movimento de um objeto baseado na direção e colisão com outro objeto
+        function movimento(objeto1, objeto2, direcao) {
+            objeto1.face = direcao;
+
+            var pontosObjeto1 = pontos(objeto1);
+            var pontosObjeto2 = pontos(objeto2);
+
+            if (direcao == 'direita') {
+                if (pontosObjeto1.c.x + 1 == pontosObjeto2.b.x) {
+                    if (pontosObjeto1.c.y >= pontosObjeto2.a.y && pontosObjeto1.c.y <= pontosObjeto2.b.y) {
+                        return false;
+                    } else if (pontosObjeto1.d.y >= pontosObjeto2.a.y && pontosObjeto1.d.y <= pontosObjeto2.b.y) {
+                        return false;
+                    } else if (pontosObjeto1.c.y <= pontosObjeto2.a.y && pontosObjeto1.d.y >= pontosObjeto2.b.y) {
+                        return false;
                     }
-                }));
 
-                var divEquipamento = document.getElementById('conteudo_janela_equipamento');
-                divEquipamento.innerHTML = '';
+                    return true;
+                }
 
-                for (const i in jogador.equipamento) {
-                    if (jogador.equipamento[i].nome != 'vazio') {
-                        var string = criarTag({
-                            tipo: 'p',
-                            attributes: {
-                                class: 'texto'
-                            },
-                            innerHTML: jogador.equipamento[i].texto,
-                            style: {
-                                fontSize: '20px',
-                                position: 'static',
-                            },
-                        });
+                return true;
+            } else if (direcao == 'esquerda') {
+                if (pontosObjeto1.b.x - 1 == pontosObjeto2.c.x) {
+                    if (pontosObjeto1.b.y >= pontosObjeto2.c.y && pontosObjeto1.b.y <= pontosObjeto2.d.y) {
+                        return false;
+                    } else if (pontosObjeto1.a.y >= pontosObjeto2.c.y && pontosObjeto1.a.y <= pontosObjeto2.d.y) {
+                        return false;
+                    } else if (pontosObjeto1.a.y <= pontosObjeto2.c.y && pontosObjeto1.b.y >= pontosObjeto2.d.y) {
+                        return false;
+                    }
 
-                        var b = criarTag({
-                            tipo: 'button',
-                            innerHTML: 'Remover',
-                            style: {
-                                backgroundColor: '#520a06',
-                                border: '1px solid white',
-                                width: '80px',
-                                color: 'white',
-                                height: '30px',
-                            },
-                            onclick: () => {
-                                removerDoEquipamento(jogador, i);
-                                mostrarEquipamento();
-                            },
-                        });
+                    return true;
+                }
 
-                        string.appendChild(b);
+                return true;
+            } else if (direcao == 'cima') {
+                if (pontosObjeto1.a.y - 1 == pontosObjeto2.b.y) {
+                    if (pontosObjeto1.c.x >= pontosObjeto2.b.x && pontosObjeto1.c.x <= pontosObjeto2.d.x) {
+                        return false;
+                    } else if (pontosObjeto1.a.x >= pontosObjeto2.b.x && pontosObjeto1.a.x <= pontosObjeto2.d.x) {
+                        return false;
+                    } else if (pontosObjeto1.a.x <= pontosObjeto2.b.x && pontosObjeto1.c.x >= pontosObjeto2.d.x) {
+                        return false;
+                    }
 
-                        divEquipamento.appendChild(string);
+                    return true;
+                }
+
+                return true;
+            } else if (direcao == 'baixo') {
+                if (pontosObjeto1.b.y + 1 == pontosObjeto2.a.y) {
+                    if (pontosObjeto1.b.x >= pontosObjeto2.a.x && pontosObjeto1.b.x <= pontosObjeto2.c.x) {
+                        return false;
+                    } else if (pontosObjeto1.d.x >= pontosObjeto2.a.x && pontosObjeto1.d.x <= pontosObjeto2.c.x) {
+                        return false;
+                    } else if (pontosObjeto1.b.x <= pontosObjeto2.a.x && pontosObjeto1.d.x >= pontosObjeto2.c.x) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        // verifica a interação de movimento e colisão entre todos os objetos (jogador, inimigos e obstáculos)
+        function movimentoGeral(objeto, direcao) {
+            var e = true;
+
+            if (existe(loja.objeto) && !movimento(objeto, loja.objeto, direcao)) {
+                e = false;
+            }
+
+            if (e) {
+                for (const i in inimigos) {
+                    if (objeto.id != inimigos[i].id) {
+                        if (!movimento(objeto, inimigos[i], direcao)) {
+                            e = false;
+
+                            break;
+                        }
                     }
                 }
             }
 
-            function mostrarInventario() {
-                var divInventario = document.getElementById('conteudo_janela_inventario');
-                divInventario.innerHTML = '';
+            if (e) {
+                for (const i in obstaculos) {
+                    if (objeto.id != obstaculos[i].id) {
+                        if (!movimento(objeto, obstaculos[i], direcao)) {
+                            e = false;
 
-                for (const i in jogador.inventario) {
-                    var string = criarTag({
-                        tipo: 'p',
-                        attributes: {
-                            class: 'texto'
-                        },
-                        innerHTML: jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)',
-                        style: {
-                            fontSize: '20px',
-                            position: 'static',
-                        },
-                    });
-
-                    if (jogador.inventario[i].tipo == tipoItemCura) {
-                        var b = criarTag({
-                            tipo: 'button',
-                            innerHTML: 'Usar',
-                            style: {
-                                backgroundColor: '#520a06',
-                                border: '1px solid white',
-                                width: '80px',
-                                color: 'white',
-                                height: '30px',
-                            },
-                            onclick: () => {
-                                curar(jogador.inventario[i].nome);
-                                mostrarInventario();
-                            },
-                        });
-
-                        string.appendChild(b);
-                    } else {
-                        var b = criarTag({
-                            tipo: 'button',
-                            innerHTML: 'Ad Equip',
-                            style: {
-                                backgroundColor: '#520a06',
-                                border: '1px solid white',
-                                width: '80px',
-                                color: 'white',
-                                height: '30px',
-                            },
-                            onclick: () => {
-                                adicionarAoEquipamento(jogador, jogador.inventario[i]);
-                                mostrarInventario();
-                            },
-                        });
-
-                        string.appendChild(b);
+                            break;
+                        }
                     }
-
-                    divInventario.appendChild(string);
                 }
             }
 
-            function adicionarAoInventario(objeto, p = undefined) {
-                var item = {
-                    nome: objeto.nome,
-                    texto: objeto.texto,
-                    poder: objeto.poder,
-                    tipo: objeto.tipo,
-                    quantidade: 1,
+            if (e) {
+                andar(objeto, direcao);
+            }
+        }
+
+        // verifica se houve colisao entre dois objetos ou se ocupam o mesmo lugar (é mais usado no ataque)
+        function colisao(objeto1, objeto2) {
+            var pontosObjeto1 = pontos(objeto1);
+            var pontosObjeto2 = pontos(objeto2);
+
+            return pontosObjeto1.c.x + 1 >= pontosObjeto2.b.x && pontosObjeto1.b.x - 1 <= pontosObjeto2.c.x && pontosObjeto1.a.y - 1 <= pontosObjeto2.b.y && pontosObjeto1.b.y + 1 >= pontosObjeto2.a.y;
+        }
+
+        function criarLoja(x, y) {
+            loja.objeto = {
+                x: x,
+                y: y,
+                altura: loja.altura,
+                largura: loja.largura,
+            };
+
+            var bordaFonte = 6;
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: loja.id,
+                    },
+                    style: {
+                        width: loja.largura + 'px',
+                        height: loja.altura + 'px',
+                        left: x + 'px',
+                        top: y + 'px',
+                        backgroundColor: 'grey',
+                    }
+                })
+            );
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: loja.id + '_agua',
+                    },
+                    style: {
+                        width: (loja.largura - (bordaFonte * 2)) + 'px',
+                        height: (loja.altura - (bordaFonte * 2)) + 'px',
+                        left: (x + bordaFonte) + 'px',
+                        top: (y + bordaFonte) + 'px',
+                        backgroundColor: '#1275e6'
+                    }
+                })
+            );
+        }
+
+        function criarItem(item, x, y) {
+            if (item.nome != 'vazio') {
+                var idKey = tamanhoObjeto(itens) + 1;
+
+                objeto = {
+                    id: 'it' + idKey,
+                    x: x,
+                    y: y,
+                    altura: 30,
+                    largura: 30,
+                    objeto: item,
                 };
 
-                if (existe(objeto.preco)) {
-                    item.preco = objeto.preco;
-                }
-
-                if (existe(objeto.tipoAtaque)) {
-                    item.tipoAtaque = objeto.tipoAtaque;
-                }
-
-                if (existe(jogador.inventario[item.nome])) {
-                    jogador.inventario[item.nome].quantidade += item.quantidade;
-                } else {
-                    jogador.inventario[item.nome] = item;
-                }
-
-                if (existe(p)) {
-                    document.getElementById(itens[p].id).remove();
-
-                    delete itens[p];
-                }
-            }
-
-            function removerDoEquipamento(personagem, tipoEquipamento) {
-                if (existe(personagem.equipamento[tipoEquipamento])) {
-                    if (personagem.equipamento[tipoEquipamento].nome != 'vazio') {
-                        adicionarAoInventario(personagem.equipamento[tipoEquipamento]);
-                    }
-
-                    personagem.equipamento[tipoEquipamento] = listaItens['vazio'];
-                }
-            }
-
-            function adicionarAoEquipamento(personagem, item) {
-                var tipoEquipamento = null;
-
-                switch (item.tipo) {
-                    case tipoItemArma:
-                        tipoEquipamento = 'arma';
-                        break;
-                    case tipoItemArmadura:
-                        tipoEquipamento = 'armadura';
-                        break;
-                    default:
-                        break;
-                }
-
-                var novoItem = {
-                    nome: item.nome,
-                    texto: item.texto,
-                    poder: item.poder,
-                    tipo: item.tipo,
-                };
-
-                if (existe(item.preco)) {
-                    novoItem.preco = item.preco;
-                }
-
-                if (existe(item.tipoAtaque)) {
-                    novoItem.tipoAtaque = item.tipoAtaque;
-                }
-
-                removerDoEquipamento(personagem, tipoEquipamento);
-
-                personagem.equipamento[tipoEquipamento] = novoItem;
-
-                if (existe(personagem.inventario)) {
-                    if (item.quantidade > 1) {
-                        personagem.inventario[item.nome].quantidade--;
-                    } else {
-                        delete personagem.inventario[item.nome];
-                    }
-                }
-            }
-
-            var contadorArma = 0;
-
-            function criarArma(atacante, larguraObjeto, alturaObjeto) {
-                var idKey = contadorArma + 1;
-
-                contadorArma++;
-
-                var objeto = {
-                    id: 'ar' + idKey,
-                };
-
-                if (atacante.face == 'esquerda') {
-                    objeto.largura = larguraObjeto;
-                    objeto.altura = alturaObjeto;
-                    objeto.x = atacante.x - objeto.largura;
-                    objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
-                } else if (atacante.face == 'direita') {
-                    objeto.largura = larguraObjeto;
-                    objeto.altura = alturaObjeto;
-                    objeto.x = atacante.x + atacante.largura;
-                    objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
-                } else if (atacante.face == 'cima') {
-                    objeto.largura = alturaObjeto;
-                    objeto.altura = larguraObjeto;
-                    objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
-                    objeto.y = atacante.y - objeto.altura;
-                } else if (atacante.face == 'baixo') {
-                    objeto.largura = alturaObjeto;
-                    objeto.altura = larguraObjeto;
-                    objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
-                    objeto.y = atacante.y + atacante.altura;
-                }
-
-                armas['arma' + idKey] = objeto;
+                itens['item' + idKey] = objeto;
 
                 canvas.appendChild(
                     criarTag({
                         tipo: 'div',
                         attributes: {
                             id: objeto.id,
-                            class: 'ar',
+                            class: 'it',
                         },
                         style: {
                             width: objeto.largura + 'px',
@@ -1054,28 +715,380 @@
                         },
                     })
                 );
+            }
+        }
 
-                return 'arma' + idKey;
+        function mostrarLoja() {
+            var divLoja = document.getElementById('conteudo_janela_loja');
+            divLoja.innerHTML = '';
+
+            for (const i in itensLoja) {
+                var string = criarTag({
+                    tipo: 'p',
+                    attributes: {
+                        class: 'texto'
+                    },
+                    innerHTML: itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ',
+                    style: {
+                        fontSize: '20px',
+                        position: 'static'
+                    }
+                });
+
+                var b = criarTag({
+                    tipo: 'button',
+                    innerHTML: 'Comprar',
+                    style: {
+                        backgroundColor: '#520a06',
+                        border: '1px solid white',
+                        width: '80px',
+                        color: 'white',
+                        height: '30px'
+                    },
+                    onclick: () => {
+                        if (jogador?.dinheiro >= itensLoja[i]?.preco) {
+                            alert('Item comprado com sucesso!');
+
+                            jogador.dinheiro -= itensLoja[i]?.preco;
+
+                            document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
+
+                            adicionarAoInventario(itensLoja[i]);
+
+                            mostrarLoja();
+                        } else {
+                            alert('Você não tem dinheiro suficiente!');
+                        }
+                    }
+                });
+
+                string.appendChild(b);
+
+                divLoja.appendChild(string);
+            }
+        }
+
+        function mostrarEquipamento() {
+            document.getElementById('status').innerHTML = '';
+
+            document.getElementById('status').appendChild(
+                criarTag({
+                    tipo: 'p',
+                    attributes: {
+                        class: 'texto'
+                    },
+                    innerHTML: 'Vida: ' + jogador.pontosDeVida + '/' + jogador.pontosDeVidaMaximo,
+                    style: {
+                        fontSize: '20px',
+                        position: 'static',
+                    },
+                })
+            );
+
+            document.getElementById('status').appendChild(
+                criarTag({
+                    tipo: 'p',
+                    attributes: {
+                        class: 'texto'
+                    },
+                    innerHTML: 'Força: ' + jogador.ataque + ' (+' + jogador.equipamento.arma.poder + ')',
+                    style: {
+                        fontSize: '20px',
+                        position: 'static',
+                    },
+                })
+            );
+
+            document.getElementById('status').appendChild(
+                criarTag({
+                    tipo: 'p',
+                    attributes: {
+                        class: 'texto'
+                    },
+                    innerHTML: 'Defesa: ' + jogador.equipamento.armadura.poder,
+                    style: {
+                        fontSize: '20px',
+                        position: 'static',
+                    },
+                })
+            );
+
+            document.getElementById('status').appendChild(criarTag({
+                tipo: 'p',
+                innerHTML: 'Dinheiro: ' + jogador.dinheiro + ' moedas',
+                attributes: {
+                    class: 'texto'
+                },
+                style: {
+                    fontSize: '20px',
+                    position: 'static'
+                }
+            }));
+
+            var divEquipamento = document.getElementById('conteudo_janela_equipamento');
+            divEquipamento.innerHTML = '';
+
+            for (const i in jogador.equipamento) {
+                if (jogador.equipamento[i].nome != 'vazio') {
+                    var string = criarTag({
+                        tipo: 'p',
+                        attributes: {
+                            class: 'texto'
+                        },
+                        innerHTML: jogador.equipamento[i].texto,
+                        style: {
+                            fontSize: '20px',
+                            position: 'static',
+                        },
+                    });
+
+                    var b = criarTag({
+                        tipo: 'button',
+                        innerHTML: 'Desequipar',
+                        style: {
+                            backgroundColor: '#520a06',
+                            border: '1px solid white',
+                            width: '80px',
+                            color: 'white',
+                            height: '30px',
+                        },
+                        onclick: () => {
+                            removerDoEquipamento(jogador, i);
+                            mostrarEquipamento();
+                        },
+                    });
+
+                    string.appendChild(b);
+
+                    divEquipamento.appendChild(string);
+                }
+            }
+        }
+
+        function mostrarInventario() {
+            var divInventario = document.getElementById('conteudo_janela_inventario');
+            divInventario.innerHTML = '';
+
+            for (const i in jogador.inventario) {
+                var string = criarTag({
+                    tipo: 'p',
+                    attributes: {
+                        class: 'texto'
+                    },
+                    innerHTML: jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)',
+                    style: {
+                        fontSize: '20px',
+                        position: 'static',
+                    },
+                });
+
+                if (jogador.inventario[i].tipo == tipoItemCura) {
+                    var b = criarTag({
+                        tipo: 'button',
+                        innerHTML: 'Usar',
+                        style: {
+                            backgroundColor: '#520a06',
+                            border: '1px solid white',
+                            width: '80px',
+                            color: 'white',
+                            height: '30px',
+                        },
+                        onclick: () => {
+                            curar(jogador.inventario[i].nome);
+                            mostrarInventario();
+                        },
+                    });
+
+                    string.appendChild(b);
+                } else {
+                    var b = criarTag({
+                        tipo: 'button',
+                        innerHTML: 'Equipar',
+                        style: {
+                            backgroundColor: '#520a06',
+                            border: '1px solid white',
+                            width: '80px',
+                            color: 'white',
+                            height: '30px',
+                        },
+                        onclick: () => {
+                            adicionarAoEquipamento(jogador, jogador.inventario[i]);
+                            mostrarInventario();
+                        },
+                    });
+
+                    string.appendChild(b);
+                }
+
+                divInventario.appendChild(string);
+            }
+        }
+
+        function adicionarAoInventario(objeto, p = undefined) {
+            var item = {
+                nome: objeto.nome,
+                texto: objeto.texto,
+                poder: objeto.poder,
+                tipo: objeto.tipo,
+                quantidade: 1,
+            };
+
+            if (existe(objeto.preco)) {
+                item.preco = objeto.preco;
             }
 
-            function atacar(objeto) {
-                // arma de longa distancia
-                if (objeto.equipamento.arma.tipoAtaque == tipoAtaqueADistancia) {
-                    var projetil_id = criarArma(objeto, 25, 6);
-                    var pr = document.getElementById(armas[projetil_id].id);
-                    var face = objeto.face;
-                    var pos = {
-                        x: armas[projetil_id].x,
-                        y: armas[projetil_id].y,
-                    };
+            if (existe(objeto.tipoAtaque)) {
+                item.tipoAtaque = objeto.tipoAtaque;
+            }
 
-                    armas[projetil_id].mov = setInterval(() => {
-                        andar(armas[projetil_id], face);
+            if (existe(jogador.inventario[item.nome])) {
+                jogador.inventario[item.nome].quantidade += item.quantidade;
+            } else {
+                jogador.inventario[item.nome] = item;
+            }
 
-                        for (const i in inimigos) {
-                            if (colisao(armas[projetil_id], inimigos[i])) {
-                                inimigos[i].diminuiVida(i);
+            if (existe(p)) {
+                document.getElementById(itens[p].id).remove();
 
+                delete itens[p];
+            }
+        }
+
+        function removerDoEquipamento(personagem, tipoEquipamento) {
+            if (existe(personagem.equipamento[tipoEquipamento])) {
+                if (personagem.equipamento[tipoEquipamento].nome != 'vazio') {
+                    adicionarAoInventario(personagem.equipamento[tipoEquipamento]);
+                }
+
+                personagem.equipamento[tipoEquipamento] = listaItens['vazio'];
+            }
+        }
+
+        function adicionarAoEquipamento(personagem, item) {
+            var tipoEquipamento = null;
+
+            switch (item.tipo) {
+                case tipoItemArma:
+                    tipoEquipamento = 'arma';
+                    break;
+                case tipoItemArmadura:
+                    tipoEquipamento = 'armadura';
+                    break;
+                default:
+                    break;
+            }
+
+            var novoItem = {
+                nome: item.nome,
+                texto: item.texto,
+                poder: item.poder,
+                tipo: item.tipo,
+            };
+
+            if (existe(item.preco)) {
+                novoItem.preco = item.preco;
+            }
+
+            if (existe(item.tipoAtaque)) {
+                novoItem.tipoAtaque = item.tipoAtaque;
+            }
+
+            removerDoEquipamento(personagem, tipoEquipamento);
+
+            personagem.equipamento[tipoEquipamento] = novoItem;
+
+            if (existe(personagem.inventario)) {
+                if (item.quantidade > 1) {
+                    personagem.inventario[item.nome].quantidade--;
+                } else {
+                    delete personagem.inventario[item.nome];
+                }
+            }
+        }
+
+        var contadorArma = 0;
+
+        function criarArma(atacante, larguraObjeto, alturaObjeto) {
+            var idKey = contadorArma + 1;
+
+            contadorArma++;
+
+            var objeto = {
+                id: 'ar' + idKey,
+            };
+
+            if (atacante.face == 'esquerda') {
+                objeto.largura = larguraObjeto;
+                objeto.altura = alturaObjeto;
+                objeto.x = atacante.x - objeto.largura;
+                objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
+            } else if (atacante.face == 'direita') {
+                objeto.largura = larguraObjeto;
+                objeto.altura = alturaObjeto;
+                objeto.x = atacante.x + atacante.largura;
+                objeto.y = Math.round(atacante.y + atacante.altura / 2 - objeto.altura / 2);
+            } else if (atacante.face == 'cima') {
+                objeto.largura = alturaObjeto;
+                objeto.altura = larguraObjeto;
+                objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
+                objeto.y = atacante.y - objeto.altura;
+            } else if (atacante.face == 'baixo') {
+                objeto.largura = alturaObjeto;
+                objeto.altura = larguraObjeto;
+                objeto.x = Math.round(atacante.x + atacante.largura / 2 - objeto.largura / 2);
+                objeto.y = atacante.y + atacante.altura;
+            }
+
+            armas['arma' + idKey] = objeto;
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: objeto.id,
+                        class: 'ar',
+                    },
+                    style: {
+                        width: objeto.largura + 'px',
+                        height: objeto.altura + 'px',
+                        left: objeto.x + 'px',
+                        top: objeto.y + 'px',
+                    },
+                })
+            );
+
+            return 'arma' + idKey;
+        }
+
+        function atacar(objeto) {
+            // arma de longa distancia
+            if (objeto.equipamento.arma.tipoAtaque == tipoAtaqueADistancia) {
+                var projetil_id = criarArma(objeto, 25, 6);
+                var pr = document.getElementById(armas[projetil_id].id);
+                var face = objeto.face;
+                var pos = {
+                    x: armas[projetil_id].x,
+                    y: armas[projetil_id].y,
+                };
+
+                armas[projetil_id].mov = setInterval(() => {
+                    andar(armas[projetil_id], face);
+
+                    for (const i in inimigos) {
+                        if (colisao(armas[projetil_id], inimigos[i])) {
+                            inimigos[i].diminuiVida(i);
+
+                            clearInterval(armas[projetil_id].mov);
+                            pr.remove();
+                            delete armas[projetil_id];
+
+                            break;
+                        }
+                    }
+
+                    if (existe(armas[projetil_id])) {
+                        for (const i in obstaculos) {
+                            if (colisao(armas[projetil_id], obstaculos[i])) {
                                 clearInterval(armas[projetil_id].mov);
                                 pr.remove();
                                 delete armas[projetil_id];
@@ -1083,674 +1096,664 @@
                                 break;
                             }
                         }
+                    }
+                }, 0.5);
 
-                        if (existe(armas[projetil_id])) {
-                            for (const i in obstaculos) {
-                                if (colisao(armas[projetil_id], obstaculos[i])) {
-                                    clearInterval(armas[projetil_id].mov);
-                                    pr.remove();
-                                    delete armas[projetil_id];
+                // bloqueia o ataque por um tempo
+                objeto.podeAtacar = false;
 
-                                    break;
-                                }
-                            }
+                setTimeout(() => {
+                    objeto.podeAtacar = true;
+                }, 300);
+
+                setTimeout(() => {
+                    if (armas[projetil_id]) {
+                        clearInterval(armas[projetil_id].mov);
+                        pr.remove();
+                        delete armas[projetil_id];
+                    }
+                }, 1500);
+            } else {
+                var arma_id = criarArma(objeto, 25, 6);
+                var ar = document.getElementById(armas[arma_id].id);
+
+                if (objeto.id != jogador.id) {
+                    if (colisao(armas[arma_id], objeto)) {
+                        jogador.pontosDeVida = Math.round(jogador.pontosDeVida - (objeto.ataque + objeto.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (objeto.ataque + objeto.equipamento.arma.poder)));
+
+                        if (jogador.pontosDeVida <= 0) {
+                            finalizarJogo('Você morreu.');
+                        } else {
+                            document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
                         }
-                    }, 0.5);
+                    }
+                } else {
+                    for (const i in inimigos) {
+                        if (colisao(armas[arma_id], inimigos[i])) {
+                            inimigos[i].diminuiVida(i);
 
-                    // bloqueia o ataque por um tempo
-                    objeto.podeAtacar = false;
+                            break;
+                        }
+                    }
+                }
 
+                // bloqueia o ataque por um tempo
+                objeto.podeAtacar = false;
+
+                setTimeout(() => {
+                    delete armas[arma_id];
+                    ar.remove();
+
+                    // verificar se é interessante esse tempo mudar dependendo do personagem
+                    // por exemplo: com um equip melhor poderia ter um tempo menor de bloqueio
                     setTimeout(() => {
                         objeto.podeAtacar = true;
                     }, 300);
-
-                    setTimeout(() => {
-                        if (armas[projetil_id]) {
-                            clearInterval(armas[projetil_id].mov);
-                            pr.remove();
-                            delete armas[projetil_id];
-                        }
-                    }, 1500);
-                } else {
-                    var arma_id = criarArma(objeto, 25, 6);
-                    var ar = document.getElementById(armas[arma_id].id);
-
-                    if (objeto.id != jogador.id) {
-                        if (colisao(armas[arma_id], objeto)) {
-                            jogador.pontosDeVida = Math.round(jogador.pontosDeVida - (objeto.ataque + objeto.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (objeto.ataque + objeto.equipamento.arma.poder)));
-
-                            if (jogador.pontosDeVida <= 0) {
-                                finalizarJogo('Você morreu.');
-                            } else {
-                                document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
-                            }
-                        }
-                    } else {
-                        for (const i in inimigos) {
-                            if (colisao(armas[arma_id], inimigos[i])) {
-                                inimigos[i].diminuiVida(i);
-
-                                break;
-                            }
-                        }
-                    }
-
-                    // bloqueia o ataque por um tempo
-                    objeto.podeAtacar = false;
-
-                    setTimeout(() => {
-                        delete armas[arma_id];
-                        ar.remove();
-
-                        // verificar se é interessante esse tempo mudar dependendo do personagem
-                        // por exemplo: com um equip melhor poderia ter um tempo menor de bloqueio
-                        setTimeout(() => {
-                            objeto.podeAtacar = true;
-                        }, 300);
-                    }, 40);
-                }
+                }, 40);
             }
+        }
 
-            // inteligência artificial básica para os inimigos
-            function ia(objeto) {
-                if (jogador.x + jogador.largura < objeto.x - 100 || jogador.x > objeto.x + objeto.largura + 100 || jogador.y + jogador.altura < objeto.y - 100 || jogador.y > objeto.y + objeto.altura + 100) {
-                    if (objeto.x < objeto.inix + 20 && objeto.bool == true) {
-                        objeto.bool = true;
+        // inteligência artificial básica para os inimigos
+        function ia(objeto) {
+            if (jogador.x + jogador.largura < objeto.x - 100 || jogador.x > objeto.x + objeto.largura + 100 || jogador.y + jogador.altura < objeto.y - 100 || jogador.y > objeto.y + objeto.altura + 100) {
+                if (objeto.x < objeto.inix + 20 && objeto.bool == true) {
+                    objeto.bool = true;
 
-                        movimentoGeral(objeto, 'direita');
-                    } else {
-                        objeto.bool = false;
-                    }
+                    movimentoGeral(objeto, 'direita');
+                } else {
+                    objeto.bool = false;
+                }
 
-                    if (objeto.x > objeto.inix - 20 && objeto.bool == false) {
-                        objeto.bool = false;
+                if (objeto.x > objeto.inix - 20 && objeto.bool == false) {
+                    objeto.bool = false;
 
+                    movimentoGeral(objeto, 'esquerda');
+                } else {
+                    objeto.bool = true;
+                }
+            } else {
+                if (jogador.x < objeto.x) {
+                    if (movimento(objeto, jogador, 'esquerda')) {
                         movimentoGeral(objeto, 'esquerda');
                     } else {
-                        objeto.bool = true;
-                    }
-                } else {
-                    if (jogador.x < objeto.x) {
-                        if (movimento(objeto, jogador, 'esquerda')) {
-                            movimentoGeral(objeto, 'esquerda');
-                        } else {
-                            if (objeto.podeAtacar) {
-                                atacar(objeto);
-                            }
-                        }
-                    } else if (jogador.x != objeto.x) {
-                        if (movimento(objeto, jogador, 'direita')) {
-                            movimentoGeral(objeto, 'direita');
-                        } else {
-                            if (objeto.podeAtacar) {
-                                atacar(objeto);
-                            }
+                        if (objeto.podeAtacar) {
+                            atacar(objeto);
                         }
                     }
+                } else if (jogador.x != objeto.x) {
+                    if (movimento(objeto, jogador, 'direita')) {
+                        movimentoGeral(objeto, 'direita');
+                    } else {
+                        if (objeto.podeAtacar) {
+                            atacar(objeto);
+                        }
+                    }
+                }
 
-                    if (jogador.y < objeto.y) {
-                        if (movimento(objeto, jogador, 'cima')) {
-                            movimentoGeral(objeto, 'cima');
-                        } else {
-                            if (objeto.podeAtacar) {
-                                atacar(objeto);
-                            }
+                if (jogador.y < objeto.y) {
+                    if (movimento(objeto, jogador, 'cima')) {
+                        movimentoGeral(objeto, 'cima');
+                    } else {
+                        if (objeto.podeAtacar) {
+                            atacar(objeto);
                         }
-                    } else if (jogador.y != objeto.y) {
-                        if (movimento(objeto, jogador, 'baixo')) {
-                            movimentoGeral(objeto, 'baixo');
-                        } else {
-                            if (objeto.podeAtacar) {
-                                atacar(objeto);
-                            }
+                    }
+                } else if (jogador.y != objeto.y) {
+                    if (movimento(objeto, jogador, 'baixo')) {
+                        movimentoGeral(objeto, 'baixo');
+                    } else {
+                        if (objeto.podeAtacar) {
+                            atacar(objeto);
                         }
                     }
                 }
             }
+        }
 
-            // cria os inimigos e coloca no mapa
-            function criarInimigo(ini = null) {
-                var idKey = tamanhoObjeto(inimigos) + 1;
+        // cria os inimigos e coloca no mapa
+        function criarInimigo(ini = null) {
+            var idKey = tamanhoObjeto(inimigos) + 1;
 
-                if (!existe(ini)) {
-                    ini = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
-                }
-
-                var objeto = {
-                    id: 'i' + idKey,
-                    bool: true,
-                    podeAtacar: true,
-                    face: 'direita',
-                    altura: ini.altura,
-                    largura: ini.largura,
-                    pontosDeVida: ini.pontosDeVida,
-                    ataque: ini.ataque,
-                    class: ini.class,
-                    equipamento: {
-                        arma: listaItens['vazio'],
-                        armadura: listaItens['vazio'],
-                    },
-                    diminuiVida: function (posicao) {
-                        this.pontosDeVida = Math.round(this.pontosDeVida - ((jogador.ataque + jogador.equipamento.arma.poder) - ((this.equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))));
-
-                        if (this.pontosDeVida <= 0) {
-                            jogador.dinheiro += randInt(5, 10);
-
-                            document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
-
-                            // if (chancePercentual(50)) {
-                            //     criarItem(randInt(0, tamanhoObjeto(listaItens) - 2), this.x, this.y);
-                            // }
-
-                            if (chancePercentual(40) && existe(this.equipamento.arma)) {
-                                criarItem(this.equipamento.arma, this.x, this.y);
-                            }
-
-                            if (chancePercentual(40) && existe(this.equipamento.armadura)) {
-                                criarItem(this.equipamento.armadura, this.x, this.y);
-                            }
-
-                            clearInterval(this.mov);
-
-                            document.getElementById(this.id).remove();
-
-                            delete inimigos[posicao];
-                        }
-                    },
-                };
-
-                if (existe(ini.equipamento.arma)) {
-                    adicionarAoEquipamento(objeto, ini.equipamento.arma);
-                }
-
-                if (existe(ini.equipamento.armadura)) {
-                    adicionarAoEquipamento(objeto, ini.equipamento.armadura);
-                }
-
-                let bool = {
-                    o: true,
-                    i: true,
-                };
-
-                do {
-                    bool.o = true;
-                    bool.i = true;
-
-                    objeto.x = objeto.inix = randInt(mapa.x + 130, mapa.x + mapa.largura - 230);
-                    objeto.y = objeto.iniy = randInt(mapa.y + 130, mapa.y + mapa.altura - 230);
-
-                    if (existe(loja.objeto) && colisao(loja.objeto, objeto)) {
-                        bool.i = false;
-                    }
-
-                    if (bool.i) {
-                        for (const i in inimigos) {
-                            if (colisao(inimigos[i], objeto)) {
-                                bool.i = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (bool.i) {
-                        for (const i in obstaculos) {
-                            if (colisao(obstaculos[i], objeto)) {
-                                bool.o = false;
-                                break;
-                            }
-                        }
-                    }
-                } while (bool.i == false || bool.o == false);
-
-                inimigos['inimigo' + idKey] = objeto;
-
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: objeto.id,
-                            class: objeto.class,
-                        },
-                        style: {
-                            width: objeto.largura + 'px',
-                            height: objeto.altura + 'px',
-                            left: objeto.x + 'px',
-                            top: objeto.y + 'px',
-                        },
-                    })
-                );
-
-                inimigos['inimigo' + idKey].mov = setInterval(() => {
-                    ia(inimigos['inimigo' + idKey]);
-                }, 25);
+            if (!existe(ini)) {
+                ini = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
             }
 
-            // cria obstaculos e coloca no mapa
-            function criarObstaculo(x, y, largura, altura) {
-                var idKey = tamanhoObjeto(obstaculos) + 1;
+            var objeto = {
+                id: 'i' + idKey,
+                bool: true,
+                podeAtacar: true,
+                face: 'direita',
+                altura: ini.altura,
+                largura: ini.largura,
+                pontosDeVida: ini.pontosDeVida,
+                ataque: ini.ataque,
+                class: ini.class,
+                equipamento: {
+                    arma: listaItens['vazio'],
+                    armadura: listaItens['vazio'],
+                },
+                diminuiVida: function (posicao) {
+                    this.pontosDeVida = Math.round(this.pontosDeVida - ((jogador.ataque + jogador.equipamento.arma.poder) - ((this.equipamento.armadura.poder / 100) * (jogador.ataque + jogador.equipamento.arma.poder))));
 
-                var objeto = {
-                    id: 'o' + idKey,
-                    x: x,
-                    y: y,
-                    altura: altura,
-                    largura: largura,
-                };
+                    if (this.pontosDeVida <= 0) {
+                        jogador.dinheiro += randInt(5, 10);
 
-                obstaculos['obstaculo' + idKey] = objeto;
+                        document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
 
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: objeto.id,
-                            class: 'o',
-                        },
-                        style: {
-                            width: objeto.largura + 'px',
-                            height: objeto.altura + 'px',
-                            left: objeto.x + 'px',
-                            top: objeto.y + 'px',
-                        },
-                    })
-                );
-            }
+                        // if (chancePercentual(50)) {
+                        //     criarItem(randInt(0, tamanhoObjeto(listaItens) - 2), this.x, this.y);
+                        // }
 
-            function criarJogador() {
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: jogador.id,
-                        },
-                        style: {
-                            width: jogador.largura + 'px',
-                            height: jogador.altura + 'px',
-                            left: jogador.x + 'px',
-                            top: jogador.y + 'px',
-                        },
-                    })
-                );
-
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'progress',
-                        attributes: {
-                            id: 'vidaJogador',
-                            value: jogador.pontosDeVida,
-                            max: jogador.pontosDeVidaMaximo,
-                        },
-                        style: {
-                            width: '200px',
-                            height: '30px',
-                            left: mapa.x + 'px',
-                            top: '70px',
-                            backgroundColor: 'green',
-                        },
-                    })
-                );
-
-                canvas.appendChild(criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: 'dinheiroJogador',
-                    },
-                    innerHTML: jogador.dinheiro + ' moedas',
-                    style: {
-                        fontSize: '20px',
-                        left: mapa.x + 'px',
-                        top: '120px',
-                        // backgroundColor: 'green'
-                        color: 'white'
-                    }
-                }));
-            }
-
-            function reset() {
-                document.getElementById(jogador.id).remove();
-                document.getElementById('vidaJogador').remove();
-                document.getElementById('dinheiroJogador').remove();
-
-                if (existe(loja.objeto)) {
-                    loja.objeto = null;
-                    document.getElementById(loja.id).remove();
-                    document.getElementById(loja.id + '_agua').remove();
-                }
-
-                document.getElementById(mapa.id).remove();
-                mapa = {};
-
-                for (const j in obstaculos) {
-                    document.getElementById(obstaculos[j].id).remove();
-                    delete obstaculos[j];
-                }
-
-                for (const j in inimigos) {
-                    document.getElementById(inimigos[j].id).remove();
-                    clearInterval(inimigos[j].mov);
-                    delete inimigos[j];
-                }
-
-                for (const j in portais) {
-                    document.getElementById(portais[j].id).remove();
-                    delete portais[j];
-                }
-
-                for (const j in itens) {
-                    document.getElementById(itens[j].id).remove();
-                    delete itens[j];
-                }
-
-                for (const j in armas) {
-                    document.getElementById(armas[j].id).remove();
-                    clearInterval(armas[j].mov);
-                    delete armas[j];
-                }
-            }
-
-            function finalizarJogo(mensagem) {
-                level = 1;
-
-                reset();
-
-                // isso não fica no reset pois ele é usado quando entra nos portais também
-                // nesses casos, o jogador, após atravessar um portal, quer continar andando
-                for (const i in jogador.mov) {
-                    clearInterval(jogador.mov[i]);
-                }
-
-                // aqui serve para limpar o histórico dos itens adquiridos
-                jogador = {};
-
-                alert(mensagem);
-
-                document.getElementById('inicial').style.display = 'block';
-            }
-
-            function entrouPortal() {
-                for (const i in portais) {
-                    if (colisao(jogador, portais[i])) {
-                        level++;
-
-                        reset();
-
-                        criarMapa();
-
-                        if (i == '1') {
-                            criarPortais(2);
-
-                            if (chancePercentual(50)) {
-                                criarPortais(1);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(3);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(4);
-                            }
-
-                            jogador.x = Math.round(mapa.x + mapa.largura - portais['2'].largura - jogador.largura * 2);
-                            jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
-                        } else if (i == '2') {
-                            criarPortais(1);
-
-                            if (chancePercentual(50)) {
-                                criarPortais(2);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(3);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(4);
-                            }
-
-                            jogador.x = Math.round(mapa.x + portais['1'].largura + jogador.largura);
-                            jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
-                        } else if (i == '3') {
-                            criarPortais(4);
-
-                            if (chancePercentual(50)) {
-                                criarPortais(1);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(2);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(3);
-                            }
-
-                            jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
-                            jogador.y = Math.round(mapa.y + mapa.altura - portais['4'].altura - jogador.altura * 2);
-                        } else if (i == '4') {
-                            criarPortais(3);
-
-                            if (chancePercentual(50)) {
-                                criarPortais(1);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(2);
-                            }
-
-                            if (chancePercentual(50)) {
-                                criarPortais(4);
-                            }
-
-                            jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
-                            jogador.y = Math.round(mapa.y + portais['3'].altura + jogador.altura);
+                        if (chancePercentual(40) && existe(this.equipamento.arma)) {
+                            criarItem(this.equipamento.arma, this.x, this.y);
                         }
 
-                        criarJogador();
-
-                        // em níveis específicos, o jogador enfrenta um chefe
-                        if (level == 10) {
-                            criarInimigo(listaChefes[0]);
-                        } else if (level == 20) {
-                        
-                        } else if (level == 30) {
-                        
-                        } else if (level == 40) {
-                        
-                        } else if (level == 50) {
-                        
-                        } else if (level > 50) {
-                            finalizarJogo('Você encontrou a saída da masmorra!');
-                        } else {
-                            // cria de 1 a 3 inimigos
-                            for (k = randInt(1, 3); k > 0; k--) {
-                                criarInimigo();
-                            }
+                        if (chancePercentual(40) && existe(this.equipamento.armadura)) {
+                            criarItem(this.equipamento.armadura, this.x, this.y);
                         }
 
-                        break;
+                        clearInterval(this.mov);
+
+                        document.getElementById(this.id).remove();
+
+                        delete inimigos[posicao];
                     }
-                }
-            }
-
-            function pegarItem() {
-                for (const i in itens) {
-                    if (colisao(jogador, itens[i])) {
-                        adicionarAoInventario(itens[i].objeto, i);
-                    }
-                }
-            }
-
-            function curar(pocao_nome) {
-                if (jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100 <= jogador.pontosDeVidaMaximo) {
-                    jogador.pontosDeVida = jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100;
-                } else {
-                    jogador.pontosDeVida = jogador.pontosDeVidaMaximo;
-                }
-
-                if (jogador.inventario[pocao_nome].quantidade == 1) {
-                    delete jogador.inventario[pocao_nome];
-                } else {
-                    jogador.inventario[pocao_nome].quantidade--;
-                }
-
-                document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
-            }
-
-            var jogador;
-
-            function iniciar() {
-                criarMapa();
-
-                criarPortais(3);
-
-                criarInimigo();
-
-                jogador = {
-                    id: 'p',
-                    altura: 40,
-                    largura: 40,
-                    x: Math.round(mapa.x + mapa.largura / 2 - 20),
-                    y: Math.round(mapa.y + mapa.altura - 125),
-                    face: 'cima',
-                    podeAtacar: true,
-                    pontosDeVida: 200,
-                    pontosDeVidaMaximo: 200,
-                    ataque: 50,
-                    dinheiro: 0,
-                    inventario: {},
-                    equipamento: {
-                        arma: listaItens['vazio'],
-                        armadura: listaItens['vazio'],
-                    },
-                    mov: {
-                        direita: false,
-                        esquerda: false,
-                        cima: false,
-                        baixo: false,
-                    },
-                };
-
-                // nasce com uma espada enferrujada e arco de madeira
-                adicionarAoEquipamento(jogador, listaItens[7]);
-                adicionarAoInventario(listaItens[6]);
-
-                criarJogador();
-            }
-
-            document.getElementById('novo').onclick = function () {
-                document.getElementById('inicial').style.display = 'none';
-                iniciar();
+                },
             };
 
-            // controles do jogador
-            document.addEventListener('keydown', function (event) {
-                if (event.keyCode == 37) {
-                    clearInterval(jogador.mov.esquerda);
+            if (existe(ini.equipamento.arma)) {
+                adicionarAoEquipamento(objeto, ini.equipamento.arma);
+            }
 
-                    jogador.mov.esquerda = setInterval(() => {
-                        entrouPortal();
+            if (existe(ini.equipamento.armadura)) {
+                adicionarAoEquipamento(objeto, ini.equipamento.armadura);
+            }
 
-                        pegarItem();
+            let bool = {
+                o: true,
+                i: true,
+            };
 
-                        movimentoGeral(jogador, 'esquerda');
-                    }, 5);
-                } else if (event.keyCode == 39) {
-                    clearInterval(jogador.mov.direita);
+            do {
+                bool.o = true;
+                bool.i = true;
 
-                    jogador.mov.direita = setInterval(() => {
-                        entrouPortal();
+                objeto.x = objeto.inix = randInt(mapa.x + 130, mapa.x + mapa.largura - 230);
+                objeto.y = objeto.iniy = randInt(mapa.y + 130, mapa.y + mapa.altura - 230);
 
-                        pegarItem();
-
-                        movimentoGeral(jogador, 'direita');
-                    }, 5);
+                if (existe(loja.objeto) && colisao(loja.objeto, objeto)) {
+                    bool.i = false;
                 }
 
-                if (event.keyCode == 38) {
-                    clearInterval(jogador.mov.cima);
-
-                    jogador.mov.cima = setInterval(() => {
-                        entrouPortal();
-
-                        pegarItem();
-
-                        movimentoGeral(jogador, 'cima');
-                    }, 5);
-                } else if (event.keyCode == 40) {
-                    clearInterval(jogador.mov.baixo);
-
-                    jogador.mov.baixo = setInterval(() => {
-                        entrouPortal();
-
-                        pegarItem();
-
-                        movimentoGeral(jogador, 'baixo');
-                    }, 5);
-                }
-
-                // Espaço
-                if (event.keyCode == 32) {
-                    if (jogador.podeAtacar) {
-                        atacar(jogador);
-                    }
-                }
-
-                // I
-                if (event.keyCode == 73) {
-                    var div = document.getElementById('janela_inventario');
-
-                    if (div.style.display == 'none' || div.style.display == '') {
-                        mostrarInventario();
-
-                        div.style.display = 'block';
-                    } else {
-                        div.style.display = 'none';
-                    }
-                }
-
-                // E
-                if (event.keyCode == 69) {
-                    var div = document.getElementById('janela_equipamento');
-
-                    if (div.style.display == 'none' || div.style.display == '') {
-                        mostrarEquipamento();
-
-                        div.style.display = 'block';
-                    } else {
-                        div.style.display = 'none';
-                    }
-                }
-
-                // Z
-                if (event.keyCode == 90 && existe(loja.objeto)) {
-                    if (colisao(jogador, loja.objeto)) {
-                        var div = document.getElementById('janela_loja');
-
-                        if (div.style.display == 'none' || div.style.display == '') {
-                            mostrarLoja();
-
-                            div.style.display = 'block';
-                        } else {
-                            div.style.display = 'none';
+                if (bool.i) {
+                    for (const i in inimigos) {
+                        if (colisao(inimigos[i], objeto)) {
+                            bool.i = false;
+                            break;
                         }
                     }
                 }
-            });
 
-            document.addEventListener('keyup', function (event) {
-                if (event.keyCode == 37) {
-                    clearInterval(jogador.mov.esquerda);
-                } else if (event.keyCode == 39) {
-                    clearInterval(jogador.mov.direita);
+                if (bool.i) {
+                    for (const i in obstaculos) {
+                        if (colisao(obstaculos[i], objeto)) {
+                            bool.o = false;
+                            break;
+                        }
+                    }
                 }
+            } while (bool.i == false || bool.o == false);
 
-                if (event.keyCode == 38) {
-                    clearInterval(jogador.mov.cima);
-                } else if (event.keyCode == 40) {
-                    clearInterval(jogador.mov.baixo);
+            inimigos['inimigo' + idKey] = objeto;
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: objeto.id,
+                        class: objeto.class,
+                    },
+                    style: {
+                        width: objeto.largura + 'px',
+                        height: objeto.altura + 'px',
+                        left: objeto.x + 'px',
+                        top: objeto.y + 'px',
+                    },
+                })
+            );
+
+            inimigos['inimigo' + idKey].mov = setInterval(() => {
+                ia(inimigos['inimigo' + idKey]);
+            }, 25);
+        }
+
+        // cria obstaculos e coloca no mapa
+        function criarObstaculo(x, y, largura, altura) {
+            var idKey = tamanhoObjeto(obstaculos) + 1;
+
+            var objeto = {
+                id: 'o' + idKey,
+                x: x,
+                y: y,
+                altura: altura,
+                largura: largura,
+            };
+
+            obstaculos['obstaculo' + idKey] = objeto;
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: objeto.id,
+                        class: 'o',
+                    },
+                    style: {
+                        width: objeto.largura + 'px',
+                        height: objeto.altura + 'px',
+                        left: objeto.x + 'px',
+                        top: objeto.y + 'px',
+                    },
+                })
+            );
+        }
+
+        function criarJogador() {
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: jogador.id,
+                    },
+                    style: {
+                        width: jogador.largura + 'px',
+                        height: jogador.altura + 'px',
+                        left: jogador.x + 'px',
+                        top: jogador.y + 'px',
+                    },
+                })
+            );
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'progress',
+                    attributes: {
+                        id: 'vidaJogador',
+                        value: jogador.pontosDeVida,
+                        max: jogador.pontosDeVidaMaximo,
+                    },
+                    style: {
+                        width: '200px',
+                        height: '30px',
+                        left: mapa.x + 'px',
+                        top: '70px',
+                        backgroundColor: 'green',
+                    },
+                })
+            );
+
+            canvas.appendChild(criarTag({
+                tipo: 'div',
+                attributes: {
+                    id: 'dinheiroJogador',
+                },
+                innerHTML: jogador.dinheiro + ' moedas',
+                style: {
+                    fontSize: '20px',
+                    left: mapa.x + 'px',
+                    top: '120px',
+                    // backgroundColor: 'green'
+                    color: 'white'
                 }
-            });
-        </script>
-    </body>
+            }));
+        }
+
+        function reset() {
+            document.getElementById(jogador.id).remove();
+            document.getElementById('vidaJogador').remove();
+            document.getElementById('dinheiroJogador').remove();
+
+            if (existe(loja.objeto)) {
+                loja.objeto = null;
+                document.getElementById(loja.id).remove();
+                document.getElementById(loja.id + '_agua').remove();
+            }
+
+            document.getElementById(mapa.id).remove();
+            mapa = {};
+
+            for (const j in obstaculos) {
+                document.getElementById(obstaculos[j].id).remove();
+                delete obstaculos[j];
+            }
+
+            for (const j in inimigos) {
+                document.getElementById(inimigos[j].id).remove();
+                clearInterval(inimigos[j].mov);
+                delete inimigos[j];
+            }
+
+            for (const j in portais) {
+                document.getElementById(portais[j].id).remove();
+                delete portais[j];
+            }
+
+            for (const j in itens) {
+                document.getElementById(itens[j].id).remove();
+                delete itens[j];
+            }
+
+            for (const j in armas) {
+                document.getElementById(armas[j].id).remove();
+                clearInterval(armas[j].mov);
+                delete armas[j];
+            }
+        }
+
+        function finalizarJogo(mensagem) {
+            level = 1;
+
+            reset();
+
+            // isso não fica no reset pois ele é usado quando entra nos portais também
+            // nesses casos, o jogador, após atravessar um portal, quer continar andando
+            for (const i in jogador.mov) {
+                clearInterval(jogador.mov[i]);
+            }
+
+            // aqui serve para limpar o histórico dos itens adquiridos
+            jogador = {};
+
+            alert(mensagem);
+
+            document.getElementById('inicial').style.display = 'block';
+        }
+
+        function entrouPortal() {
+            for (const i in portais) {
+                if (colisao(jogador, portais[i])) {
+                    level++;
+
+                    reset();
+
+                    criarMapa();
+
+                    if (i == '1') {
+                        criarPortais(2);
+
+                        if (chancePercentual(50)) {
+                            criarPortais(1);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(3);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(4);
+                        }
+
+                        jogador.x = Math.round(mapa.x + mapa.largura - portais['2'].largura - jogador.largura * 2);
+                        jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
+                    } else if (i == '2') {
+                        criarPortais(1);
+
+                        if (chancePercentual(50)) {
+                            criarPortais(2);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(3);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(4);
+                        }
+
+                        jogador.x = Math.round(mapa.x + portais['1'].largura + jogador.largura);
+                        jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
+                    } else if (i == '3') {
+                        criarPortais(4);
+
+                        if (chancePercentual(50)) {
+                            criarPortais(1);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(2);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(3);
+                        }
+
+                        jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
+                        jogador.y = Math.round(mapa.y + mapa.altura - portais['4'].altura - jogador.altura * 2);
+                    } else if (i == '4') {
+                        criarPortais(3);
+
+                        if (chancePercentual(50)) {
+                            criarPortais(1);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(2);
+                        }
+
+                        if (chancePercentual(50)) {
+                            criarPortais(4);
+                        }
+
+                        jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
+                        jogador.y = Math.round(mapa.y + portais['3'].altura + jogador.altura);
+                    }
+
+                    criarJogador();
+
+                    // em níveis específicos, o jogador enfrenta um chefe
+                    if (level == 10) {
+                        criarInimigo(listaChefes[0]);
+                    } else if (level == 20) {
+
+                    } else if (level == 30) {
+
+                    } else if (level == 40) {
+
+                    } else if (level == 50) {
+
+                    } else if (level > 50) {
+                        finalizarJogo('Você encontrou a saída da masmorra!');
+                    } else {
+                        // cria de 1 a 3 inimigos
+                        for (k = randInt(1, 3); k > 0; k--) {
+                            criarInimigo();
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        function pegarItem() {
+            for (const i in itens) {
+                if (colisao(jogador, itens[i])) {
+                    adicionarAoInventario(itens[i].objeto, i);
+                }
+            }
+        }
+
+        function curar(pocao_nome) {
+            if (jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100 <= jogador.pontosDeVidaMaximo) {
+                jogador.pontosDeVida = jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100;
+            } else {
+                jogador.pontosDeVida = jogador.pontosDeVidaMaximo;
+            }
+
+            if (jogador.inventario[pocao_nome].quantidade == 1) {
+                delete jogador.inventario[pocao_nome];
+            } else {
+                jogador.inventario[pocao_nome].quantidade--;
+            }
+
+            document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
+        }
+
+        var jogador;
+
+        function iniciar() {
+            criarMapa();
+
+            criarPortais(3);
+
+            criarInimigo();
+
+            jogador = {
+                id: 'p',
+                altura: 40,
+                largura: 40,
+                x: Math.round(mapa.x + mapa.largura / 2 - 20),
+                y: Math.round(mapa.y + mapa.altura - 125),
+                face: 'cima',
+                podeAtacar: true,
+                pontosDeVida: 200,
+                pontosDeVidaMaximo: 200,
+                ataque: 50,
+                dinheiro: 0,
+                inventario: {},
+                equipamento: {
+                    arma: listaItens['vazio'],
+                    armadura: listaItens['vazio'],
+                },
+                mov: {
+                    direita: false,
+                    esquerda: false,
+                    cima: false,
+                    baixo: false,
+                },
+            };
+
+            // nasce com uma espada enferrujada e arco de madeira
+            adicionarAoEquipamento(jogador, listaItens[7]);
+            adicionarAoInventario(listaItens[6]);
+
+            criarJogador();
+        }
+
+        document.getElementById('novo').onclick = function () {
+            document.getElementById('inicial').style.display = 'none';
+            iniciar();
+        };
+
+        // controles do jogador
+        document.addEventListener('keydown', function (event) {
+            if (event.keyCode == 37) {
+                clearInterval(jogador.mov.esquerda);
+
+                jogador.mov.esquerda = setInterval(() => {
+                    entrouPortal();
+
+                    pegarItem();
+
+                    movimentoGeral(jogador, 'esquerda');
+                }, 5);
+            } else if (event.keyCode == 39) {
+                clearInterval(jogador.mov.direita);
+
+                jogador.mov.direita = setInterval(() => {
+                    entrouPortal();
+
+                    pegarItem();
+
+                    movimentoGeral(jogador, 'direita');
+                }, 5);
+            }
+
+            if (event.keyCode == 38) {
+                clearInterval(jogador.mov.cima);
+
+                jogador.mov.cima = setInterval(() => {
+                    entrouPortal();
+
+                    pegarItem();
+
+                    movimentoGeral(jogador, 'cima');
+                }, 5);
+            } else if (event.keyCode == 40) {
+                clearInterval(jogador.mov.baixo);
+
+                jogador.mov.baixo = setInterval(() => {
+                    entrouPortal();
+
+                    pegarItem();
+
+                    movimentoGeral(jogador, 'baixo');
+                }, 5);
+            }
+
+            // Espaço
+            if (event.keyCode == 32) {
+                if (jogador.podeAtacar) {
+                    atacar(jogador);
+                }
+            }
+
+            // I
+            if (event.keyCode == 73) {
+                var div = document.getElementById('janela_inventario');
+
+                if (div.style.display == 'none' || div.style.display == '') {
+                    mostrarInventario();
+
+                    div.style.display = 'block';
+                } else {
+                    div.style.display = 'none';
+                }
+            }
+
+            // E
+            if (event.keyCode == 69) {
+                var div = document.getElementById('janela_equipamento');
+
+                if (div.style.display == 'none' || div.style.display == '') {
+                    mostrarEquipamento();
+
+                    div.style.display = 'block';
+                } else {
+                    div.style.display = 'none';
+                }
+            }
+
+            // Z
+            if (event.keyCode == 90 && existe(loja.objeto)) {
+                if (colisao(jogador, loja.objeto)) {
+                    var div = document.getElementById('janela_loja');
+
+                    if (div.style.display == 'none' || div.style.display == '') {
+                        mostrarLoja();
+
+                        div.style.display = 'block';
+                    } else {
+                        div.style.display = 'none';
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('keyup', function (event) {
+            if (event.keyCode == 37) {
+                clearInterval(jogador.mov.esquerda);
+            } else if (event.keyCode == 39) {
+                clearInterval(jogador.mov.direita);
+            }
+
+            if (event.keyCode == 38) {
+                clearInterval(jogador.mov.cima);
+            } else if (event.keyCode == 40) {
+                clearInterval(jogador.mov.baixo);
+            }
+        });
+    </script>
+</body>
+
 </html>
