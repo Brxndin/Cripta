@@ -1587,17 +1587,17 @@
             }
         }
 
-        function curar(pocao_nome) {
-            if (jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100 <= jogador.pontosDeVidaMaximo) {
-                jogador.pontosDeVida = jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[pocao_nome].poder) / 100;
+        function curar(nomePocao) {
+            if (jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[nomePocao].poder) / 100 <= jogador.pontosDeVidaMaximo) {
+                jogador.pontosDeVida = jogador.pontosDeVida + (jogador.pontosDeVidaMaximo * jogador.inventario[nomePocao].poder) / 100;
             } else {
                 jogador.pontosDeVida = jogador.pontosDeVidaMaximo;
             }
 
-            if (jogador.inventario[pocao_nome].quantidade == 1) {
-                delete jogador.inventario[pocao_nome];
+            if (jogador.inventario[nomePocao].quantidade == 1) {
+                delete jogador.inventario[nomePocao];
             } else {
-                jogador.inventario[pocao_nome].quantidade--;
+                jogador.inventario[nomePocao].quantidade--;
             }
 
             document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
