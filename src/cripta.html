@@ -10,7 +10,7 @@
             background-color: #520a06;
         }
 
-        #p {
+        #jogador {
             background-color: #368203;
         }
 
@@ -30,12 +30,12 @@
             background-color: brown;
         }
 
-        .ar {
+        .armas {
             background-color: gray;
             border: 1px solid black;
         }
 
-        .po {
+        .portais {
             background-color: #b0279b;
         }
 
@@ -119,16 +119,16 @@
         // constantes e variáveis globais
 
         // tipos de itens
-        var tipoItemArma = 'a';
-        var tipoItemArmadura = 'ar';
-        var tipoItemCura = 'c';
+        const tipoItemArma = 'a';
+        const tipoItemArmadura = 'ar';
+        const tipoItemCura = 'c';
 
         // tipos de ataque
-        var tipoAtaqueADistancia = 'd';
-        var tipoAtaqueCorporal = 'c';
+        const tipoAtaqueADistancia = 'd';
+        const tipoAtaqueCorporal = 'c';
 
         // globais
-        var canvas = document.getElementById('canvas');
+        const canvas = document.getElementById('canvas');
         var level = 1;
         var contadorArma = 0;
 
@@ -153,7 +153,7 @@
         };
 
         // listas com o conteúdo do jogo
-        var listaMapas = {
+        const listaMapas = {
             0: {
                 x: Math.round(screen.width / 4),
                 y: Math.round(screen.height / 7),
@@ -183,10 +183,10 @@
             },
         };
 
-        var listaPortais = {
+        const listaPortais = {
             // esquerda
             1: {
-                id: 'po1',
+                id: 'portal_1',
                 largura: 30,
                 altura: 90,
                 funcao: () => {
@@ -196,7 +196,7 @@
             },
             // direita
             2: {
-                id: 'po2',
+                id: 'portal_2',
                 largura: 30,
                 altura: 90,
                 funcao: () => {
@@ -206,7 +206,7 @@
             },
             // cima
             3: {
-                id: 'po3',
+                id: 'portal_3',
                 largura: 90,
                 altura: 30,
                 funcao: () => {
@@ -216,7 +216,7 @@
             },
             // baixo
             4: {
-                id: 'po4',
+                id: 'portal_4',
                 largura: 90,
                 altura: 30,
                 funcao: () => {
@@ -226,7 +226,7 @@
             },
         };
 
-        var listaItens = {
+        const listaItens = {
             vazio: {
                 nome: 'vazio',
                 texto: 'Vazio',
@@ -333,7 +333,7 @@
             },
         };
 
-        var listaInimigos = {
+        const listaInimigos = {
             0: {
                 nome: 'guerreiro_esquecido',
                 altura: 40,
@@ -372,7 +372,7 @@
             },
         };
 
-        var listaChefes = {
+        const listaChefes = {
             0: {
                 nome: 'cavaleiro_das_trevas',
                 altura: 70,
@@ -399,14 +399,14 @@
             return Math.floor(Math.random() * (max - min)) + min;
         }
 
-        //retorna true ou false de acordo com a chance em porcentagem informada
-        //exemplo: chancePercentual(50) tem 50% de chance de retornar true
+        // retorna true ou false de acordo com a chance em porcentagem informada
+        // exemplo: chancePercentual(50) tem 50% de chance de retornar true
         function chancePercentual(n) {
             return randInt(1, 100) <= n;
         }
 
         function criarTag(objeto) {
-            var tag = document.createElement(objeto.tipo);
+            let tag = document.createElement(objeto.tipo);
             tag.style.position = 'absolute';
 
             for (const i in objeto) {
@@ -489,8 +489,8 @@
         function movimento(objeto1, objeto2, direcao) {
             objeto1.face = direcao;
 
-            var pontosObjeto1 = pontos(objeto1);
-            var pontosObjeto2 = pontos(objeto2);
+            let pontosObjeto1 = pontos(objeto1);
+            let pontosObjeto2 = pontos(objeto2);
 
             if (direcao == 'direita') {
                 if (pontosObjeto1.c.x + 1 == pontosObjeto2.b.x) {
@@ -555,17 +555,17 @@
 
         // verifica a interação de movimento e colisão entre todos os objetos (jogador, inimigos e obstáculos)
         function movimentoGeral(objeto, direcao) {
-            var e = true;
+            var permiteAndar = true;
 
             if (existe(loja.objeto) && !movimento(objeto, loja.objeto, direcao)) {
-                e = false;
+                permiteAndar = false;
             }
 
-            if (e) {
+            if (permiteAndar) {
                 for (const i in inimigos) {
                     if (objeto.id != inimigos[i].id) {
                         if (!movimento(objeto, inimigos[i], direcao)) {
-                            e = false;
+                            permiteAndar = false;
 
                             break;
                         }
@@ -573,11 +573,11 @@
                 }
             }
 
-            if (e) {
+            if (permiteAndar) {
                 for (const i in obstaculos) {
                     if (objeto.id != obstaculos[i].id) {
                         if (!movimento(objeto, obstaculos[i], direcao)) {
-                            e = false;
+                            permiteAndar = false;
 
                             break;
                         }
@@ -585,15 +585,15 @@
                 }
             }
 
-            if (e) {
+            if (permiteAndar) {
                 andar(objeto, direcao);
             }
         }
 
         // verifica se houve colisao entre dois objetos ou se ocupam o mesmo lugar (é mais usado no ataque)
         function colisao(objeto1, objeto2) {
-            var pontosObjeto1 = pontos(objeto1);
-            var pontosObjeto2 = pontos(objeto2);
+            let pontosObjeto1 = pontos(objeto1);
+            let pontosObjeto2 = pontos(objeto2);
 
             return pontosObjeto1.c.x + 1 >= pontosObjeto2.b.x && pontosObjeto1.b.x - 1 <= pontosObjeto2.c.x && pontosObjeto1.a.y - 1 <= pontosObjeto2.b.y && pontosObjeto1.b.y + 1 >= pontosObjeto2.a.y;
         }
@@ -622,7 +622,7 @@
                     tipo: 'div',
                     attributes: {
                         id: portais[n].id,
-                        class: 'po',
+                        class: 'portais',
                     },
                     style: {
                         width: portais[n].largura + 'px',
@@ -667,7 +667,7 @@
                 largura: loja.largura,
             };
 
-            var bordaFonte = 6;
+            let bordaFonte = 6;
 
             canvas.appendChild(
                 criarTag({
@@ -736,10 +736,10 @@
         }
 
         function mostrarLoja() {
-            var divLoja = document.getElementById('conteudo_janela_loja');
+            let divLoja = document.getElementById('conteudo_janela_loja');
             divLoja.innerHTML = '';
 
-            var itensLoja = {
+            let itensLoja = {
                 0: listaItens[9],
                 1: listaItens[11],
                 2: listaItens[4],
@@ -849,7 +849,7 @@
                 }
             }));
 
-            var divEquipamento = document.getElementById('conteudo_janela_equipamento');
+            let divEquipamento = document.getElementById('conteudo_janela_equipamento');
             divEquipamento.innerHTML = '';
 
             for (const i in jogador.equipamento) {
@@ -890,7 +890,7 @@
         }
 
         function mostrarInventario() {
-            var divInventario = document.getElementById('conteudo_janela_inventario');
+            let divInventario = document.getElementById('conteudo_janela_inventario');
             divInventario.innerHTML = '';
 
             for (const i in jogador.inventario) {
@@ -986,7 +986,7 @@
                     tipo: 'div',
                     attributes: {
                         id: objeto.id,
-                        class: 'ar',
+                        class: 'armas',
                     },
                     style: {
                         width: objeto.largura + 'px',
@@ -1243,7 +1243,7 @@
         }
 
         function adicionarAoEquipamento(personagem, item) {
-            var tipoEquipamento = null;
+            let tipoEquipamento = null;
 
             switch (item.tipo) {
                 case tipoItemArma:
@@ -1256,7 +1256,7 @@
                     break;
             }
 
-            var novoItem = {
+            let novoItem = {
                 nome: item.nome,
                 texto: item.texto,
                 poder: item.poder,
@@ -1284,7 +1284,7 @@
             }
         }
 
-        function atacar(objeto) {
+        function atacar(atacante) {
             // arma de longa distancia
             if (objeto.equipamento.arma.tipoAtaque == tipoAtaqueADistancia) {
                 var projetil_id = criarArma(objeto, 25, 6);
@@ -1324,10 +1324,10 @@
                 }, 0.5);
 
                 // bloqueia o ataque por um tempo
-                objeto.podeAtacar = false;
+                atacante.podeAtacar = false;
 
                 setTimeout(() => {
-                    objeto.podeAtacar = true;
+                    atacante.podeAtacar = true;
                 }, 300);
 
                 setTimeout(() => {
@@ -1341,9 +1341,9 @@
                 var arma_id = criarArma(objeto, 25, 6);
                 var ar = document.getElementById(armas[arma_id].id);
 
-                if (objeto.id != jogador.id) {
-                    if (colisao(armas[arma_id], objeto)) {
-                        jogador.pontosDeVida = Math.round(jogador.pontosDeVida - (objeto.ataque + objeto.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (objeto.ataque + objeto.equipamento.arma.poder)));
+                if (atacante.id != jogador.id) {
+                    if (colisao(armas[arma.id], atacante)) {
+                        jogador.pontosDeVida = Math.round(jogador.pontosDeVida - (atacante.ataque + atacante.equipamento.arma.poder - (jogador.equipamento.armadura.poder / 100) * (atacante.ataque + atacante.equipamento.arma.poder)));
 
                         if (jogador.pontosDeVida <= 0) {
                             finalizarJogo('Você morreu.');
@@ -1362,7 +1362,7 @@
                 }
 
                 // bloqueia o ataque por um tempo
-                objeto.podeAtacar = false;
+                atacante.podeAtacar = false;
 
                 setTimeout(() => {
                     delete armas[arma_id];
@@ -1371,7 +1371,7 @@
                     // verificar se é interessante esse tempo mudar dependendo do personagem
                     // por exemplo: com um equip melhor poderia ter um tempo menor de bloqueio
                     setTimeout(() => {
-                        objeto.podeAtacar = true;
+                        atacante.podeAtacar = true;
                     }, 300);
                 }, 40);
             }
@@ -1483,8 +1483,8 @@
 
             // isso não fica no reset pois ele é usado quando entra nos portais também
             // nesses casos, o jogador, após atravessar um portal, quer continar andando
-            for (const i in jogador.mov) {
-                clearInterval(jogador.mov[i]);
+            for (const i in jogador.direcoesMovimento) {
+                clearInterval(jogador.direcoesMovimento[i]);
             }
 
             // aqui serve para limpar o histórico dos itens adquiridos
@@ -1633,7 +1633,7 @@
             criarInimigo();
 
             jogador = {
-                id: 'p',
+                id: 'jogador',
                 altura: 40,
                 largura: 40,
                 x: Math.round(mapa.x + mapa.largura / 2 - 20),
@@ -1649,7 +1649,7 @@
                     arma: listaItens['vazio'],
                     armadura: listaItens['vazio'],
                 },
-                mov: {
+                direcoesMovimento: {
                     direita: false,
                     esquerda: false,
                     cima: false,
@@ -1671,9 +1671,9 @@
         // controles do jogador
         document.addEventListener('keydown', function (event) {
             if (event.keyCode == 37) {
-                clearInterval(jogador.mov.esquerda);
+                clearInterval(jogador.direcoesMovimento.esquerda);
 
-                jogador.mov.esquerda = setInterval(() => {
+                jogador.direcoesMovimento.esquerda = setInterval(() => {
                     entrouPortal();
 
                     pegarItem();
@@ -1681,9 +1681,9 @@
                     movimentoGeral(jogador, 'esquerda');
                 }, 5);
             } else if (event.keyCode == 39) {
-                clearInterval(jogador.mov.direita);
+                clearInterval(jogador.direcoesMovimento.direita);
 
-                jogador.mov.direita = setInterval(() => {
+                jogador.direcoesMovimento.direita = setInterval(() => {
                     entrouPortal();
 
                     pegarItem();
@@ -1693,9 +1693,9 @@
             }
 
             if (event.keyCode == 38) {
-                clearInterval(jogador.mov.cima);
+                clearInterval(jogador.direcoesMovimento.cima);
 
-                jogador.mov.cima = setInterval(() => {
+                jogador.direcoesMovimento.cima = setInterval(() => {
                     entrouPortal();
 
                     pegarItem();
@@ -1703,9 +1703,9 @@
                     movimentoGeral(jogador, 'cima');
                 }, 5);
             } else if (event.keyCode == 40) {
-                clearInterval(jogador.mov.baixo);
+                clearInterval(jogador.direcoesMovimento.baixo);
 
-                jogador.mov.baixo = setInterval(() => {
+                jogador.direcoesMovimento.baixo = setInterval(() => {
                     entrouPortal();
 
                     pegarItem();
@@ -1765,15 +1765,15 @@
 
         document.addEventListener('keyup', function (event) {
             if (event.keyCode == 37) {
-                clearInterval(jogador.mov.esquerda);
+                clearInterval(jogador.direcoesMovimento.esquerda);
             } else if (event.keyCode == 39) {
-                clearInterval(jogador.mov.direita);
+                clearInterval(jogador.direcoesMovimento.direita);
             }
 
             if (event.keyCode == 38) {
-                clearInterval(jogador.mov.cima);
+                clearInterval(jogador.direcoesMovimento.cima);
             } else if (event.keyCode == 40) {
-                clearInterval(jogador.mov.baixo);
+                clearInterval(jogador.direcoesMovimento.baixo);
             }
         });
 
