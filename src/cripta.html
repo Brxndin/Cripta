@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cripta</title>
     <style>
         body {
@@ -52,6 +53,10 @@
             background-color: #e8b07b;
         }
 
+        #inicial {
+            text-align: center;
+        }
+
         .menu {
             display: none;
             z-index: 99;
@@ -82,7 +87,7 @@
 </head>
 
 <body>
-    <div id="inicial" style="text-align: center">
+    <div id="inicial">
         <h1 class="texto">Cripta</h1>
         <p class="texto">Ao se aventurar em uma masmorra, você se deparou com um portal roxo.</p>
         <p class="texto">Quando entrou nele, percebeu que estava preso num loop, sendo transportado para vários locais
@@ -106,7 +111,7 @@
     </div>
     <div id="canvas"></div>
 
-    <script>
+    <script type="text/javascript">
         // ==============================================
         // -> VARIÁVEIS: variáveis e dados iniciais/padrão
         // ==============================================
