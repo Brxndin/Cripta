@@ -1178,8 +1178,8 @@
         // -> FUNCIONALIDADES: funcionalidades específicas do jogo
         // ==============================================
 
-        function adicionarAoInventario(objeto, p = undefined) {
-            var item = {
+        function adicionarAoInventario(objeto) {
+            let item = {
                 nome: objeto.nome,
                 texto: objeto.texto,
                 poder: objeto.poder,
@@ -1199,12 +1199,6 @@
                 jogador.inventario[item.nome].quantidade += item.quantidade;
             } else {
                 jogador.inventario[item.nome] = item;
-            }
-
-            if (existe(p)) {
-                document.getElementById(itens[p].id).remove();
-
-                delete itens[p];
             }
         }
 
