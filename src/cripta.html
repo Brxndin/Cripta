@@ -1042,11 +1042,7 @@
                             criarItem(this.equipamento.armadura, this.x, this.y);
                         }
 
-                        clearInterval(this.mov);
-
-                        document.getElementById(this.id).remove();
-
-                        delete inimigos[posicao];
+                        removerDaLista(inimigos, posicao);
                     }
                 },
             };
@@ -1196,6 +1192,22 @@
                     color: 'white'
                 }
             }));
+        }
+
+        function removerDaLista(lista, chave) {
+            if (existe(lista[chave])) {
+                if (existe(lista[chave].movimento)) {
+                    clearInterval(lista[chave].movimento);
+                }
+
+                let div = document.getElementById(lista[chave].id);
+
+                if (div) {
+                    div.remove();
+                }
+
+                delete lista[chave];
+            }
         }
 
         // ==============================================
@@ -1365,8 +1377,7 @@
                 atacante.podeAtacar = false;
 
                 setTimeout(() => {
-                    delete armas[arma_id];
-                    ar.remove();
+                    removerDaLista(armas, arma.id);
 
                     // verificar se é interessante esse tempo mudar dependendo do personagem
                     // por exemplo: com um equip melhor poderia ter um tempo menor de bloqueio
@@ -1449,30 +1460,23 @@
             mapa = {};
 
             for (const j in obstaculos) {
-                document.getElementById(obstaculos[j].id).remove();
-                delete obstaculos[j];
+                removerDaLista(obstaculos, j);
             }
 
             for (const j in inimigos) {
-                document.getElementById(inimigos[j].id).remove();
-                clearInterval(inimigos[j].mov);
-                delete inimigos[j];
+                removerDaLista(inimigos, j);
             }
 
             for (const j in portais) {
-                document.getElementById(portais[j].id).remove();
-                delete portais[j];
+                removerDaLista(portais, j);
             }
 
             for (const j in itens) {
-                document.getElementById(itens[j].id).remove();
-                delete itens[j];
+                removerDaLista(itens, j);
             }
 
             for (const j in armas) {
-                document.getElementById(armas[j].id).remove();
-                clearInterval(armas[j].mov);
-                delete armas[j];
+                removerDaLista(armas, j);
             }
         }
 
@@ -1605,6 +1609,7 @@
             for (const i in itens) {
                 if (colisao(jogador, itens[i])) {
                     adicionarAoInventario(itens[i].objeto, i);
+                    removerDaLista(itens, i);
                 }
             }
         }
