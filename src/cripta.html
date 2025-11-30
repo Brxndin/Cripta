@@ -434,6 +434,10 @@
             return typeof dado != 'undefined' && dado != null;
         }
 
+        function gerarIdLista(string, lista) {
+            return string + '_' + (tamanhoObjeto(lista) + 1);
+        }
+
         // ==============================================
         // -> ENGINE: funções do motor do jogo
         // ==============================================
@@ -704,10 +708,10 @@
 
         function criarItem(item, x, y) {
             if (item.nome != 'vazio') {
-                var idKey = tamanhoObjeto(itens) + 1;
+                let id = gerarIdLista('item', itens);
 
-                objeto = {
-                    id: 'it' + idKey,
+                let objeto = {
+                    id: id,
                     x: x,
                     y: y,
                     altura: 30,
@@ -715,7 +719,7 @@
                     objeto: item,
                 };
 
-                itens['item' + idKey] = objeto;
+                itens[id] = objeto;
 
                 canvas.appendChild(
                     criarTag({
@@ -949,12 +953,12 @@
         }
 
         function criarArma(atacante, larguraObjeto, alturaObjeto) {
-            var idKey = contadorArma + 1;
-
             contadorArma++;
 
-            var objeto = {
-                id: 'ar' + idKey,
+            let id = 'arma_' + contadorArma;
+
+            let objeto = {
+                id: id,
             };
 
             if (atacante.face == 'esquerda') {
@@ -979,7 +983,7 @@
                 objeto.y = atacante.y + atacante.altura;
             }
 
-            armas['arma' + idKey] = objeto;
+            armas[id] = objeto;
 
             canvas.appendChild(
                 criarTag({
@@ -997,19 +1001,19 @@
                 })
             );
 
-            return 'arma' + idKey;
+            return id;
         }
 
         // cria os inimigos e coloca no mapa
         function criarInimigo(ini = null) {
-            var idKey = tamanhoObjeto(inimigos) + 1;
+            let id = gerarIdLista('inimigo', inimigos);
 
             if (!existe(ini)) {
                 ini = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
             }
 
-            var objeto = {
-                id: 'i' + idKey,
+            let objeto = {
+                id: id,
                 bool: true,
                 podeAtacar: true,
                 face: 'direita',
@@ -1090,7 +1094,7 @@
                 }
             } while (bool.i == false || bool.o == false);
 
-            inimigos['inimigo' + idKey] = objeto;
+            inimigos[id] = objeto;
 
             canvas.appendChild(
                 criarTag({
@@ -1108,24 +1112,24 @@
                 })
             );
 
-            inimigos['inimigo' + idKey].mov = setInterval(() => {
-                ia(inimigos['inimigo' + idKey]);
+            inimigos[id].movimento = setInterval(() => {
+                ia(inimigos[id]);
             }, 25);
         }
 
         // cria obstaculos e coloca no mapa
         function criarObstaculo(x, y, largura, altura) {
-            var idKey = tamanhoObjeto(obstaculos) + 1;
+            let id = gerarIdLista('obstaculo', obstaculos);
 
-            var objeto = {
-                id: 'o' + idKey,
+            let objeto = {
+                id: id,
                 x: x,
                 y: y,
                 altura: altura,
                 largura: largura,
             };
 
-            obstaculos['obstaculo' + idKey] = objeto;
+            obstaculos[id] = objeto;
 
             canvas.appendChild(
                 criarTag({
