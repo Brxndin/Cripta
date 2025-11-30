@@ -606,6 +606,42 @@
         // -> DOM: funções para criação dos objetos no DOM
         // ==============================================
 
+        function criarLinhaMenu(texto, textoBotao = null, onClickBotao = null) {
+            let string = criarTag({
+                tipo: 'p',
+                attributes: {
+                    class: 'texto'
+                },
+                innerHTML: texto,
+                style: {
+                    fontSize: '20px',
+                    position: 'static'
+                }
+            });
+
+            if (textoBotao) {
+                let botao = {
+                    tipo: 'button',
+                    innerHTML: textoBotao,
+                    style: {
+                        backgroundColor: '#520a06',
+                        border: '1px solid white',
+                        width: '80px',
+                        color: 'white',
+                        height: '30px'
+                    },
+                };
+
+                if (onClickBotao) {
+                    botao.onclick = onClickBotao;
+                }
+
+                string.appendChild(criarTag(botao));
+            }
+
+            return string;
+        }
+
         function criarPortais(n) {
             listaPortais['1'].x = mapa.x;
             listaPortais['1'].y = mapa.y + Math.floor(mapa.altura / 2) - 45;
@@ -751,48 +787,23 @@
             };
 
             for (const i in itensLoja) {
-                var string = criarTag({
-                    tipo: 'p',
-                    attributes: {
-                        class: 'texto'
-                    },
-                    innerHTML: itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ',
-                    style: {
-                        fontSize: '20px',
-                        position: 'static'
+                let linha = criarLinhaMenu(itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ', 'Comprar', () => {
+                    if (jogador?.dinheiro >= itensLoja[i]?.preco) {
+                        alert('Item comprado com sucesso!');
+
+                        jogador.dinheiro -= itensLoja[i]?.preco;
+
+                        document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
+
+                        adicionarAoInventario(itensLoja[i]);
+
+                        mostrarLoja();
+                    } else {
+                        alert('Você não tem dinheiro suficiente!');
                     }
                 });
 
-                var b = criarTag({
-                    tipo: 'button',
-                    innerHTML: 'Comprar',
-                    style: {
-                        backgroundColor: '#520a06',
-                        border: '1px solid white',
-                        width: '80px',
-                        color: 'white',
-                        height: '30px'
-                    },
-                    onclick: () => {
-                        if (jogador?.dinheiro >= itensLoja[i]?.preco) {
-                            alert('Item comprado com sucesso!');
-
-                            jogador.dinheiro -= itensLoja[i]?.preco;
-
-                            document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
-
-                            adicionarAoInventario(itensLoja[i]);
-
-                            mostrarLoja();
-                        } else {
-                            alert('Você não tem dinheiro suficiente!');
-                        }
-                    }
-                });
-
-                string.appendChild(b);
-
-                divLoja.appendChild(string);
+                divLoja.appendChild(linha);
             }
         }
 
@@ -841,54 +852,31 @@
                 })
             );
 
-            document.getElementById('status').appendChild(criarTag({
-                tipo: 'p',
-                innerHTML: 'Dinheiro: ' + jogador.dinheiro + ' moedas',
-                attributes: {
-                    class: 'texto'
-                },
-                style: {
-                    fontSize: '20px',
-                    position: 'static'
-                }
-            }));
+            document.getElementById('status').appendChild(
+                criarTag({
+                    tipo: 'p',
+                    innerHTML: 'Dinheiro: ' + jogador.dinheiro + ' moedas',
+                    attributes: {
+                        class: 'texto'
+                    },
+                    style: {
+                        fontSize: '20px',
+                        position: 'static'
+                    }
+                })
+            );
 
             let divEquipamento = document.getElementById('conteudo_janela_equipamento');
             divEquipamento.innerHTML = '';
 
             for (const i in jogador.equipamento) {
                 if (jogador.equipamento[i].nome != 'vazio') {
-                    var string = criarTag({
-                        tipo: 'p',
-                        attributes: {
-                            class: 'texto'
-                        },
-                        innerHTML: jogador.equipamento[i].texto,
-                        style: {
-                            fontSize: '20px',
-                            position: 'static',
-                        },
+                    let linha = criarLinhaMenu(jogador.equipamento[i].texto, 'Desequipar', () => {
+                        removerDoEquipamento(jogador, i);
+                        mostrarEquipamento();
                     });
 
-                    var b = criarTag({
-                        tipo: 'button',
-                        innerHTML: 'Desequipar',
-                        style: {
-                            backgroundColor: '#520a06',
-                            border: '1px solid white',
-                            width: '80px',
-                            color: 'white',
-                            height: '30px',
-                        },
-                        onclick: () => {
-                            removerDoEquipamento(jogador, i);
-                            mostrarEquipamento();
-                        },
-                    });
-
-                    string.appendChild(b);
-
-                    divEquipamento.appendChild(string);
+                    divEquipamento.appendChild(linha);
                 }
             }
         }
@@ -898,57 +886,29 @@
             divInventario.innerHTML = '';
 
             for (const i in jogador.inventario) {
-                var string = criarTag({
-                    tipo: 'p',
-                    attributes: {
-                        class: 'texto'
-                    },
-                    innerHTML: jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)',
-                    style: {
-                        fontSize: '20px',
-                        position: 'static',
-                    },
-                });
+                let opcoesBotao = {};
 
                 if (jogador.inventario[i].tipo == tipoItemCura) {
-                    var b = criarTag({
-                        tipo: 'button',
-                        innerHTML: 'Usar',
-                        style: {
-                            backgroundColor: '#520a06',
-                            border: '1px solid white',
-                            width: '80px',
-                            color: 'white',
-                            height: '30px',
-                        },
-                        onclick: () => {
+                    opcoesBotao = {
+                        texto: 'Usar',
+                        funcao: () => {
                             curar(jogador.inventario[i].nome);
                             mostrarInventario();
-                        },
-                    });
-
-                    string.appendChild(b);
+                        }
+                    };
                 } else {
-                    var b = criarTag({
-                        tipo: 'button',
-                        innerHTML: 'Equipar',
-                        style: {
-                            backgroundColor: '#520a06',
-                            border: '1px solid white',
-                            width: '80px',
-                            color: 'white',
-                            height: '30px',
-                        },
-                        onclick: () => {
+                    opcoesBotao = {
+                        texto: 'Equipar',
+                        funcao: () => {
                             adicionarAoEquipamento(jogador, jogador.inventario[i]);
                             mostrarInventario();
-                        },
-                    });
-
-                    string.appendChild(b);
+                        }
+                    };
                 }
 
-                divInventario.appendChild(string);
+                let linha = criarLinhaMenu(jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)', opcoesBotao.texto, opcoesBotao.funcao);
+
+                divInventario.appendChild(linha);
             }
         }
 
