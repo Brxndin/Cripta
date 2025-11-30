@@ -7,7 +7,13 @@
     <title>Cripta</title>
     <style>
         body {
-            background-color: #520a06;
+            /* background-color: #520a06; */
+            background-color: #241200;
+        }
+
+        @font-face {
+            font-family: 'Gothic';
+            src: url('./fonts/cloister-black-font/CloisterBlackLight-axjg.ttf') format('truetype');
         }
 
         #jogador {
@@ -19,15 +25,16 @@
         }
 
         .zumbi {
-            background-color: lightgreen;
+            background-color: rgb(118, 199, 98);
         }
 
         .esqueleto {
-            background-color: lightgray;
+            background-color: rgb(255, 255, 255);
         }
 
         .o {
-            background-color: brown;
+            /* background-color: brown; */
+            background-color: #241200;
         }
 
         .armas {
@@ -50,7 +57,7 @@
         }
 
         #mapa {
-            background-color: #e8b07b;
+            background-color: #fac882;
         }
 
         #inicial {
@@ -83,12 +90,20 @@
         .texto {
             color: white;
         }
+
+        .titulo {
+            font-size: 50px;
+        }
+
+        .gotico {
+            font-family: 'Gothic', 'Times New Roman', serif;
+        }
     </style>
 </head>
 
 <body>
     <div id="inicial">
-        <h1 class="texto">Cripta</h1>
+        <h1 class="titulo texto gotico">Cripta</h1>
         <p class="texto">Ao se aventurar em uma masmorra, você se deparou com um portal roxo.</p>
         <p class="texto">Quando entrou nele, percebeu que estava preso num loop, sendo transportado para vários locais
         </p>
