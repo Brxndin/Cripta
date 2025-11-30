@@ -14,7 +14,8 @@ OBS: Funciona melhor no Google Chrome ou Microsoft Edge.
 ## Controles
 
 * Setas: Movimentação.
-* Spacebar: Ataque.
+* letra X: Ataque.
+* letra C: Cura rápida (usa somente poções básicas).
 * letra I: Inventário (para abrir e fechar).
 * letra E: Equipamento e status (para abrir e fechar).
 * letra Z: Loja (para abrir e fechar). Só funciona se o jogador estiver encostado na loja.

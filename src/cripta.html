@@ -1692,10 +1692,17 @@
                 }, 5);
             }
 
-            // Espaço
-            if (event.keyCode == 32) {
+            // X
+            if (event.keyCode == 88) {
                 if (jogador.podeAtacar) {
                     atacar(jogador);
+                }
+            }
+
+            // C
+            if (event.keyCode == 67) {
+                if (existe(jogador.inventario['pocao_hp'])) {
+                    curar(jogador.inventario['pocao_hp'].nome);
                 }
             }
 
