@@ -1460,99 +1460,101 @@
                 if (colisao(jogador, portais[i])) {
                     level++;
 
-                    reset();
-
-                    criarMapa();
-
-                    if (i == '1') {
-                        criarPortais(2);
-
-                        if (chancePercentual(50)) {
-                            criarPortais(1);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(3);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(4);
-                        }
-
-                        jogador.x = Math.round(mapa.x + mapa.largura - portais['2'].largura - jogador.largura * 2);
-                        jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
-                    } else if (i == '2') {
-                        criarPortais(1);
-
-                        if (chancePercentual(50)) {
-                            criarPortais(2);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(3);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(4);
-                        }
-
-                        jogador.x = Math.round(mapa.x + portais['1'].largura + jogador.largura);
-                        jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
-                    } else if (i == '3') {
-                        criarPortais(4);
-
-                        if (chancePercentual(50)) {
-                            criarPortais(1);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(2);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(3);
-                        }
-
-                        jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
-                        jogador.y = Math.round(mapa.y + mapa.altura - portais['4'].altura - jogador.altura * 2);
-                    } else if (i == '4') {
-                        criarPortais(3);
-
-                        if (chancePercentual(50)) {
-                            criarPortais(1);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(2);
-                        }
-
-                        if (chancePercentual(50)) {
-                            criarPortais(4);
-                        }
-
-                        jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
-                        jogador.y = Math.round(mapa.y + portais['3'].altura + jogador.altura);
-                    }
-
-                    criarJogador();
-
-                    // em níveis específicos, o jogador enfrenta um chefe
-                    if (level == 10) {
-                        criarInimigo(listaChefes[0]);
-                    } else if (level == 20) {
-
-                    } else if (level == 30) {
-
-                    } else if (level == 40) {
-
-                    } else if (level == 50) {
-
-                    } else if (level > 50) {
+                    if (level > 50) {
                         finalizarJogo('Você encontrou a saída da masmorra!');
                     } else {
-                        // cria de 1 a 3 inimigos
-                        for (k = randInt(1, 3); k > 0; k--) {
-                            criarInimigo();
+                        reset();
+    
+                        criarMapa();
+    
+                        if (i == '1') {
+                            criarPortais(2);
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(1);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(3);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(4);
+                            }
+    
+                            jogador.x = Math.round(mapa.x + mapa.largura - portais['2'].largura - jogador.largura * 2);
+                            jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
+                        } else if (i == '2') {
+                            criarPortais(1);
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(2);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(3);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(4);
+                            }
+    
+                            jogador.x = Math.round(mapa.x + portais['1'].largura + jogador.largura);
+                            jogador.y = Math.round(mapa.y + mapa.altura / 2 - jogador.altura / 2);
+                        } else if (i == '3') {
+                            criarPortais(4);
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(1);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(2);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(3);
+                            }
+    
+                            jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
+                            jogador.y = Math.round(mapa.y + mapa.altura - portais['4'].altura - jogador.altura * 2);
+                        } else if (i == '4') {
+                            criarPortais(3);
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(1);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(2);
+                            }
+    
+                            if (chancePercentual(50)) {
+                                criarPortais(4);
+                            }
+    
+                            jogador.x = Math.round(mapa.x + mapa.largura / 2 - jogador.largura / 2);
+                            jogador.y = Math.round(mapa.y + portais['3'].altura + jogador.altura);
+                        }
+    
+                        criarJogador();
+    
+                        // em níveis específicos, o jogador enfrenta um chefe
+                        if (level == 10) {
+                            criarInimigo(listaChefes[0]);
+                        } else if (level == 20) {
+    
+                        } else if (level == 30) {
+    
+                        } else if (level == 40) {
+    
+                        } else if (level == 50) {
+    
+                        } else {
+                            // cria de 1 a 3 inimigos
+                            for (k = randInt(1, 3); k > 0; k--) {
+                                criarInimigo();
+                            }
                         }
                     }
 
