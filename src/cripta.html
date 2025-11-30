@@ -64,6 +64,14 @@
             text-align: center;
         }
 
+        #loja {
+            background-color: grey;
+        }
+
+        #loja_agua {
+            background-color: #1275e6;
+        }
+
         .menu {
             display: none;
             z-index: 99;
@@ -190,24 +198,28 @@
                 id: 'portal_1',
                 largura: 15,
                 altura: 100,
+                classeCSS: 'portais',
             },
             // direita
             2: {
                 id: 'portal_2',
                 largura: 15,
                 altura: 100,
+                classeCSS: 'portais',
             },
             // cima
             3: {
                 id: 'portal_3',
                 largura: 100,
                 altura: 15,
+                classeCSS: 'portais',
             },
             // baixo
             4: {
                 id: 'portal_4',
                 largura: 100,
                 altura: 15,
+                classeCSS: 'portais',
             },
         };
 
@@ -225,6 +237,7 @@
                 tipo: tipoItemArma,
                 tipoAtaque: tipoAtaqueCorporal,
                 preco: 60,
+                classeCSS: 'it',
             },
             1: {
                 nome: 'armadura_ferro',
@@ -232,6 +245,7 @@
                 poder: 10,
                 tipo: tipoItemArmadura,
                 preco: 60,
+                classeCSS: 'it',
             },
             2: {
                 nome: 'espada_ouro',
@@ -240,6 +254,7 @@
                 tipo: tipoItemArma,
                 tipoAtaque: tipoAtaqueCorporal,
                 preco: 220,
+                classeCSS: 'it',
             },
             3: {
                 nome: 'armadura_trevas',
@@ -247,6 +262,7 @@
                 poder: 60,
                 tipo: tipoItemArmadura,
                 preco: 225,
+                classeCSS: 'it',
             },
             4: {
                 nome: 'pocao_hp',
@@ -254,6 +270,7 @@
                 poder: 25,
                 tipo: tipoItemCura,
                 preco: 25,
+                classeCSS: 'it',
             },
             5: {
                 nome: 'pocao_hp_grande',
@@ -261,6 +278,7 @@
                 poder: 50,
                 tipo: tipoItemCura,
                 preco: 50,
+                classeCSS: 'it',
             },
             6: {
                 nome: 'arco_madeira',
@@ -268,7 +286,8 @@
                 poder: 5,
                 tipo: tipoItemArma,
                 tipoAtaque: tipoAtaqueADistancia,
-                preco: 10
+                preco: 10,
+                classeCSS: 'it',
             },
             7: {
                 nome: 'espada_enferrujada',
@@ -277,6 +296,7 @@
                 tipo: tipoItemArma,
                 tipoAtaque: tipoAtaqueCorporal,
                 preco: 2,
+                classeCSS: 'it',
             },
             8: {
                 nome: 'armadura_enferrujada',
@@ -284,6 +304,7 @@
                 poder: 5,
                 tipo: tipoItemArmadura,
                 preco: 2,
+                classeCSS: 'it',
             },
             9: {
                 nome: 'espada_prata',
@@ -292,6 +313,7 @@
                 tipo: tipoItemArma,
                 tipoAtaque: tipoAtaqueCorporal,
                 preco: 130,
+                classeCSS: 'it',
             },
             10: {
                 nome: 'arco_recurvo',
@@ -300,6 +322,7 @@
                 tipo: tipoItemArma,
                 tipoAtaque: tipoAtaqueADistancia,
                 preco: 35,
+                classeCSS: 'it',
             },
             11: {
                 nome: 'armadura_dragao',
@@ -307,6 +330,7 @@
                 poder: 70,
                 tipo: tipoItemArmadura,
                 preco: 250,
+                classeCSS: 'it',
             },
             12: {
                 nome: 'besta',
@@ -315,6 +339,7 @@
                 tipo: tipoItemArma,
                 tipoAtaque: tipoAtaqueADistancia,
                 preco: 55,
+                classeCSS: 'it',
             },
         };
 
@@ -325,7 +350,7 @@
                 largura: 40,
                 pontosDeVida: 200,
                 ataque: 10,
-                class: 'i',
+                classeCSS: 'i',
                 equipamento: {
                     arma: listaItens[0],
                     armadura: listaItens[1],
@@ -337,7 +362,7 @@
                 largura: 40,
                 pontosDeVida: 200,
                 ataque: 7,
-                class: 'zumbi',
+                classeCSS: 'zumbi',
                 equipamento: {
                     arma: listaItens['vazio'],
                     armadura: listaItens[8],
@@ -349,7 +374,7 @@
                 largura: 40,
                 pontosDeVida: 100,
                 ataque: 3,
-                class: 'esqueleto',
+                classeCSS: 'esqueleto',
                 equipamento: {
                     arma: listaItens[7],
                     armadura: listaItens['vazio'],
@@ -364,7 +389,7 @@
                 largura: 70,
                 pontosDeVida: 500,
                 ataque: 15,
-                class: 'cavaleiro_das_trevas',
+                classeCSS: 'cavaleiro_das_trevas',
                 equipamento: {
                     arma: listaItens[9],
                     armadura: listaItens[3],
@@ -627,209 +652,25 @@
             return string;
         }
 
-        function criarPortal(chavePortal) {
-            // em alguns casos a altura vai no lugar da largura pois a perspectiva muda
-            switch (chavePortal) {
-                // esquerda
-                case 1:
-                    listaPortais[1].x = mapa.x;
-                    listaPortais[1].y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(listaPortais[1].altura / 2);
-
-                    criarObstaculo(mapa.x, mapa.y, bordaMapa, listaPortais[1].y - mapa.y);
-                    criarObstaculo(mapa.x, listaPortais[1].y + listaPortais[1].altura, bordaMapa, mapa.altura - listaPortais[1].y + mapa.y - listaPortais[1].altura);
-                    break;
-                // direita
-                case 2:
-                    listaPortais[2].x = mapa.x + mapa.largura - listaPortais[2].largura;
-                    listaPortais[2].y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(listaPortais[2].altura / 2);
-
-                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, mapa.y, bordaMapa, listaPortais[2].y - mapa.y);
-                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, listaPortais[2].y + listaPortais[2].altura, bordaMapa, mapa.altura - listaPortais[2].y + mapa.y - listaPortais[2].altura);
-                    break;
-                // cima
-                case 3:
-                    listaPortais[3].x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(listaPortais[3].largura / 2);
-                    listaPortais[3].y = mapa.y;
-
-                    criarObstaculo(mapa.x, mapa.y, listaPortais[3].x - mapa.x, bordaMapa);
-                    criarObstaculo(listaPortais[3].x + listaPortais[3].largura, mapa.y, mapa.largura - listaPortais[3].x + mapa.x - listaPortais[3].largura, bordaMapa);
-                    break;
-                // baixo
-                case 4:
-                    listaPortais[4].x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(listaPortais[4].largura / 2);
-                    listaPortais[4].y = mapa.y + mapa.altura - listaPortais[4].altura;
-
-                    criarObstaculo(mapa.x, mapa.y + mapa.altura - bordaMapa, listaPortais[4].x - mapa.x, bordaMapa);
-                    criarObstaculo(listaPortais[4].x + listaPortais[4].largura, mapa.y + mapa.altura - bordaMapa, mapa.largura - listaPortais[4].x + mapa.x - listaPortais[4].largura, bordaMapa);
-                    break;
-                default:
-                    break;
-            }
-
-            portais[chavePortal] = listaPortais[chavePortal];
-
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: portais[chavePortal].id,
-                        class: 'portais',
-                    },
-                    style: {
-                        width: portais[chavePortal].largura + 'px',
-                        height: portais[chavePortal].altura + 'px',
-                        left: portais[chavePortal].x + 'px',
-                        top: portais[chavePortal].y + 'px',
-                    },
-                })
-            );
-        }
-
-        function criarPortais(portalAnterior) {
-            if (portalAnterior == 2 || chancePercentual(50)) {
-                criarPortal(1);
-            } else {
-                criarObstaculo(mapa.x, mapa.y, bordaMapa, mapa.altura);
-            }
-
-            if (portalAnterior == 1 || chancePercentual(50)) {
-                criarPortal(2);
-            } else {
-                criarObstaculo(mapa.x + mapa.largura - bordaMapa, mapa.y, bordaMapa, mapa.altura);
-            }
-
-            if (portalAnterior == 4 || chancePercentual(50)) {
-                criarPortal(3);
-            } else {
-                criarObstaculo(mapa.x, mapa.y, mapa.largura, bordaMapa);
-            }
-
-            if (portalAnterior == 3 || chancePercentual(50)) {
-                criarPortal(4);
-            } else {
-                criarObstaculo(mapa.x, mapa.y + mapa.altura - bordaMapa, mapa.largura, bordaMapa);
-            }
-        }
-
-        function criarMapa(objeto, chave) {
-            let recuoAltura = 70;
-
-            mapa = {
-                id: 'mapa',
-                x: Math.round(screen.width / 2) - Math.round(objeto.largura / 2),
-                y: Math.round(screen.height / 2) - Math.round(objeto.altura / 2) - recuoAltura,
-                largura: objeto.largura,
-                altura: objeto.altura,
-            };
-
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: mapa.id,
-                    },
-                    style: {
-                        width: mapa.largura + 'px',
-                        height: mapa.altura + 'px',
-                        left: mapa.x + 'px',
-                        top: mapa.y + 'px',
-                    },
-                })
-            );
-
-            if (chave == 0) {
-                if (chancePercentual(33)) {
-                    criarObstaculo(Math.round(mapa.x + (mapa.largura / 2) - 40), Math.round(mapa.y + (mapa.altura / 2) - 40), 80, 80);
-                } else if (chancePercentual(33)) {
-                    criarObstaculo(mapa.x, 550, 700, 50);
-                    criarObstaculo(mapa.x + mapa.largura - 700, 300, 700, 50);
-                } else if (chancePercentual(33)) {
-                    criarObstaculo(mapa.x + 200, mapa.y, 50, 480);
-                    criarObstaculo(mapa.x + 650, mapa.y + mapa.altura - 480, 50, 480);
-                }
-            } else if (chave == 1) {
-                if (chancePercentual(50)) {
-                    criarObstaculo(Math.round(mapa.x + (mapa.largura / 2) - 40), Math.round(mapa.y + (mapa.altura / 2) - 40), 80, 80);
-                } else if (chancePercentual(30)) {
-                    criarLoja(Math.round(mapa.x + (mapa.largura / 2) - (loja.largura / 2)), Math.round(mapa.y + (mapa.altura / 2) - (loja.altura / 2)));
-                }
-            }
-        }
-
-        function criarLoja(x, y) {
-            loja.objeto = {
-                x: x,
-                y: y,
-                altura: loja.altura,
-                largura: loja.largura,
-            };
-
-            let bordaFonte = 6;
-
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: loja.id,
-                    },
-                    style: {
-                        width: loja.largura + 'px',
-                        height: loja.altura + 'px',
-                        left: x + 'px',
-                        top: y + 'px',
-                        backgroundColor: 'grey',
-                    }
-                })
-            );
-
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: loja.id + '_agua',
-                    },
-                    style: {
-                        width: (loja.largura - (bordaFonte * 2)) + 'px',
-                        height: (loja.altura - (bordaFonte * 2)) + 'px',
-                        left: (x + bordaFonte) + 'px',
-                        top: (y + bordaFonte) + 'px',
-                        backgroundColor: '#1275e6'
-                    }
-                })
-            );
-        }
-
-        function criarItem(item, x, y) {
-            if (item.nome != 'vazio') {
-                let id = gerarIdLista('item', itens);
-
-                let objeto = {
+        function criarNoCanvas(id, objeto) {
+            dadosTag = {
+                tipo: 'div',
+                attributes: {
                     id: id,
-                    x: x,
-                    y: y,
-                    altura: 30,
-                    largura: 30,
-                    objeto: item,
-                };
+                },
+                style: {
+                    width: objeto.largura + 'px',
+                    height: objeto.altura + 'px',
+                    left: objeto.x + 'px',
+                    top: objeto.y + 'px',
+                },
+            };
 
-                itens[id] = objeto;
-
-                canvas.appendChild(
-                    criarTag({
-                        tipo: 'div',
-                        attributes: {
-                            id: objeto.id,
-                            class: 'it',
-                        },
-                        style: {
-                            width: objeto.largura + 'px',
-                            height: objeto.altura + 'px',
-                            left: objeto.x + 'px',
-                            top: objeto.y + 'px',
-                        },
-                    })
-                );
+            if (existe(objeto.classeCSS)) {
+                dadosTag.attributes.class = objeto.classeCSS;
             }
+
+            canvas.appendChild(criarTag(dadosTag));
         }
 
         function mostrarLoja() {
@@ -1021,12 +862,218 @@
             return id;
         }
 
+        function criarJogador() {
+            criarNoCanvas(jogador.id, jogador);
+
+            canvas.appendChild(
+                criarTag({
+                    tipo: 'progress',
+                    attributes: {
+                        id: 'vidaJogador',
+                        value: jogador.pontosDeVida,
+                        max: jogador.pontosDeVidaMaximo,
+                    },
+                    style: {
+                        width: '200px',
+                        height: '30px',
+                        left: mapa.x + 'px',
+                        top: '70px',
+                        backgroundColor: 'green',
+                    },
+                })
+            );
+
+            canvas.appendChild(criarTag({
+                tipo: 'div',
+                attributes: {
+                    id: 'dinheiroJogador',
+                },
+                innerHTML: jogador.dinheiro + ' moedas',
+                style: {
+                    fontSize: '20px',
+                    left: mapa.x + 'px',
+                    top: '120px',
+                    // backgroundColor: 'green'
+                    color: 'white'
+                }
+            }));
+        }
+
+        function removerDoCanvas(id) {
+            let div = document.getElementById(id);
+
+            if (div) {
+                div.remove();
+            }
+        }
+
+        // ==============================================
+        // -> FUNCIONALIDADES: funcionalidades específicas do jogo
+        // ==============================================
+
+        function ativarPortal(chavePortal) {
+            portais[chavePortal].ativo = true;
+
+            criarNoCanvas(portais[chavePortal].id, portais[chavePortal]);
+        }
+
+        function criarPortal(chavePortal, ativo = true) {
+            // em alguns casos a altura vai no lugar da largura pois a perspectiva muda
+            switch (chavePortal) {
+                // esquerda
+                case 1:
+                    listaPortais[1].x = mapa.x;
+                    listaPortais[1].y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(listaPortais[1].altura / 2);
+
+                    criarObstaculo(mapa.x, mapa.y, bordaMapa, listaPortais[1].y - mapa.y);
+                    criarObstaculo(mapa.x, listaPortais[1].y + listaPortais[1].altura, bordaMapa, mapa.altura - listaPortais[1].y + mapa.y - listaPortais[1].altura);
+                    break;
+                // direita
+                case 2:
+                    listaPortais[2].x = mapa.x + mapa.largura - listaPortais[2].largura;
+                    listaPortais[2].y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(listaPortais[2].altura / 2);
+
+                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, mapa.y, bordaMapa, listaPortais[2].y - mapa.y);
+                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, listaPortais[2].y + listaPortais[2].altura, bordaMapa, mapa.altura - listaPortais[2].y + mapa.y - listaPortais[2].altura);
+                    break;
+                // cima
+                case 3:
+                    listaPortais[3].x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(listaPortais[3].largura / 2);
+                    listaPortais[3].y = mapa.y;
+
+                    criarObstaculo(mapa.x, mapa.y, listaPortais[3].x - mapa.x, bordaMapa);
+                    criarObstaculo(listaPortais[3].x + listaPortais[3].largura, mapa.y, mapa.largura - listaPortais[3].x + mapa.x - listaPortais[3].largura, bordaMapa);
+                    break;
+                // baixo
+                case 4:
+                    listaPortais[4].x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(listaPortais[4].largura / 2);
+                    listaPortais[4].y = mapa.y + mapa.altura - listaPortais[4].altura;
+
+                    criarObstaculo(mapa.x, mapa.y + mapa.altura - bordaMapa, listaPortais[4].x - mapa.x, bordaMapa);
+                    criarObstaculo(listaPortais[4].x + listaPortais[4].largura, mapa.y + mapa.altura - bordaMapa, mapa.largura - listaPortais[4].x + mapa.x - listaPortais[4].largura, bordaMapa);
+                    break;
+                default:
+                    break;
+            }
+
+            portais[chavePortal] = listaPortais[chavePortal];
+
+            portais[chavePortal].ativo = ativo;
+
+            if (ativo) {
+                ativarPortal(chavePortal);
+            }
+        }
+
+        function criarPortais(portalAnterior, ativos = true) {
+            if (portalAnterior == 2 || chancePercentual(50)) {
+                criarPortal(1, ativos);
+            } else {
+                criarObstaculo(mapa.x, mapa.y, bordaMapa, mapa.altura);
+            }
+
+            if (portalAnterior == 1 || chancePercentual(50)) {
+                criarPortal(2, ativos);
+            } else {
+                criarObstaculo(mapa.x + mapa.largura - bordaMapa, mapa.y, bordaMapa, mapa.altura);
+            }
+
+            if (portalAnterior == 4 || chancePercentual(50)) {
+                criarPortal(3, ativos);
+            } else {
+                criarObstaculo(mapa.x, mapa.y, mapa.largura, bordaMapa);
+            }
+
+            if (portalAnterior == 3 || chancePercentual(50)) {
+                criarPortal(4, ativos);
+            } else {
+                criarObstaculo(mapa.x, mapa.y + mapa.altura - bordaMapa, mapa.largura, bordaMapa);
+            }
+        }
+
+        function criarMapa(objeto, chave) {
+            let recuoAltura = 70;
+
+            mapa = {
+                id: 'mapa',
+                x: Math.round(screen.width / 2) - Math.round(objeto.largura / 2),
+                y: Math.round(screen.height / 2) - Math.round(objeto.altura / 2) - recuoAltura,
+                largura: objeto.largura,
+                altura: objeto.altura,
+            };
+
+            criarNoCanvas(mapa.id, mapa);
+
+            if (chave == 0) {
+                if (chancePercentual(33)) {
+                    criarObstaculo(Math.round(mapa.x + (mapa.largura / 2) - 40), Math.round(mapa.y + (mapa.altura / 2) - 40), 80, 80);
+                } else if (chancePercentual(33)) {
+                    criarObstaculo(mapa.x, 550, 700, 50);
+                    criarObstaculo(mapa.x + mapa.largura - 700, 300, 700, 50);
+                } else if (chancePercentual(33)) {
+                    criarObstaculo(mapa.x + 200, mapa.y, 50, 480);
+                    criarObstaculo(mapa.x + 650, mapa.y + mapa.altura - 480, 50, 480);
+                }
+            } else if (chave == 1) {
+                if (chancePercentual(50)) {
+                    criarObstaculo(Math.round(mapa.x + (mapa.largura / 2) - 40), Math.round(mapa.y + (mapa.altura / 2) - 40), 80, 80);
+                } else if (chancePercentual(30)) {
+                    criarLoja(Math.round(mapa.x + (mapa.largura / 2) - (loja.largura / 2)), Math.round(mapa.y + (mapa.altura / 2) - (loja.altura / 2)));
+                }
+            }
+        }
+
+        function criarLoja(x, y) {
+            loja.objeto = {
+                x: x,
+                y: y,
+                altura: loja.altura,
+                largura: loja.largura,
+            };
+
+            let bordaFonte = 6;
+
+            criarNoCanvas(loja.id, {
+                largura: loja.largura,
+                altura: loja.altura,
+                x: x,
+                y: y,
+            });
+
+            criarNoCanvas(loja.id + '_agua', {
+                largura: (loja.largura - (bordaFonte * 2)),
+                altura: (loja.altura - (bordaFonte * 2)),
+                x: (x + bordaFonte),
+                y: (y + bordaFonte),
+            });
+        }
+
+        function criarItem(item, x, y) {
+            if (item.nome != 'vazio') {
+                let id = gerarIdLista('item', itens);
+
+                let objeto = {
+                    id: id,
+                    x: x,
+                    y: y,
+                    altura: 30,
+                    largura: 30,
+                    classeCSS: item.classeCSS,
+                    objeto: item,
+                };
+
+                itens[id] = objeto;
+
+                criarNoCanvas(objeto.id, objeto);
+            }
+        }
+
         // cria os inimigos e coloca no mapa
-        function criarInimigo(ini = null) {
+        function criarInimigo(inimigo = null) {
             let id = gerarIdLista('inimigo', inimigos);
 
-            if (!existe(ini)) {
-                ini = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
+            if (!existe(inimigo)) {
+                inimigo = listaInimigos[randInt(0, tamanhoObjeto(listaInimigos) - 1)];
             }
 
             let objeto = {
@@ -1034,11 +1081,11 @@
                 bool: true,
                 podeAtacar: true,
                 face: 'direita',
-                altura: ini.altura,
-                largura: ini.largura,
-                pontosDeVida: ini.pontosDeVida,
-                ataque: ini.ataque,
-                class: ini.class,
+                altura: inimigo.altura,
+                largura: inimigo.largura,
+                pontosDeVida: inimigo.pontosDeVida,
+                ataque: inimigo.ataque,
+                classeCSS: inimigo.classeCSS,
                 equipamento: {
                     arma: listaItens['vazio'],
                     armadura: listaItens['vazio'],
@@ -1064,16 +1111,22 @@
                         }
 
                         removerDaLista(inimigos, posicao);
+
+                        if (tamanhoObjeto(inimigos) <= 0) {
+                            for (const i in portais) {
+                                ativarPortal(i);
+                            }
+                        }
                     }
                 },
             };
 
-            if (existe(ini.equipamento.arma)) {
-                adicionarAoEquipamento(objeto, ini.equipamento.arma);
+            if (existe(inimigo.equipamento.arma)) {
+                adicionarAoEquipamento(objeto, inimigo.equipamento.arma);
             }
 
-            if (existe(ini.equipamento.armadura)) {
-                adicionarAoEquipamento(objeto, ini.equipamento.armadura);
+            if (existe(inimigo.equipamento.armadura)) {
+                adicionarAoEquipamento(objeto, inimigo.equipamento.armadura);
             }
 
             let bool = {
@@ -1113,21 +1166,7 @@
 
             inimigos[id] = objeto;
 
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: objeto.id,
-                        class: objeto.class,
-                    },
-                    style: {
-                        width: objeto.largura + 'px',
-                        height: objeto.altura + 'px',
-                        left: objeto.x + 'px',
-                        top: objeto.y + 'px',
-                    },
-                })
-            );
+            criarNoCanvas(objeto.id, objeto);
 
             inimigos[id].movimento = setInterval(() => {
                 ia(inimigos[id]);
@@ -1144,75 +1183,12 @@
                 y: y,
                 altura: altura,
                 largura: largura,
+                classeCSS: 'o'
             };
 
             obstaculos[id] = objeto;
 
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: objeto.id,
-                        class: 'o',
-                    },
-                    style: {
-                        width: objeto.largura + 'px',
-                        height: objeto.altura + 'px',
-                        left: objeto.x + 'px',
-                        top: objeto.y + 'px',
-                    },
-                })
-            );
-        }
-
-        function criarJogador() {
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'div',
-                    attributes: {
-                        id: jogador.id,
-                    },
-                    style: {
-                        width: jogador.largura + 'px',
-                        height: jogador.altura + 'px',
-                        left: jogador.x + 'px',
-                        top: jogador.y + 'px',
-                    },
-                })
-            );
-
-            canvas.appendChild(
-                criarTag({
-                    tipo: 'progress',
-                    attributes: {
-                        id: 'vidaJogador',
-                        value: jogador.pontosDeVida,
-                        max: jogador.pontosDeVidaMaximo,
-                    },
-                    style: {
-                        width: '200px',
-                        height: '30px',
-                        left: mapa.x + 'px',
-                        top: '70px',
-                        backgroundColor: 'green',
-                    },
-                })
-            );
-
-            canvas.appendChild(criarTag({
-                tipo: 'div',
-                attributes: {
-                    id: 'dinheiroJogador',
-                },
-                innerHTML: jogador.dinheiro + ' moedas',
-                style: {
-                    fontSize: '20px',
-                    left: mapa.x + 'px',
-                    top: '120px',
-                    // backgroundColor: 'green'
-                    color: 'white'
-                }
-            }));
+            criarNoCanvas(objeto.id, objeto);
         }
 
         function removerDaLista(lista, chave) {
@@ -1221,19 +1197,11 @@
                     clearInterval(lista[chave].movimento);
                 }
 
-                let div = document.getElementById(lista[chave].id);
-
-                if (div) {
-                    div.remove();
-                }
+                removerDoCanvas(lista[chave].id);
 
                 delete lista[chave];
             }
         }
-
-        // ==============================================
-        // -> FUNCIONALIDADES: funcionalidades específicas do jogo
-        // ==============================================
 
         function adicionarAoInventario(objeto) {
             let item = {
@@ -1250,6 +1218,10 @@
 
             if (existe(objeto.tipoAtaque)) {
                 item.tipoAtaque = objeto.tipoAtaque;
+            }
+
+            if (existe(objeto.classeCSS)) {
+                item.classeCSS = objeto.classeCSS;
             }
 
             if (existe(jogador.inventario[item.nome])) {
@@ -1296,6 +1268,10 @@
 
             if (existe(item.tipoAtaque)) {
                 novoItem.tipoAtaque = item.tipoAtaque;
+            }
+
+            if (existe(item.classeCSS)) {
+                novoItem.classeCSS = item.classeCSS;
             }
 
             removerDoEquipamento(personagem, tipoEquipamento);
@@ -1513,58 +1489,65 @@
         }
 
         function entrouPortal() {
+            let entrou = false;
+            let portalAcessado = null;
+
             for (const i in portais) {
-                if (colisao(jogador, portais[i])) {
-                    level++;
+                if (colisao(jogador, portais[i]) && portais[i].ativo) {
+                    entrou = true;
+                    portalAcessado = i;
+                    break;
+                }
+            }
 
-                    if (level > 50) {
-                        finalizarJogo('Você encontrou a saída da masmorra!');
-                    } else {
-                        reset();
+            if (entrou) {
+                level++;
 
-                        let chaveMapa = randInt(0, 1);
+                if (level > 50) {
+                    finalizarJogo('Você encontrou a saída da masmorra!');
+                } else {
+                    reset();
 
-                        criarMapa(listaMapas[chaveMapa], chaveMapa);
+                    let chaveMapa = randInt(0, 1);
 
-                        criarPortais(i);
+                    criarMapa(listaMapas[chaveMapa], chaveMapa);
 
-                        // reposiciona o jogador na frente do portal contrário
-                        if (i == 1) {
-                            jogador.x = Math.round(mapa.x + mapa.largura - portais[2].largura - jogador.largura * 2);
-                            jogador.y = Math.round(mapa.y + (mapa.altura / 2) - jogador.altura / 2);
-                        } else if (i == 2) {
-                            jogador.x = Math.round(mapa.x + portais[1].largura + jogador.largura);
-                            jogador.y = Math.round(mapa.y + (mapa.altura / 2) - jogador.altura / 2);
-                        } else if (i == 3) {
-                            jogador.x = Math.round(mapa.x + (mapa.largura / 2) - jogador.largura / 2);
-                            jogador.y = Math.round(mapa.y + mapa.altura - portais[4].altura - jogador.altura * 2);
-                        } else if (i == 4) {
-                            jogador.x = Math.round(mapa.x + (mapa.largura / 2) - jogador.largura / 2);
-                            jogador.y = Math.round(mapa.y + portais[3].altura + jogador.altura);
-                        }
+                    criarPortais(portalAcessado, false);
 
-                        criarJogador();
-
-                        // em níveis específicos, o jogador enfrenta um chefe
-                        if (level == 10) {
-                            criarInimigo(listaChefes[0]);
-                        } else if (level == 20) {
-
-                        } else if (level == 30) {
-
-                        } else if (level == 40) {
-
-                        } else if (level == 50) {
-
-                        } else {
-                            // cria de 1 a 3 inimigos
-                            for (k = randInt(1, 3); k > 0; k--) {
-                                criarInimigo();
-                            }
-                        }
+                    // reposiciona o jogador na frente do portal contrário
+                    if (portalAcessado == 1) {
+                        jogador.x = Math.round(mapa.x + mapa.largura - portais[2].largura - jogador.largura * 2);
+                        jogador.y = Math.round(mapa.y + (mapa.altura / 2) - jogador.altura / 2);
+                    } else if (portalAcessado == 2) {
+                        jogador.x = Math.round(mapa.x + portais[1].largura + jogador.largura);
+                        jogador.y = Math.round(mapa.y + (mapa.altura / 2) - jogador.altura / 2);
+                    } else if (portalAcessado == 3) {
+                        jogador.x = Math.round(mapa.x + (mapa.largura / 2) - jogador.largura / 2);
+                        jogador.y = Math.round(mapa.y + mapa.altura - portais[4].altura - jogador.altura * 2);
+                    } else if (portalAcessado == 4) {
+                        jogador.x = Math.round(mapa.x + (mapa.largura / 2) - jogador.largura / 2);
+                        jogador.y = Math.round(mapa.y + portais[3].altura + jogador.altura);
                     }
 
-                    break;
+                    criarJogador();
+
+                    // em níveis específicos, o jogador enfrenta um chefe
+                    if (level == 10) {
+                        criarInimigo(listaChefes[0]);
+                    } else if (level == 20) {
+                        criarInimigo(listaChefes[0]);
+                    } else if (level == 30) {
+                        criarInimigo(listaChefes[0]);
+                    } else if (level == 40) {
+                        criarInimigo(listaChefes[0]);
+                    } else if (level == 50) {
+                        criarInimigo(listaChefes[0]);
+                    } else {
+                        // cria de 1 a 3 inimigos
+                        for (k = randInt(1, 3); k > 0; k--) {
+                            criarInimigo();
+                        }
+                    }
                 }
             }
         }
