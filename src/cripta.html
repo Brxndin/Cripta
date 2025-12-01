@@ -72,27 +72,26 @@
             background-color: #1275e6;
         }
 
-        .menu {
+        .janela {
             display: none;
             z-index: 99;
-            background-color: #520a06;
+            background-color: #241200;
             color: white;
             position: absolute;
-            width: 500px;
-            height: 500px;
             border: 2px solid white;
-            left: 650px;
-            top: 300px;
             padding: 20px;
-            /* overflow-y: scroll; */
+            /* overflow-y: 'scroll'; */
         }
 
         .botao {
-            width: 150px;
-            height: 50px;
             border: 1px solid white;
             color: white;
             background-color: #520a06;
+        }
+
+        #novo_jogo {
+            width: 150px;
+            height: 50px;
         }
 
         .texto {
@@ -116,21 +115,7 @@
         <p class="texto">Quando entrou nele, percebeu que estava preso num loop, sendo transportado para vários locais
         </p>
         <p class="texto">Agora, você deve prosseguir para encontrar uma saída.</p>
-        <button class="botao" id="novo">Iniciar</button>
-    </div>
-    <div id="janela_inventario" class="menu">
-        <h1>Inventário</h1>
-        <div id="conteudo_janela_inventario"></div>
-    </div>
-    <div id="janela_equipamento" class="menu">
-        <h1>Status</h1>
-        <div id="status"></div>
-        <h1>Equipamento</h1>
-        <div id="conteudo_janela_equipamento"></div>
-    </div>
-    <div id="janela_loja" class="menu">
-        <h1>Loja</h1>
-        <div id="conteudo_janela_loja"></div>
+        <button class="botao" id="novo_jogo">Iniciar</button>
     </div>
     <div id="canvas"></div>
 
@@ -186,7 +171,7 @@
                 altura: 600,
                 largura: 350,
             },
-            1: {
+            2: {
                 altura: 350,
                 largura: 900,
             },
@@ -394,6 +379,27 @@
                     arma: listaItens[9],
                     armadura: listaItens[3],
                 },
+            },
+        };
+
+        const listaJanelas = {
+            0: {
+                id: 'janela_loja',
+                conteudo: () => {
+                    return conteudoLoja();
+                }
+            },
+            1: {
+                id: 'janela_equipamento',
+                conteudo: () => {
+                    return conteudoEquipamento();
+                }
+            },
+            2: {
+                id: 'janela_inventario',
+                conteudo: () => {
+                    return conteudoInventario();
+                }
             },
         };
 
@@ -616,7 +622,17 @@
         // -> DOM: funções para criação dos objetos no DOM
         // ==============================================
 
-        function criarLinhaMenu(texto, textoBotao = null, onClickBotao = null) {
+        function criarTituloJanela(texto) {
+            return criarTag({
+                tipo: 'h1',
+                innerHTML: texto,
+                style: {
+                    position: 'static',
+                }
+            });
+        }
+
+        function criarLinhaJanela(texto, textoBotao = null, onClickBotao = null) {
             let string = criarTag({
                 tipo: 'p',
                 attributes: {
@@ -633,11 +649,11 @@
                 let botao = {
                     tipo: 'button',
                     innerHTML: textoBotao,
+                    attributes: {
+                        class: 'botao'
+                    },
                     style: {
-                        backgroundColor: '#520a06',
-                        border: '1px solid white',
                         width: '80px',
-                        color: 'white',
                         height: '30px'
                     },
                 };
@@ -673,9 +689,67 @@
             canvas.appendChild(criarTag(dadosTag));
         }
 
-        function mostrarLoja() {
-            let divLoja = document.getElementById('conteudo_janela_loja');
-            divLoja.innerHTML = '';
+        function criarJanela(id) {
+            let janela = listaJanelas[id];
+
+            document.body.appendChild(
+                criarTag({
+                    tipo: 'div',
+                    attributes: {
+                        id: janela.id,
+                        class: 'janela',
+                    },
+                    style: {
+                        width: 500 + 'px',
+                        height: 700 + 'px',
+                        left: (Math.round(screen.width / 2) - Math.round(500 / 2)) + 'px',
+                        top: (Math.round(screen.height / 2) - Math.round(700 / 2)) + 'px',
+                    },
+                })
+            );
+        }
+
+        function abrirFecharJanela(id) {
+            let janela = listaJanelas[id];
+
+            var div = document.getElementById(janela.id);
+
+            if (div.style.display == 'none' || div.style.display == '') {
+                atualizarConteudoJanela(id);
+
+                div.style.display = 'block';
+            } else {
+                div.style.display = 'none';
+            }
+        }
+
+        function atualizarConteudoJanela(id) {
+            let janela = listaJanelas[id];
+
+            var div = document.getElementById(janela.id);
+
+            div.innerHTML = '';
+
+            let conteudo = janela.conteudo();
+
+            for (const linha of conteudo) {
+                div.appendChild(linha);
+            }
+        }
+
+        function conteudoLoja() {
+            let conteudo = [];
+
+            conteudo.push(
+                criarTituloJanela('Loja')
+            );
+
+            let divConteudo = criarTag({
+                tipo: 'div',
+                attributes: {
+                    id: 'janela_loja_conteudo',
+                }
+            });
 
             let itensLoja = {
                 0: listaItens[9],
@@ -685,7 +759,7 @@
             };
 
             for (const i in itensLoja) {
-                let linha = criarLinhaMenu(itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ', 'Comprar', () => {
+                let linha = criarLinhaJanela(itensLoja[i].texto + ' (' + itensLoja[i].preco + ' moedas) ', 'Comprar', () => {
                     if (jogador?.dinheiro >= itensLoja[i]?.preco) {
                         alert('Item comprado com sucesso!');
 
@@ -695,93 +769,67 @@
 
                         adicionarAoInventario(itensLoja[i]);
 
-                        mostrarLoja();
+                        atualizarConteudoJanela(0);
                     } else {
                         alert('Você não tem dinheiro suficiente!');
                     }
                 });
 
-                divLoja.appendChild(linha);
+                divConteudo.appendChild(linha);
             }
+
+            conteudo.push(divConteudo);
+
+            return conteudo;
         }
 
-        function mostrarEquipamento() {
-            document.getElementById('status').innerHTML = '';
+        function conteudoEquipamento() {
+            let conteudo = [];
 
-            document.getElementById('status').appendChild(
-                criarTag({
-                    tipo: 'p',
-                    attributes: {
-                        class: 'texto'
-                    },
-                    innerHTML: 'Vida: ' + jogador.pontosDeVida + '/' + jogador.pontosDeVidaMaximo,
-                    style: {
-                        fontSize: '20px',
-                        position: 'static',
-                    },
-                })
+            conteudo.push(
+                criarTituloJanela('Status')
             );
 
-            document.getElementById('status').appendChild(
-                criarTag({
-                    tipo: 'p',
-                    attributes: {
-                        class: 'texto'
-                    },
-                    innerHTML: 'Força: ' + jogador.ataque + ' (+' + jogador.equipamento.arma.poder + ')',
-                    style: {
-                        fontSize: '20px',
-                        position: 'static',
-                    },
-                })
+            conteudo.push(
+                criarLinhaJanela('Vida: ' + jogador.pontosDeVida + '/' + jogador.pontosDeVidaMaximo)
             );
 
-            document.getElementById('status').appendChild(
-                criarTag({
-                    tipo: 'p',
-                    attributes: {
-                        class: 'texto'
-                    },
-                    innerHTML: 'Defesa: ' + jogador.equipamento.armadura.poder,
-                    style: {
-                        fontSize: '20px',
-                        position: 'static',
-                    },
-                })
+            conteudo.push(
+                criarLinhaJanela('Força: ' + jogador.ataque + ' (+' + jogador.equipamento.arma.poder + ')')
             );
 
-            document.getElementById('status').appendChild(
-                criarTag({
-                    tipo: 'p',
-                    innerHTML: 'Dinheiro: ' + jogador.dinheiro + ' moedas',
-                    attributes: {
-                        class: 'texto'
-                    },
-                    style: {
-                        fontSize: '20px',
-                        position: 'static'
-                    }
-                })
+            conteudo.push(
+                criarLinhaJanela('Defesa: ' + jogador.equipamento.armadura.poder)
             );
 
-            let divEquipamento = document.getElementById('conteudo_janela_equipamento');
-            divEquipamento.innerHTML = '';
+            conteudo.push(
+                criarLinhaJanela('Dinheiro: ' + jogador.dinheiro + ' moedas')
+            );
+
+            conteudo.push(
+                criarTituloJanela('Equipamento')
+            );
 
             for (const i in jogador.equipamento) {
                 if (jogador.equipamento[i].nome != 'vazio') {
-                    let linha = criarLinhaMenu(jogador.equipamento[i].texto, 'Desequipar', () => {
+                    let linha = criarLinhaJanela(jogador.equipamento[i].texto, 'Desequipar', () => {
                         removerDoEquipamento(jogador, i);
-                        mostrarEquipamento();
+                        atualizarConteudoJanela(1);
                     });
 
-                    divEquipamento.appendChild(linha);
+                    conteudo.push(linha);
                 }
             }
+
+            return conteudo;
         }
 
-        function mostrarInventario() {
-            let divInventario = document.getElementById('conteudo_janela_inventario');
-            divInventario.innerHTML = '';
+        function conteudoInventario() {
+            let conteudo = [];
+
+            conteudo.push(
+                criarTituloJanela('Inventário')
+            );
 
             for (const i in jogador.inventario) {
                 let opcoesBotao = {};
@@ -791,7 +839,7 @@
                         texto: 'Usar',
                         funcao: () => {
                             curar(jogador.inventario[i].nome);
-                            mostrarInventario();
+                            atualizarConteudoJanela(2);
                         }
                     };
                 } else {
@@ -799,15 +847,17 @@
                         texto: 'Equipar',
                         funcao: () => {
                             adicionarAoEquipamento(jogador, jogador.inventario[i]);
-                            mostrarInventario();
+                            atualizarConteudoJanela(2);
                         }
                     };
                 }
 
-                let linha = criarLinhaMenu(jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)', opcoesBotao.texto, opcoesBotao.funcao);
+                let linha = criarLinhaJanela(jogador.inventario[i].texto + ' (' + jogador.inventario[i].quantidade + 'x)', opcoesBotao.texto, opcoesBotao.funcao);
 
-                divInventario.appendChild(linha);
+                conteudo.push(linha);
             }
+
+            return conteudo;
         }
 
         function criarArma(atacante, larguraObjeto, alturaObjeto) {
@@ -1013,11 +1063,19 @@
                 } else if (chancePercentual(33)) {
                     criarObstaculo(mapa.x + 200, mapa.y, 50, 480);
                     criarObstaculo(mapa.x + 650, mapa.y + mapa.altura - 480, 50, 480);
+                } else if (chancePercentual(45)) {
+                    criarLoja(Math.round(mapa.x + (mapa.largura / 2) - (loja.largura / 2)), Math.round(mapa.y + (mapa.altura / 2) - (loja.altura / 2)));
                 }
             } else if (chave == 1) {
                 if (chancePercentual(50)) {
                     criarObstaculo(Math.round(mapa.x + (mapa.largura / 2) - 40), Math.round(mapa.y + (mapa.altura / 2) - 40), 80, 80);
-                } else if (chancePercentual(30)) {
+                } else if (chancePercentual(45)) {
+                    criarLoja(Math.round(mapa.x + (mapa.largura / 2) - (loja.largura / 2)), Math.round(mapa.y + (mapa.altura / 2) - (loja.altura / 2)));
+                }
+            } else if (chave == 2) {
+                if (chancePercentual(33)) {
+                    criarObstaculo(Math.round(mapa.x + (mapa.largura / 2) - 40), Math.round(mapa.y + (mapa.altura / 2) - 40), 80, 80);
+                } else if (chancePercentual(45)) {
                     criarLoja(Math.round(mapa.x + (mapa.largura / 2) - (loja.largura / 2)), Math.round(mapa.y + (mapa.altura / 2) - (loja.altura / 2)));
                 }
             }
@@ -1580,6 +1638,10 @@
         function iniciar() {
             let chaveMapa = randInt(0, 1);
 
+            for (const i in listaJanelas) {
+                criarJanela(i);
+            };
+
             criarMapa(listaMapas[chaveMapa], chaveMapa);
 
             criarPortal(3);
@@ -1684,42 +1746,18 @@
 
             // I
             if (event.keyCode == 73) {
-                var div = document.getElementById('janela_inventario');
-
-                if (div.style.display == 'none' || div.style.display == '') {
-                    mostrarInventario();
-
-                    div.style.display = 'block';
-                } else {
-                    div.style.display = 'none';
-                }
+                abrirFecharJanela(2);
             }
 
             // E
             if (event.keyCode == 69) {
-                var div = document.getElementById('janela_equipamento');
-
-                if (div.style.display == 'none' || div.style.display == '') {
-                    mostrarEquipamento();
-
-                    div.style.display = 'block';
-                } else {
-                    div.style.display = 'none';
-                }
+                abrirFecharJanela(1);
             }
 
             // Z
             if (event.keyCode == 90 && existe(loja.objeto)) {
                 if (colisao(jogador, loja.objeto)) {
-                    var div = document.getElementById('janela_loja');
-
-                    if (div.style.display == 'none' || div.style.display == '') {
-                        mostrarLoja();
-
-                        div.style.display = 'block';
-                    } else {
-                        div.style.display = 'none';
-                    }
+                    abrirFecharJanela(0);
                 }
             }
         });
@@ -1742,7 +1780,7 @@
         // -> INICIAR: trigger para iniciar o jogo
         // ==============================================
 
-        document.getElementById('novo').onclick = function () {
+        document.getElementById('novo_jogo').onclick = function () {
             document.getElementById('inicial').style.display = 'none';
             iniciar();
         };
