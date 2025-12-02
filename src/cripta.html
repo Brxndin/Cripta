@@ -180,28 +180,24 @@
         const listaPortais = {
             // esquerda
             1: {
-                id: 'portal_1',
                 largura: 15,
                 altura: 100,
                 classeCSS: 'portais',
             },
             // direita
             2: {
-                id: 'portal_2',
                 largura: 15,
                 altura: 100,
                 classeCSS: 'portais',
             },
             // cima
             3: {
-                id: 'portal_3',
                 largura: 100,
                 altura: 15,
                 classeCSS: 'portais',
             },
             // baixo
             4: {
-                id: 'portal_4',
                 largura: 100,
                 altura: 15,
                 classeCSS: 'portais',
@@ -961,57 +957,71 @@
         // -> FUNCIONALIDADES: funcionalidades específicas do jogo
         // ==============================================
 
-        function ativarPortal(chavePortal) {
-            portais[chavePortal].ativo = true;
+        function ativarPortal(id) {
+            if (!portais[id].ativo) {
+                portais[id].ativo = true;
 
-            criarNoCanvas(portais[chavePortal].id, portais[chavePortal]);
+                criarNoCanvas(portais[id].id, portais[id]);
+            }
         }
 
         function criarPortal(chavePortal, ativo = true) {
+            let id = gerarIdLista('portal', portais);
+
+            let portal = listaPortais[chavePortal];
+
+            let objeto = {
+                id: id,
+                largura: portal.largura,
+                altura: portal.altura,
+                classeCSS: portal.classeCSS,
+                keyLista: chavePortal,
+            };
+
             // em alguns casos a altura vai no lugar da largura pois a perspectiva muda
             switch (chavePortal) {
                 // esquerda
                 case 1:
-                    listaPortais[1].x = mapa.x;
-                    listaPortais[1].y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(listaPortais[1].altura / 2);
+                    objeto.x = mapa.x;
+                    objeto.y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(portal.altura / 2);
 
-                    criarObstaculo(mapa.x, mapa.y, bordaMapa, listaPortais[1].y - mapa.y);
-                    criarObstaculo(mapa.x, listaPortais[1].y + listaPortais[1].altura, bordaMapa, mapa.altura - listaPortais[1].y + mapa.y - listaPortais[1].altura);
+                    criarObstaculo(mapa.x, mapa.y, bordaMapa, objeto.y - mapa.y);
+                    criarObstaculo(mapa.x, objeto.y + objeto.altura, bordaMapa, mapa.altura - objeto.y + mapa.y - objeto.altura);
                     break;
                 // direita
                 case 2:
-                    listaPortais[2].x = mapa.x + mapa.largura - listaPortais[2].largura;
-                    listaPortais[2].y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(listaPortais[2].altura / 2);
+                    objeto.x = mapa.x + mapa.largura - portal.largura;
+                    objeto.y = mapa.y + Math.floor(mapa.altura / 2) - Math.floor(portal.altura / 2);
 
-                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, mapa.y, bordaMapa, listaPortais[2].y - mapa.y);
-                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, listaPortais[2].y + listaPortais[2].altura, bordaMapa, mapa.altura - listaPortais[2].y + mapa.y - listaPortais[2].altura);
+                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, mapa.y, bordaMapa, objeto.y - mapa.y);
+                    criarObstaculo(mapa.x + mapa.largura - bordaMapa, objeto.y + objeto.altura, bordaMapa, mapa.altura - objeto.y + mapa.y - objeto.altura);
                     break;
                 // cima
                 case 3:
-                    listaPortais[3].x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(listaPortais[3].largura / 2);
-                    listaPortais[3].y = mapa.y;
+                    objeto.x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(portal.largura / 2);
+                    objeto.y = mapa.y;
 
-                    criarObstaculo(mapa.x, mapa.y, listaPortais[3].x - mapa.x, bordaMapa);
-                    criarObstaculo(listaPortais[3].x + listaPortais[3].largura, mapa.y, mapa.largura - listaPortais[3].x + mapa.x - listaPortais[3].largura, bordaMapa);
+                    criarObstaculo(mapa.x, mapa.y, objeto.x - mapa.x, bordaMapa);
+                    criarObstaculo(objeto.x + objeto.largura, mapa.y, mapa.largura - objeto.x + mapa.x - objeto.largura, bordaMapa);
                     break;
                 // baixo
                 case 4:
-                    listaPortais[4].x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(listaPortais[4].largura / 2);
-                    listaPortais[4].y = mapa.y + mapa.altura - listaPortais[4].altura;
+                    objeto.x = mapa.x + Math.floor((mapa.largura / 2)) - Math.floor(portal.largura / 2);
+                    objeto.y = mapa.y + mapa.altura - portal.altura;
 
-                    criarObstaculo(mapa.x, mapa.y + mapa.altura - bordaMapa, listaPortais[4].x - mapa.x, bordaMapa);
-                    criarObstaculo(listaPortais[4].x + listaPortais[4].largura, mapa.y + mapa.altura - bordaMapa, mapa.largura - listaPortais[4].x + mapa.x - listaPortais[4].largura, bordaMapa);
+                    criarObstaculo(mapa.x, mapa.y + mapa.altura - bordaMapa, objeto.x - mapa.x, bordaMapa);
+                    criarObstaculo(objeto.x + objeto.largura, mapa.y + mapa.altura - bordaMapa, mapa.largura - objeto.x + mapa.x - objeto.largura, bordaMapa);
                     break;
                 default:
                     break;
             }
 
-            portais[chavePortal] = listaPortais[chavePortal];
+            portais[id] = objeto;
 
-            portais[chavePortal].ativo = ativo;
+            portais[id].ativo = ativo;
 
             if (ativo) {
-                ativarPortal(chavePortal);
+                criarNoCanvas(portais[id].id, portais[id]);
             }
         }
 
@@ -1406,6 +1416,8 @@
 
                         if (jogador.pontosDeVida <= 0) {
                             finalizarJogo('Você morreu.');
+
+                            return;
                         } else {
                             document.getElementById('vidaJogador').setAttribute('value', jogador.pontosDeVida);
                         }
@@ -1553,7 +1565,7 @@
             for (const i in portais) {
                 if (colisao(jogador, portais[i]) && portais[i].ativo) {
                     entrou = true;
-                    portalAcessado = i;
+                    portalAcessado = portais[i].keyLista;
                     break;
                 }
             }
@@ -1566,7 +1578,7 @@
                 } else {
                     reset();
 
-                    let chaveMapa = randInt(0, 1);
+                    let chaveMapa = randInt(0, tamanhoObjeto(listaMapas) - 1);
 
                     criarMapa(listaMapas[chaveMapa], chaveMapa);
 
@@ -1574,17 +1586,17 @@
 
                     // reposiciona o jogador na frente do portal contrário
                     if (portalAcessado == 1) {
-                        jogador.x = Math.round(mapa.x + mapa.largura - portais[2].largura - jogador.largura * 2);
+                        jogador.x = Math.round(mapa.x + mapa.largura - listaPortais[2].largura - jogador.largura * 2);
                         jogador.y = Math.round(mapa.y + (mapa.altura / 2) - jogador.altura / 2);
                     } else if (portalAcessado == 2) {
-                        jogador.x = Math.round(mapa.x + portais[1].largura + jogador.largura);
+                        jogador.x = Math.round(mapa.x + listaPortais[1].largura + jogador.largura);
                         jogador.y = Math.round(mapa.y + (mapa.altura / 2) - jogador.altura / 2);
                     } else if (portalAcessado == 3) {
                         jogador.x = Math.round(mapa.x + (mapa.largura / 2) - jogador.largura / 2);
-                        jogador.y = Math.round(mapa.y + mapa.altura - portais[4].altura - jogador.altura * 2);
+                        jogador.y = Math.round(mapa.y + mapa.altura - listaPortais[4].altura - jogador.altura * 2);
                     } else if (portalAcessado == 4) {
                         jogador.x = Math.round(mapa.x + (mapa.largura / 2) - jogador.largura / 2);
-                        jogador.y = Math.round(mapa.y + portais[3].altura + jogador.altura);
+                        jogador.y = Math.round(mapa.y + listaPortais[3].altura + jogador.altura);
                     }
 
                     criarJogador();
