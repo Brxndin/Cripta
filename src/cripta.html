@@ -25,11 +25,11 @@
         }
 
         .zumbi {
-            background-color: rgb(118, 199, 98);
+            background-color: #76c762;
         }
 
         .esqueleto {
-            background-color: rgb(255, 255, 255);
+            background-color: #ffffff;
         }
 
         .o {
@@ -744,6 +744,9 @@
                 tipo: 'div',
                 attributes: {
                     id: 'janela_loja_conteudo',
+                },
+                style: {
+                    position: 'static',
                 }
             });
 
@@ -761,9 +764,9 @@
 
                         jogador.dinheiro -= itensLoja[i]?.preco;
 
-                        document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
+                        atualizaDinheiroJogador();
 
-                        adicionarAoInventario(itensLoja[i]);
+                        adicionarAoInventario(jogador, itensLoja[i]);
 
                         atualizarConteudoJanela(0);
                     } else {
@@ -775,6 +778,36 @@
             }
 
             conteudo.push(divConteudo);
+
+            conteudo.push(
+                criarTituloJanela('Venda')
+            );
+
+            let divVenda = criarTag({
+                tipo: 'div',
+                attributes: {
+                    id: 'janela_loja_conteudo_venda',
+                },
+                style: {
+                    position: 'static',
+                }
+            });
+
+            for (const i in jogador.inventario) {
+                let linha = criarLinhaJanela(jogador.inventario[i].quantidade + 'x ' + jogador.inventario[i].texto + ' (' + jogador.inventario[i].preco + ' moedas cada) ', 'Vender', () => {
+                    jogador.dinheiro += jogador.inventario[i].preco;
+
+                    atualizaDinheiroJogador();
+                    
+                    removerDoInventario(jogador, jogador.inventario[i]);
+
+                    atualizarConteudoJanela(0);
+                });
+
+                divVenda.appendChild(linha);
+            }
+
+            conteudo.push(divVenda);
 
             return conteudo;
         }
@@ -1136,6 +1169,10 @@
             }
         }
 
+        function atualizaDinheiroJogador() {
+            document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
+        }
+
         // cria os inimigos e coloca no mapa
         function criarInimigo(inimigo = null) {
             let id = gerarIdLista('inimigo', inimigos);
@@ -1164,7 +1201,7 @@
                     if (this.pontosDeVida <= 0) {
                         jogador.dinheiro += randInt(5, 10);
 
-                        document.getElementById('dinheiroJogador').innerHTML = jogador.dinheiro + ' moedas';
+                        atualizaDinheiroJogador();
 
                         // if (chancePercentual(50)) {
                         //     criarItem(randInt(0, tamanhoObjeto(listaItens) - 2), this.x, this.y);
@@ -1271,7 +1308,7 @@
             }
         }
 
-        function adicionarAoInventario(objeto) {
+        function adicionarAoInventario(personagem, objeto) {
             let item = {
                 nome: objeto.nome,
                 texto: objeto.texto,
@@ -1292,20 +1329,20 @@
                 item.classeCSS = objeto.classeCSS;
             }
 
-            if (existe(jogador.inventario[item.nome])) {
-                jogador.inventario[item.nome].quantidade += item.quantidade;
+            if (existe(personagem.inventario[item.nome])) {
+                personagem.inventario[item.nome].quantidade += item.quantidade;
             } else {
-                jogador.inventario[item.nome] = item;
+                personagem.inventario[item.nome] = item;
             }
         }
 
-        function removerDoEquipamento(personagem, tipoEquipamento) {
-            if (existe(personagem.equipamento[tipoEquipamento])) {
-                if (personagem.equipamento[tipoEquipamento].nome != 'vazio') {
-                    adicionarAoInventario(personagem.equipamento[tipoEquipamento]);
+        function removerDoInventario(personagem, item) {
+            if (existe(personagem.inventario)) {
+                if (item.quantidade > 1) {
+                    personagem.inventario[item.nome].quantidade--;
+                } else {
+                    delete personagem.inventario[item.nome];
                 }
-
-                personagem.equipamento[tipoEquipamento] = listaItens['vazio'];
             }
         }
 
@@ -1346,12 +1383,16 @@
 
             personagem.equipamento[tipoEquipamento] = novoItem;
 
-            if (existe(personagem.inventario)) {
-                if (item.quantidade > 1) {
-                    personagem.inventario[item.nome].quantidade--;
-                } else {
-                    delete personagem.inventario[item.nome];
+            removerDoInventario(personagem, item);
+        }
+
+        function removerDoEquipamento(personagem, tipoEquipamento) {
+            if (existe(personagem.equipamento[tipoEquipamento])) {
+                if (personagem.equipamento[tipoEquipamento].nome != 'vazio') {
+                    adicionarAoInventario(personagem, personagem.equipamento[tipoEquipamento]);
                 }
+
+                personagem.equipamento[tipoEquipamento] = listaItens['vazio'];
             }
         }
 
@@ -1625,7 +1666,7 @@
         function pegarItem() {
             for (const i in itens) {
                 if (colisao(jogador, itens[i])) {
-                    adicionarAoInventario(itens[i].objeto, i);
+                    adicionarAoInventario(jogador, itens[i].objeto, i);
                     removerDaLista(itens, i);
                 }
             }
@@ -1687,7 +1728,7 @@
 
             // nasce com uma espada enferrujada e arco de madeira
             adicionarAoEquipamento(jogador, listaItens[7]);
-            adicionarAoInventario(listaItens[6]);
+            adicionarAoInventario(jogador, listaItens[6]);
 
             criarJogador();
         }
